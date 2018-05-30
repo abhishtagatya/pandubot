@@ -58,6 +58,7 @@ def handle_followevent(event):
 @handler.add(UnfollowEvent)
 def handle_unfollow(event):
     app.logger.info("Got Unfollow event")
+    print("Got Unfollow event")
 
     findUser = Users.query.filter_by(id=event.source.user_id).first()
 
@@ -97,7 +98,7 @@ def handle_postback(event):
                     line_bot_api.reply_message(
                         event.reply_token,[
                         TextSendMessage(text="Berhasil! Tinggal satu langkah lagi"),
-                        TextSendMessage(text="Untuk mengetahui lingkungan Anda, dapatkah Anda membagikan lokasi Anda")
+                        TextSendMessage(text="Untuk mengetahui lingkungan Anda, dapatkah Anda membagikan lokasi Anda?")
                         ])
 
                 except :
@@ -157,9 +158,11 @@ def handle_location_message(event):
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     """ Here's all the messages will be handled and processed by the program """
+    findUser = Users.query.filter_by(id=event.source.user_id).first()
+
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=event.message.text))
+        TextSendMessage(text=findUser.location))
 
 @handler.default()
 def default(event):
