@@ -162,6 +162,7 @@ def handle_message(event):
         TextSendMessage(text=str(findUser.location)),
         TextSendMessage(text=str(findUser.latitude)),
         TextSendMessage(text=str(findUser.longitude)),
+        ]
         )
 
 @handler.default()
