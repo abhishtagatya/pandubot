@@ -46,8 +46,8 @@ def callback():
 def handle_followevent(event):
     """  """
     confirm_template = ConfirmTemplate(text='Untuk mengoptimalkan penggunaan aplikasi, apakah anda berkenan untuk registrasi secara otomatis?', actions=[
-        PostbackTemplateAction(label='Yes', text='Yes!', data='create_user=confirm'),
-        PostbackTemplateAction(label='Yes', text='Yes!', data='create_user=decline'),
+        PostbackTemplateAction(label='Yes', text='Yes', data='create_user=confirm'),
+        PostbackTemplateAction(label='No', text='No', data='create_user=decline'),
     ])
     line_bot_api.reply_message(
         event.reply_token,[
@@ -56,7 +56,7 @@ def handle_followevent(event):
             alt_text='User Confirmation', template=confirm_template)])
 
 @handler.add(UnfollowEvent)
-def handle_unfollow():
+def handle_unfollow(event):
     app.logger.info("Got Unfollow event")
 
     findUser = Users.query.filter_by(id=event.source.user_id).first()
@@ -76,7 +76,7 @@ def handle_postback(event):
         if command[1] == 'confirm':
             findUser = Users.query.filter_by(id=event.source.user_id).first()
 
-            if findUser != None:
+            if findUser == None:
                 try :
                     user_profile = line_bot_api.get_profile(event.source.user_id)
                     new_user = Users(
