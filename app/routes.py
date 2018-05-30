@@ -133,7 +133,7 @@ def handle_location_message(event):
 
     if findUser != None:
         try:
-            findUser.location = (event.message.address)[20]
+            findUser.location = event.message.address
             findUser.latitude = event.message.latitude
             findUser.longitude = event.message.longitude
 
@@ -158,8 +158,11 @@ def handle_message(event):
     findUser = Users.query.filter_by(id=event.source.user_id).first()
 
     line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=str(findUser.location)))
+        event.reply_token,[
+        TextSendMessage(text=str(findUser.location)),
+        TextSendMessage(text=str(findUser.latitude)),
+        TextSendMessage(text=str(findUser.longitude)),
+        )
 
 @handler.default()
 def default(event):
