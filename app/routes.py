@@ -96,10 +96,15 @@ def handle_postback(event):
                     db.session.commit()
 
                     line_bot_api.reply_message(
-                        event.reply_token,[
-                        TextSendMessage(text="Berhasil! Tinggal satu langkah lagi"),
-                        TextSendMessage(text="Untuk mengetahui lingkungan Anda, dapatkah Anda membagikan lokasi Anda?")
-                        ])
+                        event.reply_token, [
+                            TextSendMessage(
+                                text='Berhasil! Tinggal satu langkah lagi'
+                            ),
+                            TextSendMessage(
+                                text='Untuk mengetahui lingkungan Anda, dapatkah Anda membagikan lokasi Anda?'
+                            )
+                        ]
+                    )
 
                 except :
                     line_bot_api.reply_message(
