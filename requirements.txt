@@ -1,2 +1,4 @@
 flask
+sqlite3
+flask-sqlalchemy
 line-bot-sdk
