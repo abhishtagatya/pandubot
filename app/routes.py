@@ -87,24 +87,14 @@ def handle_postback(event):
                         latitude=-6.17511,
                         longitude=106.8650395
                     )
-                    # Logs
-                    line_bot_api.reply_message(
-                        event.reply_token,
-                        TextSendMessage(text="Membuat registrasi data untuk user {}".format(user_profile.display_name)))
-
-
+                    db.session.add(new_user)
+                    # Logging
+                    app.logger.info("Create User Request: " + user_profile.user_id)
                     line_bot_api.reply_message(
                         event.reply_token, [
-                            TextSendMessage(
-                                text='Berhasil! Tinggal satu langkah lagi'
-                            ),
-                            TextSendMessage(
-                                text='Untuk mengetahui lingkungan Anda, dapatkah Anda membagikan lokasi Anda?'
-                            )
-                        ]
-                    )
+                            TextSendMessage(text='Berhasil membuat registrasi untuk user {}'),
+                            TextSendMessage(text='Untuk mengetahui lingkungan Anda, dapatkah Anda membagikan lokasi Anda?')])
 
-                    db.session.add(new_user)
                     db.session.commit()
 
                 except :
