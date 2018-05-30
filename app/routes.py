@@ -92,7 +92,6 @@ def handle_postback(event):
                         event.reply_token,
                         TextSendMessage(text="Membuat registrasi data untuk user {}".format(user_profile.display_name)))
 
-                    db.session.add(new_user)
 
                     line_bot_api.reply_message(
                         event.reply_token, [
@@ -105,6 +104,7 @@ def handle_postback(event):
                         ]
                     )
 
+                    db.session.add(new_user)
                     db.session.commit()
 
                 except :
