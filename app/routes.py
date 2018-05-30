@@ -93,7 +93,6 @@ def handle_postback(event):
                         TextSendMessage(text="Membuat registrasi data untuk user {}".format(user_profile.display_name)))
 
                     db.session.add(new_user)
-                    db.session.commit()
 
                     line_bot_api.reply_message(
                         event.reply_token, [
@@ -105,6 +104,8 @@ def handle_postback(event):
                             )
                         ]
                     )
+
+                    db.session.commit()
 
                 except :
                     line_bot_api.reply_message(
@@ -142,14 +143,15 @@ def handle_location_message(event):
 
     if findUser != None:
         try:
-            findUser.location = event.message.address
+            findUser.location = (event.message.address)[20]
             findUser.latitude = event.message.latitude
             findUser.longitude = event.message.longitude
 
-            db.session.commit()
             line_bot_api.reply_message(
                 event.reply_token,
                 TextSendMessage(text="Lokasi Anda sudah diperbarui!"))
+
+            db.session.commit()
         except :
             line_bot_api.reply_message(
                 event.reply_token,[
