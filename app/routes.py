@@ -92,7 +92,7 @@ def handle_postback(event):
                     app.logger.info("Create User Request: " + user_profile.user_id)
                     line_bot_api.reply_message(
                         event.reply_token, [
-                            TextSendMessage(text='Berhasil membuat registrasi untuk user {}'),
+                            TextSendMessage(text='Berhasil membuat registrasi untuk user {}'.format(user_profile.display_name)),
                             TextSendMessage(text='Untuk mengetahui lingkungan Anda, dapatkah Anda membagikan lokasi Anda?')])
 
                     db.session.commit()
@@ -159,7 +159,7 @@ def handle_message(event):
 
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=findUser.location))
+        TextSendMessage(text=str(findUser.location)))
 
 @handler.default()
 def default(event):
