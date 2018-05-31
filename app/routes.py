@@ -132,11 +132,11 @@ def handle_postback(event):
                                 label='Cek Menu', uri=restaurant['restaurant']['menu_url']),
                             PostbackTemplateAction(label='Details', data='restaurant_details')
                             ])
-                            carousel_columns.append(carousel_column)
+                        carousel_columns.append(carousel_column)
 
-                            food_carousel = CarouselTemplate(columns=carousel_columns)
+                        food_carousel = CarouselTemplate(columns=carousel_columns)
 
-                            line_bot_api.reply_message(
+                        line_bot_api.reply_message(
                             event.reply_token,[
                                 TextSendMessage(text="Kami akan carikan tempat makan didekat posisi Anda..."),
                                 TemplateSendMessage(alt_text='Restaurant Carousel', template=food_carousel)
