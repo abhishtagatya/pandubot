@@ -130,17 +130,22 @@ def handle_postback(event):
 
                     counter = 0
                     for restaurant in restaurant_list:
+                        if (restaurant['restaurant']['featured_image'] == '' or restaurant['restaurant']['featured_image'] == None):
+                            thumbnail_image = url_for('static', filename='restaurant/default.png')
+                        else :
+                            thumbnail_image = restaurant['restaurant']['featured_image']
+
                         restaurant_column = CarouselColumn(
                             text=restaurant['restaurant']['location']['address'],
                             title=restaurant['restaurant']['name'],
-                            thumbnail_image_url=restaurant['restaurant']['featured_image'],
+                            thumbnail_image_url=thumbnail_image,
                             actions=[
                             URITemplateAction(
                                 label='Cek Menu', uri=restaurant['restaurant']['menu_url']),
                             PostbackTemplateAction(label='Informasi Lebih', data='restaurant_details')
                             ])
                         counter += 1
-                        if counter < 5:
+                        if counter < 6:
                             restaurant_carousel.append(restaurant_column)
                         else :
                             break
