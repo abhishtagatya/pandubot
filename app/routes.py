@@ -127,13 +127,18 @@ def handle_postback(event):
                     restaurant_carousel = []
                     restaurant_list = ZomatoAPI().geocode(latitude=findUser.latitude, longitude=findUser.longitude)
 
+                    counter = 0
                     for restaurant in restaurant_list:
                         restaurant_column = CarouselColumn(text=restaurant['restaurant']['location']['address'], title=restaurant['restaurant']['name'], actions=[
                             URITemplateAction(
                                 label='Cek Menu', uri=restaurant['restaurant']['menu_url']),
                             PostbackTemplateAction(label='Informasi Lebih', data='restaurant_details')
                             ])
-                        restaurant_carousel.append(restaurant_column)
+                        counter += 1
+                        if counter < 5:
+                            restaurant_carousel.append(restaurant_column)
+                        else :
+                            break
 
                     food_carousel = CarouselTemplate(columns=restaurant_carousel)
 
