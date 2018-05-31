@@ -13,14 +13,14 @@ class ZomatoAPI:
 
         self.headers = {
             "User-agent": "curl/7.43.0",
-            "Accept": "application/json",
+            "Content-type": "application/json",
             "X-Zomato-API-Key": self.key
         }
 
     def geocode(self, latitude, longitude):
         geocode_url = self.baseurl + 'geocode?lat={}&lon={}'.format(latitude, longitude)
-        response = requests.get(url=self.baseurl, headers=self.headers)
+        response = requests.get(url=self.baseurl, headers=self.headers).json()
         #response_jsonify = response.json()
 
-        #restaurant_list = response_jsonify['nearby_restaurants']
-        return response.json()
+        restaurant_list = response['nearby_restaurants']
+        return restaurant_list
