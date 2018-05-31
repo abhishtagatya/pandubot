@@ -44,10 +44,10 @@ def callback():
 
 @handler.add(FollowEvent)
 def handle_followevent(event):
-    """  """
+    """ When a FollowEvent is done, it will activate the SignUp Flow"""
     confirm_template = ConfirmTemplate(text='Untuk mengoptimalkan penggunaan aplikasi, apakah anda berkenan untuk registrasi secara otomatis?', actions=[
-        PostbackTemplateAction(label='Yes', text='Yes', data='create_user=confirm'),
-        PostbackTemplateAction(label='No', text='No', data='create_user=decline'),
+        PostbackTemplateAction(label='Iya', text='Iya, registrasikan akun saya', data='create_user=confirm'),
+        PostbackTemplateAction(label='Tidak', text='Tidak, jangan registrasikan akun saya', data='create_user=decline'),
     ])
     line_bot_api.reply_message(
         event.reply_token,[
@@ -104,23 +104,28 @@ def handle_postback(event):
 
             else :
                 line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text="Sepertinya Anda sudah registrasi, membatalkan proses registrasi"))
+                    event.reply_token,
+                    TextSendMessage(text="Sepertinya Anda sudah registrasi, membatalkan proses registrasi"))
         else :
             line_bot_api.reply_message(
                 event.reply_token,
-                TextSendMessage(text="Sepertinya ada masalah dalam PostbackEvent Anda"))
+                TextSendMessage(text="Tahap registrasi di tunda, silahkan registrasi untuk menggunakan aplikasi secara lengkap :)"))
 
+    elif command[0] == 'location_confirm':
+        if command[1] == 'True':
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text="Kami akan carikan tempat makan didekat posisi Anda..."))
+        else :
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text="Baiklah, silahkan perbarui lokasi Anda dengan mengirimkan lokasi Anda"))
 
-    elif event.postback.data == 'datetime_postback':
-        line_bot_api.reply_message(
-            event.reply_token, TextSendMessage(text=event.postback.params['datetime']))
-    elif event.postback.data == 'date_postback':
-        line_bot_api.reply_message(
-            event.reply_token, TextSendMessage(text=event.postback.params['date']))
     else :
         line_bot_api.reply_message(
-            event.reply_token, TextSendMessage(text=event.postback.data))
+            event.reply_token,
+            TextSendMessage(text="Sepertinya ada masalah dalam PostbackEvent Anda"))
+
 
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_location_message(event):
@@ -155,18 +160,29 @@ def handle_location_message(event):
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     """ Here's all the messages will be handled and processed by the program """
+    msg = event.message.text
     findUser = Users.query.filter_by(id=event.source.user_id).first()
 
-    line_bot_api.reply_message(
-        event.reply_token,[
-        TextSendMessage(text=str(findUser.location)),
-        TextSendMessage(text=str(findUser.latitude)),
-        TextSendMessage(text=str(findUser.longitude)),
-        ]
-        )
+    location_confirm = ConfirmTemplate(text='Apakah anda sedang berada di Jakarta?', actions=[
+        PostbackTemplateAction(label='Iya', text='Iya', data='location_confirm=True'),
+        PostbackTemplateAction(label='Tidak', text='Tidak', data='location_confirm=False'),
+    ])
+
+    if 'cari' in msg:
+        if 'makan' in msg:
+            line_bot_api.reply_message(
+                event.reply_token,[
+                LocationSendMessage(
+                    title='Posisi Terakhir Anda', address='Jakarta, Indonesia',
+                    latitude=-6.17511, longitude=106.8650395
+                ),
+                TemplateSendMessage(
+                    alt_text='Location Confirmation', template=location_confirm)
+                ])
 
 @handler.default()
 def default(event):
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text="Jenis obrolan tidak didukung oleh ..."))
+        TextSendMessage(
+        text="Jenis obrolan tidak didukung oleh ..."))
