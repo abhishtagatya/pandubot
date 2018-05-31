@@ -114,21 +114,19 @@ def handle_postback(event):
     elif command[0] == 'location_confirm':
         if command[1] == 'True':
             if command[2] == 'food':
-                # Zomato API Call
-                food_carousel = CarouselTemplate(columns=[
-                    CarouselColumn(text='hoge1', title='fuga1', actions=[
-                        URITemplateAction(
-                            label='Go to line.me', uri='https://line.me'),
-                        PostbackTemplateAction(label='ping', data='ping')
-                    ]),
-                    CarouselColumn(text='hoge2', title='fuga2', actions=[
-                        PostbackTemplateAction(
-                            label='ping with text', data='ping',
-                            text='ping'),
-                        MessageTemplateAction(label='Translate Rice', text='米')
-                    ]),
-                ])
 
+                data_columns = [{"name" : "Restaurant", "place" : "Jakarta"},{"name" : "Cafe", "place" : "Jakarta"}]
+                carousel_columns = []
+                # Zomato API Call
+                for column in data_columns:
+                    carousel_column = CarouselColumn(text=column['place'], title=column['name'], actions=[
+                        URITemplateAction(
+                            label='Go to Restaurant', uri='https://line.me'),
+                        PostbackTemplateAction(label='Details', data='ping')
+                    ])
+                    carousel_columns.append(carousel_column)
+
+                food_carousel = CarouselTemplate(columns=carousel_columns)
 
                 line_bot_api.reply_message(
                     event.reply_token,[
