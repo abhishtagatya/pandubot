@@ -18,7 +18,7 @@ class ZomatoAPI:
 
     def geocode(self, latitude, longitude):
         geocode_url = self.baseurl + 'geocode?lat={}&lon={}'.format(latitude, longitude)
-        response = requests.get(url=self.base_url, headers=self.headers)
+        response = requests.get(url=self.baseurl, headers=self.headers)
         response_jsonify = response.json()
 
         restaurant_list = response_jsonify['nearby_restaurants']
