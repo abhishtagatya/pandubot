@@ -99,7 +99,8 @@ def handle_postback(event):
                     line_bot_api.reply_message(
                         event.reply_token, [
                             TextSendMessage(text='Berhasil membuat registrasi untuk user {}'.format(user_profile.display_name)),
-                            TextSendMessage(text='Untuk mengetahui lingkungan Anda, dapatkah Anda membagikan lokasi Anda?')])
+                            TextSendMessage(text='Untuk mengetahui lingkungan Anda, dapatkah Anda membagikan lokasi Anda?')
+                        ])
 
                     db.session.commit()
 
@@ -129,7 +130,11 @@ def handle_postback(event):
 
                     counter = 0
                     for restaurant in restaurant_list:
-                        restaurant_column = CarouselColumn(text=restaurant['restaurant']['location']['address'], title=restaurant['restaurant']['name'], actions=[
+                        restaurant_column = CarouselColumn(
+                            text=restaurant['restaurant']['location']['address'],
+                            title=restaurant['restaurant']['name'],
+                            thumbnail_image_url=restaurant['restaurant']['featured_image']
+                            actions=[
                             URITemplateAction(
                                 label='Cek Menu', uri=restaurant['restaurant']['menu_url']),
                             PostbackTemplateAction(label='Informasi Lebih', data='restaurant_details')
