@@ -130,11 +130,15 @@ def handle_postback(event):
 
                     counter = 0
                     for restaurant in restaurant_list:
+                        if (restaurant['restaurant']['featured_image'] == '' or restaurant['restaurant']['featured_image'] == None):
+                            thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
+                        else :
+                            thumbnail_image = (restaurant['restaurant']['featured_image']).replace('webp', 'png')
 
                         restaurant_column = CarouselColumn(
                             text=restaurant['restaurant']['location']['address'],
                             title=restaurant['restaurant']['name'],
-                            thumbnail_image_url= url_for('static', filename='restaurant/default.png'),
+                            thumbnail_image_url=thumbnail_image,
                             actions=[
                             URITemplateAction(
                                 label='Cek Menu', uri=restaurant['restaurant']['menu_url']),
