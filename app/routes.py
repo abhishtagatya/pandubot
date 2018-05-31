@@ -124,23 +124,24 @@ def handle_postback(event):
                 if command[2] == 'food':
 
                     # Zomato API Call
+                    restaurant_carousel = []
                     restaurant_list = ZomatoAPI().geocode(latitude=findUser.latitude, longitude=findUser.longitude)
 
                     for restaurant in restaurant_list:
-                        carousel_column = CarouselColumn(text=restaurant['restaurant']['location']['address'], title=restaurant['restaurant']['name'], actions=[
+                        restaurant_column = CarouselColumn(text=restaurant['restaurant']['location']['address'], title=restaurant['restaurant']['name'], actions=[
                             URITemplateAction(
                                 label='Cek Menu', uri=restaurant['restaurant']['menu_url']),
-                            PostbackTemplateAction(label='Details', data='restaurant_details')
+                            PostbackTemplateAction(label='Informasi Lebih', data='restaurant_details')
                             ])
-                        carousel_columns.append(carousel_column)
+                        restaurant_carousel.append(restaurant_column)
 
-                        food_carousel = CarouselTemplate(columns=carousel_columns)
+                    food_carousel = CarouselTemplate(columns=restaurant_carousel)
 
-                        line_bot_api.reply_message(
-                            event.reply_token,[
-                                TextSendMessage(text="Kami akan carikan tempat makan didekat posisi Anda..."),
-                                TemplateSendMessage(alt_text='Restaurant Carousel', template=food_carousel)
-                            ])
+                    line_bot_api.reply_message(
+                        event.reply_token,[
+                            TextSendMessage(text="Kami akan carikan tempat makan didekat posisi Anda..."),
+                            TemplateSendMessage(alt_text='Restaurant Carousel', template=food_carousel)
+                        ])
                 else :
                     line_bot_api.reply_message(
                         event.reply_token,
