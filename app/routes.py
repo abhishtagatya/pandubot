@@ -163,22 +163,29 @@ def handle_message(event):
     msg = event.message.text
     findUser = Users.query.filter_by(id=event.source.user_id).first()
 
-    location_confirm = ConfirmTemplate(text='Apakah anda sedang berada di Jakarta?', actions=[
-        PostbackTemplateAction(label='Iya', text='Iya', data='location_confirm=True'),
-        PostbackTemplateAction(label='Tidak', text='Tidak', data='location_confirm=False'),
-    ])
+    if findUser != None:
+            if 'cari' in msg:
+                if 'makan' in msg:
+                    data_search = 'food'
+                else :
+                    data_search = 'else'
 
-    if 'cari' in msg:
-        if 'makan' in msg:
-            line_bot_api.reply_message(
-                event.reply_token,[
-                LocationSendMessage(
-                    title='Posisi Terakhir Anda', address='Jakarta, Indonesia',
-                    latitude=-6.17511, longitude=106.8650395
-                ),
-                TemplateSendMessage(
-                    alt_text='Location Confirmation', template=location_confirm)
-                ])
+                location_confirm = ConfirmTemplate(text='Apakah anda sedang berada di {0}?'.format(findUser.location),
+                actions=[
+                    PostbackTemplateAction(label='Iya', text='Iya', data='location_confirm=True={}'.format(data_search)),
+                    PostbackTemplateAction(label='Tidak', text='Tidak', data='location_confirm=False'),
+                    ])
+
+                line_bot_api.reply_message(
+                    event.reply_token,[
+                    LocationSendMessage(
+                        title='Posisi Terakhir Anda', address='{0}'.format(findUser.location),
+                        latitude=findUser.latitude, longitude=findUser.longitude
+                    ),
+                    TemplateSendMessage(
+                        alt_text='Location Confirmation', template=location_confirm)
+                    ])
+
 
 @handler.default()
 def default(event):
