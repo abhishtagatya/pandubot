@@ -131,7 +131,7 @@ def handle_postback(event):
                     counter = 0
                     for restaurant in restaurant_list:
                         if (restaurant['restaurant']['featured_image'] == '' or restaurant['restaurant']['featured_image'] == None):
-                            thumbnail_image = None
+                            thumbnail_image = os.path.join(current_app.root_path, 'static/restaurant', 'default.png')
                         else :
                             thumbnail_image = restaurant['restaurant']['featured_image']
 
