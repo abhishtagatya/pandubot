@@ -123,6 +123,7 @@ def handle_postback(event):
             if command[2] == 'food':
 
                 restaurant_list = ZomatoAPI().geocode(latitude=findUser.latitude, longitude=findUser.longitude)
+                app.logger.info(restaurant_list)
                 # Zomato API Call
                 for restaurant in restaurant_list:
                     carousel_column = CarouselColumn(text=restaurant['restaurant']['location']['address'], title=restaurant['restaurant']['name'], actions=[
