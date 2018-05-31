@@ -2,7 +2,7 @@ import os
 import sys
 import json
 import requests
-from flask import Flask, request, abort, url_for
+from flask import Flask, request, abort, url_for, current_app
 
 from app import app, db
 from app.models import Users
