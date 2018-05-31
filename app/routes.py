@@ -131,9 +131,9 @@ def handle_postback(event):
                     counter = 0
                     for restaurant in restaurant_list:
                         if (restaurant['restaurant']['featured_image'] == '' or restaurant['restaurant']['featured_image'] == None):
-                            thumbnail_image = 'https://b.zmtcdn.com/data/pictures/chains/8/7400098/2391859863f4831c660fcf957fff8742.jpg?output-format=webp'
+                            thumbnail_image = 'https://b.zmtcdn.com/data/pictures/chains/8/7400098/2391859863f4831c660fcf957fff8742.jpg?output-format=png'
                         else :
-                            thumbnail_image = restaurant['restaurant']['featured_image']
+                            thumbnail_image = (restaurant['restaurant']['featured_image']).replace('webp', 'png')
 
                         restaurant_column = CarouselColumn(
                             text=restaurant['restaurant']['location']['address'],
