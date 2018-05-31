@@ -14,7 +14,7 @@ class ZomatoAPI:
         self.headers = {
             "User-agent": "curl/7.43.0",
             "Content-type": "application/json",
-            "X-Zomato-API-Key": self.key
+            "X-Zomato-API-Key": "f2dac5371f99f1cd026726e22a175741"
         }
 
     def geocode(self, latitude, longitude):
