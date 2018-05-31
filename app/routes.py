@@ -1,8 +1,11 @@
+import requests
 from flask import Flask, request, abort, url_for
 
 from app import app, db
 from app.models import Users
-from app.config import LINE_CHANNEL_ACCESS_TOKEN, LINE_CHANNEL_SECRET_TOKEN
+from app.module.zomato import ZomatoAPI
+from instance.config import LINE_CHANNEL_ACCESS_TOKEN, LINE_CHANNEL_SECRET_TOKEN
+from instance.config import ZOMATO_API_KEY
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -113,16 +116,16 @@ def handle_postback(event):
 
     elif command[0] == 'location_confirm':
         if command[1] == 'True':
+            findUser = Users.query.filter_by(id=event.source.user_id).first()
             if command[2] == 'food':
 
-                data_columns = [{"name" : "Restaurant", "place" : "Jakarta"},{"name" : "Cafe", "place" : "Jakarta"}]
-                carousel_columns = []
+                restaurant_list = ZomatoAPI().geocode(latitude=findUser.latitude, longitude=findUser.longitude)
                 # Zomato API Call
-                for column in data_columns:
-                    carousel_column = CarouselColumn(text=column['place'], title=column['name'], actions=[
+                for restaurant in restaurant_list:
+                    carousel_column = CarouselColumn(text=restaurant['restaurant']['location']['address'], title=restaurant['restaurant']['name'], actions=[
                         URITemplateAction(
-                            label='Go to Restaurant', uri='https://line.me'),
-                        PostbackTemplateAction(label='Details', data='ping')
+                            label='Cek Menu', uri=restaurant['restaurant']['menu_url']),
+                        PostbackTemplateAction(label='Details', data='restaurant_details')
                     ])
                     carousel_columns.append(carousel_column)
 

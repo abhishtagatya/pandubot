@@ -1,4 +1,4 @@
-from app.config import LINE_CHANNEL_ACCESS_TOKEN, LINE_CHANNEL_SECRET_TOKEN
+from instance.config import LINE_CHANNEL_ACCESS_TOKEN, LINE_CHANNEL_SECRET_TOKEN
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
