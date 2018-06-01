@@ -150,7 +150,7 @@ def handle_postback(event):
 
 
 
-                            food_carousel = CarouselTemplate(columns=restaurant_carousel)
+                            food_carousel = CarouselTemplate(columns=restaurant_carousel[:5])
 
                             line_bot_api.reply_message(
                             event.reply_token,[
@@ -192,15 +192,15 @@ def handle_location_message(event):
 
     if findUser != None:
         try:
-            findUser.location = event.message.address
+            findUser.location = (event.message.address)[:100]
             findUser.latitude = event.message.latitude
             findUser.longitude = event.message.longitude
+            db.session.commit()
 
             line_bot_api.reply_message(
                 event.reply_token,
                 TextSendMessage(text="Lokasi Anda sudah diperbarui!"))
 
-            db.session.commit()
         except :
             line_bot_api.reply_message(
                 event.reply_token,[
