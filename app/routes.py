@@ -130,7 +130,7 @@ def handle_postback(event):
 
                     counter = 0
 
-                    if len(restaurant_list) < 2:
+                    if len(restaurant_list) > 2:
                         for restaurant in restaurant_list:
                             if (restaurant['restaurant']['featured_image'] == '' or restaurant['restaurant']['featured_image'] == None):
                                 thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
