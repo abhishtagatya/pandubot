@@ -136,11 +136,10 @@ def handle_postback(event):
                         for restaurant in restaurant_list:
                             restaurant_column = CarouselColumn(
                                 title=str(restaurant['restaurant']['name']),
-                                text=str(restaurant['restaurant']['location']['address']),
+                                text="Location",
                                 thumbnail_image_url=thumbnail_image,
                                 actions=[
-                                URITemplateAction(
-                                    label='Cek Menu', uri=restaurant['restaurant']['url']),
+                                URITemplateAction(label='Cek Menu', uri=restaurant['restaurant']['url']),
                                 PostbackTemplateAction(label='Informasi Lebih', data='restaurant_details')
                                     ])
 
