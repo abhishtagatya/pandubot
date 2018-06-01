@@ -125,16 +125,19 @@ def handle_postback(event):
                 if command[2] == 'food':
 
                     # Zomato API Call
-                    restaurant_carousel = []
                     restaurant_list = ZomatoAPI().geocode(latitude=findUser.latitude, longitude=findUser.longitude)
 
-                    if len(restaurant_list) > 2:
-                        counter = 0
+                    if (len(restaurant_list) > 2 and restaurant_list != None):
+                        restaurant_carousel = []
                         for restaurant in restaurant_list:
                             if (restaurant['restaurant']['featured_image'] == '' or restaurant['restaurant']['featured_image'] == None):
                                 thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
                             else :
-                                thumbnail_image = (restaurant['restaurant']['featured_image']).replace('webp', 'png')
+                                if ('.png' in restaurant['restaurant']['featured_image'] and '.jpeg' in restaurant['restaurant']['featured_image']):
+                                    thumbnail_image = (restaurant['restaurant']['featured_image'])
+                                else :
+                                    thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
+
 
                             restaurant_column = CarouselColumn(
                                 title=restaurant['restaurant']['name'],
@@ -146,13 +149,9 @@ def handle_postback(event):
                                     PostbackTemplateAction(label='Informasi Lebih', data='restaurant_details')
                                     ])
 
-                            if counter > 6:
-                                restaurant_carousel.append(restaurant_column)
-                            else :
-                                break
+                            restaurant_carousel.append(restaurant_column)
 
-                        food_carousel = CarouselTemplate(columns=restaurant_carousel)
-
+                        food_carousel = CarouselTemplate(columns=restaurant_carousel[:5])
                         line_bot_api.reply_message(
                             event.reply_token,[
                             TextSendMessage(text="Kami akan carikan tempat makan didekat posisi Anda..."),
