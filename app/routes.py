@@ -141,7 +141,8 @@ def handle_postback(event):
                                     label='Cek Menu', uri=restaurant['restaurant']['menu_url']),
                                     PostbackTemplateAction(label='Informasi Lebih', data='restaurant_details')
                                     ])
-
+                                    
+                            counter += 1
                             if counter < 6:
                                 restaurant_carousel.append(restaurant_column)
                             else :
