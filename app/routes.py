@@ -123,7 +123,6 @@ def handle_postback(event):
             findUser = Users.query.filter_by(id=event.source.user_id).first()
             if findUser != None:
                 if command[2] == 'food':
-
                     # Zomato API Call
                     # To Do:
                     #   - Clean Up code
@@ -136,13 +135,13 @@ def handle_postback(event):
                         thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
                         for restaurant in restaurant_list:
                             restaurant_column = CarouselColumn(
-                                title=restaurant['restaurant']['name'],
-                                text=restaurant['restaurant']['location']['address'],
+                                title="Restaurant Name",
+                                text="Restaurant Description",
                                 thumbnail_image_url=thumbnail_image,
                                 actions=[
                                 URITemplateAction(
                                     label='Cek Menu', uri=restaurant['restaurant']['url']),
-                                    PostbackTemplateAction(label='Informasi Lebih', data='restaurant_details')
+                                PostbackTemplateAction(label='Informasi Lebih', data='restaurant_details')
                                     ])
 
                             counter += 1
@@ -151,17 +150,12 @@ def handle_postback(event):
                             else :
                                 break
 
-                        try :
-                            food_carousel = CarouselTemplate(columns=restaurant_carousel)
-                            line_bot_api.reply_message(
-                                event.reply_token,[
-                                TextSendMessage(text="Kami akan carikan tempat makan didekat posisi Anda..."),
-                                TemplateSendMessage(alt_text='Restaurant Carousel', template=food_carousel)
-                                ])
-                        except :
-                            line_bot_api.reply_message(
-                                event.reply_token,
-                                TextSendMessage(text="Maaf...tapi saat ini kita tidak menemukan restaurant di dekat Anda"))
+                        food_carousel = CarouselTemplate(columns=restaurant_carousel)
+                        line_bot_api.reply_message(
+                            event.reply_token,[
+                            TextSendMessage(text="Kami akan carikan tempat makan didekat posisi Anda..."),
+                            TemplateSendMessage(alt_text='Restaurant Carousel', template=food_carousel)
+                            ])
 
                     else :
                         line_bot_api.reply_message(
