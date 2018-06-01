@@ -129,34 +129,39 @@ def handle_postback(event):
                     restaurant_list = ZomatoAPI().geocode(latitude=findUser.latitude, longitude=findUser.longitude)
 
                     counter = 0
-                    for restaurant in restaurant_list:
-                        if (restaurant['restaurant']['featured_image'] == '' or restaurant['restaurant']['featured_image'] == None):
-                            thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
-                        else :
-                            thumbnail_image = (restaurant['restaurant']['featured_image']).replace('webp', 'png')
 
-                        restaurant_column = CarouselColumn(
-                            text=restaurant['restaurant']['location']['address'],
-                            title=restaurant['restaurant']['name'],
-                            thumbnail_image_url=thumbnail_image,
-                            actions=[
-                            URITemplateAction(
-                                label='Cek Menu', uri=restaurant['restaurant']['menu_url']),
-                            PostbackTemplateAction(label='Informasi Lebih', data='restaurant_details')
-                            ])
-                        counter += 1
-                        if counter < 6:
+                    if len(restaurant_list) < 2:
+                        for restaurant in restaurant_list:
+                            if (restaurant['restaurant']['featured_image'] == '' or restaurant['restaurant']['featured_image'] == None):
+                                thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
+                            else :
+                                thumbnail_image = (restaurant['restaurant']['featured_image']).replace('webp', 'png')
+
+                            restaurant_column = CarouselColumn(
+                                text=restaurant['restaurant']['location']['address'],
+                                title=restaurant['restaurant']['name'],
+                                thumbnail_image_url=thumbnail_image,
+                                actions=[
+                                URITemplateAction(
+                                    label='Cek Menu', uri=restaurant['restaurant']['menu_url']),
+                                    PostbackTemplateAction(label='Informasi Lebih', data='restaurant_details')
+                                    ])
                             restaurant_carousel.append(restaurant_column)
-                        else :
-                            break
 
-                    food_carousel = CarouselTemplate(columns=restaurant_carousel)
 
-                    line_bot_api.reply_message(
-                        event.reply_token,[
-                            TextSendMessage(text="Kami akan carikan tempat makan didekat posisi Anda..."),
-                            TemplateSendMessage(alt_text='Restaurant Carousel', template=food_carousel)
-                        ])
+
+                            food_carousel = CarouselTemplate(columns=restaurant_carousel)
+
+                            line_bot_api.reply_message(
+                            event.reply_token,[
+                                TextSendMessage(text="Kami akan carikan tempat makan didekat posisi Anda..."),
+                                TemplateSendMessage(alt_text='Restaurant Carousel', template=food_carousel)
+                                ])
+
+                    else :
+                        line_bot_api.reply_message(
+                            event.reply_token,
+                            TextSendMessage(text="Maaf...tapi saat ini kita tidak menemukan restaurant di dekat Anda"))
                 else :
                     line_bot_api.reply_message(
                         event.reply_token,
