@@ -128,9 +128,8 @@ def handle_postback(event):
                     restaurant_carousel = []
                     restaurant_list = ZomatoAPI().geocode(latitude=findUser.latitude, longitude=findUser.longitude)
 
-                    counter = 0
-
                     if len(restaurant_list) > 2:
+                        counter = 0
                         for restaurant in restaurant_list:
                             if (restaurant['restaurant']['featured_image'] == '' or restaurant['restaurant']['featured_image'] == None):
                                 thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
@@ -147,10 +146,10 @@ def handle_postback(event):
                                     PostbackTemplateAction(label='Informasi Lebih', data='restaurant_details')
                                     ])
 
-
-                            restaurant_carousel.append(restaurant_column)
-
-
+                            if counter > 6:
+                                restaurant_carousel.append(restaurant_column)
+                            else :
+                                break
 
                         food_carousel = CarouselTemplate(columns=restaurant_carousel)
 
