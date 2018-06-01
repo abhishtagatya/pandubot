@@ -129,16 +129,8 @@ def handle_postback(event):
 
                     if (len(restaurant_list) > 2 and restaurant_list != None):
                         restaurant_carousel = []
+                        thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
                         for restaurant in restaurant_list:
-                            if (restaurant['restaurant']['featured_image'] == '' or restaurant['restaurant']['featured_image'] == None):
-                                thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
-                            else :
-                                if ('.png' in restaurant['restaurant']['featured_image'] and '.jpeg' in restaurant['restaurant']['featured_image']):
-                                    thumbnail_image = (restaurant['restaurant']['featured_image'])
-                                else :
-                                    thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
-
-
                             restaurant_column = CarouselColumn(
                                 title=restaurant['restaurant']['name'],
                                 text=restaurant['restaurant']['location']['address'],
