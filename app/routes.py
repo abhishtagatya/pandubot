@@ -135,8 +135,8 @@ def handle_postback(event):
                         thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
                         for restaurant in restaurant_list:
                             restaurant_column = CarouselColumn(
-                                title="Restaurant Name",
-                                text="Restaurant Description",
+                                title=str(restaurant['restaurant']['name']),
+                                text=str(restaurant['restaurant']['location']['address']),
                                 thumbnail_image_url=thumbnail_image,
                                 actions=[
                                 URITemplateAction(
