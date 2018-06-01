@@ -138,25 +138,27 @@ def handle_postback(event):
                                 thumbnail_image = (restaurant['restaurant']['featured_image']).replace('webp', 'png')
 
                             restaurant_column = CarouselColumn(
-                                text=restaurant['restaurant']['location']['address'],
                                 title=restaurant['restaurant']['name'],
+                                text=restaurant['restaurant']['location']['address'],
                                 thumbnail_image_url=thumbnail_image,
                                 actions=[
                                 URITemplateAction(
                                     label='Cek Menu', uri=restaurant['restaurant']['menu_url']),
                                     PostbackTemplateAction(label='Informasi Lebih', data='restaurant_details')
                                     ])
+
+
                             restaurant_carousel.append(restaurant_column)
 
 
 
-                            food_carousel = CarouselTemplate(columns=restaurant_carousel)
+                        food_carousel = CarouselTemplate(columns=restaurant_carousel)
 
-                            line_bot_api.reply_message(
+                        line_bot_api.reply_message(
                             event.reply_token,[
-                                TextSendMessage(text="Kami akan carikan tempat makan didekat posisi Anda..."),
-                                TemplateSendMessage(alt_text='Restaurant Carousel', template=food_carousel)
-                                ])
+                            TextSendMessage(text="Kami akan carikan tempat makan didekat posisi Anda..."),
+                            TemplateSendMessage(alt_text='Restaurant Carousel', template=food_carousel)
+                            ])
 
                     else :
                         line_bot_api.reply_message(
