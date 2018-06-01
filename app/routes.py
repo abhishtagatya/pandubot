@@ -128,7 +128,6 @@ def handle_postback(event):
                     restaurant_list = ZomatoAPI().geocode(latitude=findUser.latitude, longitude=findUser.longitude)
 
                     if (len(restaurant_list) > 2 and restaurant_list != None):
-                        counter = 0
                         restaurant_carousel = []
                         thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
                         for restaurant in restaurant_list:
@@ -138,17 +137,11 @@ def handle_postback(event):
                                 thumbnail_image_url=thumbnail_image,
                                 actions=[
                                 URITemplateAction(
-                                    label='Cek Menu', uri=restaurant['restaurant']['menu_url']),
+                                    label='Cek Menu', uri=restaurant['restaurant']['url']),
                                     PostbackTemplateAction(label='Informasi Lebih', data='restaurant_details')
                                     ])
-                                    
-                            counter += 1
-                            if counter < 6:
-                                restaurant_carousel.append(restaurant_column)
-                            else :
-                                break
 
-                        food_carousel = CarouselTemplate(columns=restaurant_carousel)
+                        food_carousel = CarouselTemplate(columns=restaurant_carousel[:5])
                         line_bot_api.reply_message(
                             event.reply_token,[
                             TextSendMessage(text="Kami akan carikan tempat makan didekat posisi Anda..."),
