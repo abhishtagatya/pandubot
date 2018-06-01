@@ -1,4 +1,5 @@
 requests
 flask
+psycopg2
 flask-sqlalchemy
 line-bot-sdk
