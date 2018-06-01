@@ -150,7 +150,7 @@ def handle_postback(event):
 
 
 
-                            food_carousel = CarouselTemplate(columns=restaurant_carousel[:5])
+                            food_carousel = CarouselTemplate(columns=restaurant_carousel)
 
                             line_bot_api.reply_message(
                             event.reply_token,[
