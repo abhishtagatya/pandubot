@@ -125,6 +125,9 @@ def handle_postback(event):
                 if command[2] == 'food':
 
                     # Zomato API Call
+                    # To Do:
+                    #   - Clean Up code
+                    #   - Fix Internal Server Error on line 134 - 164
                     restaurant_list = ZomatoAPI().geocode(latitude=findUser.latitude, longitude=findUser.longitude)
 
                     if (len(restaurant_list) > 2 and restaurant_list != None):
@@ -148,12 +151,17 @@ def handle_postback(event):
                             else :
                                 break
 
-                        food_carousel = CarouselTemplate(columns=restaurant_carousel)
-                        line_bot_api.reply_message(
-                            event.reply_token,[
-                            TextSendMessage(text="Kami akan carikan tempat makan didekat posisi Anda..."),
-                            TemplateSendMessage(alt_text='Restaurant Carousel', template=food_carousel)
-                            ])
+                        try :
+                            food_carousel = CarouselTemplate(columns=restaurant_carousel)
+                            line_bot_api.reply_message(
+                                event.reply_token,[
+                                TextSendMessage(text="Kami akan carikan tempat makan didekat posisi Anda..."),
+                                TemplateSendMessage(alt_text='Restaurant Carousel', template=food_carousel)
+                                ])
+                        except :
+                            line_bot_api.reply_message(
+                                event.reply_token,
+                                TextSendMessage(text="Maaf...tapi saat ini kita tidak menemukan restaurant di dekat Anda"))
 
                     else :
                         line_bot_api.reply_message(
