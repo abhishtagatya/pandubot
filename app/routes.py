@@ -218,7 +218,7 @@ def handle_postback(event):
                             line_bot_api.reply_message(
                                 event.reply_token,[
                                 TextSendMessage(text="Kami akan carikan {query} didekat posisi Anda...".format(query=query)),
-                                TemplateSendMessage(alt_text='Places Carousel', template=places_carousel)
+                                TemplateSendMessage(alt_text='Places Carousel', template=search_carousel)
                                 ])
 
                         else :
