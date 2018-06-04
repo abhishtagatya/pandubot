@@ -267,6 +267,10 @@ def handle_location_message(event):
                 ImageCarouselColumn(image_url=thumbnail_image,
                                     action=MessageTemplateAction(label='Cari Makan', text='Carikan tempat makan dekat lokasi saya')),
                 ImageCarouselColumn(image_url=thumbnail_image,
+                                    action=MessageTemplateAction(label='Cari Bioskop', text='Carikan bioskop dekat lokasi saya')),
+                ImageCarouselColumn(image_url=thumbnail_image,
+                                    action=MessageTemplateAction(label='Cari Minimarket', text='Carikan minimartket dekat lokasi saya')),
+                ImageCarouselColumn(image_url=thumbnail_image,
                                     action=MessageTemplateAction(label='Cek Cuaca', text='Cek cuaca hari ini di lokasi saya'))
             ])
 
@@ -289,7 +293,7 @@ def handle_location_message(event):
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     """ Here's all the messages will be handled and processed by the program """
-    msg = event.message.text
+    msg = (event.message.text).lower()
     findUser = Users.query.filter_by(id=event.source.user_id).first()
 
     if (findUser != None):
