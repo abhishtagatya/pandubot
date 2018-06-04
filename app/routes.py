@@ -273,7 +273,7 @@ def handle_location_message(event):
             line_bot_api.reply_message(
                 event.reply_token,[
                 TextSendMessage(text="Lokasi Anda sudah diperbarui!"),
-                TemplateSendMessage(alt_text='Pilihan Aplikasi', template=image_carousel_template)
+                TemplateSendMessage(alt_text='Pilihan Aplikasi', template=image_option_template)
                 ])
 
         except :
