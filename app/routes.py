@@ -9,8 +9,7 @@ from app.models import Users
 from app.module.zomato import ZomatoAPI
 from app.module.geomaps import GoogleMapsAPI
 from instance.config import LINE_CHANNEL_ACCESS_TOKEN, LINE_CHANNEL_SECRET_TOKEN
-from instance.config import ZOMATO_API_KEY
-from instance.config import GOOGLE_MAPS_API_KEY
+
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -73,11 +72,11 @@ def handle_postback(event):
 
     command = (event.postback.data).split('=')
 
-    if (command[0] == 'create_user'):
-        if (command[1] == 'confirm'):
-            findUser = Users.query.filter_by(id=event.source.user_id).first()
+    findUser = Users.query.filter_by(id=event.source.user_id).first()
+    if (findUser == None):
+        if (command[0] == 'create_user'):
+            if (command[1] == 'confirm'):
 
-            if (findUser == None):
                 try :
                     user_profile = line_bot_api.get_profile(event.source.user_id)
                     new_user = Users(
@@ -106,143 +105,123 @@ def handle_postback(event):
             else :
                 line_bot_api.reply_message(
                     event.reply_token,
-                    TextSendMessage(text="Sepertinya Anda sudah registrasi, membatalkan proses registrasi"))
-        else :
-            line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text="Tahap registrasi di tunda, silahkan registrasi untuk menggunakan aplikasi secara lengkap :)"))
+                    TextSendMessage(text="Tahap registrasi di tunda, silahkan registrasi untuk menggunakan aplikasi secara lengkap :)"))
 
-    elif (command[0] == 'search'):
-        if (command[1] == 'location_confirm'):
-            if (command[2] == 'True'):
-                findUser = Users.query.filter_by(id=event.source.user_id).first()
-                if (findUser != None):
-                    if (command[3] == 'food'):
-                        # Zomato API Call
-                        # To Do:
-                        #   - Clean Up code
-                        #   - Fix Internal Server Error on line 134 - 164
-                        restaurant_list = ZomatoAPI().geocode(latitude=findUser.latitude, longitude=findUser.longitude)
+    else :
+        if (command[0] == 'search'):
+            if (command[3] == 'food'):
+                # Zomato API Call
+                restaurant_list = ZomatoAPI().geocode(latitude=findUser.latitude, longitude=findUser.longitude)
 
-                        # To calculate travel_option
-                        origin = ''
+                # To calculate travel_option
+                origin = '{lat},{lng}'.format(findUser.latitude, findUser.longitude)
+                if (len(restaurant_list) > 2 and restaurant_list != None):
+                    counter = 0
 
-                        if (len(restaurant_list) > 2 and restaurant_list != None):
-                            counter = 0
+                    # The list of all the carousel columns
+                    restaurant_carousel = []
 
-                            # The list of all the carousel columns
-                            restaurant_carousel = []
+                    # Temporary thumbnail_image
+                    thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
+                    for restaurant in restaurant_list:
+                        destination = '{lat},{lng}'.format(restaurant['restaurant']['location']['latitude'], restaurant['restaurant']['location']['longitude'])
 
-                            # Temporary thumbnail_image
-                            thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
-                            for restaurant in restaurant_list:
-                                destination = ''
+                        # Carousel Column
+                        restaurant_column = CarouselColumn(
+                            title=str(restaurant['restaurant']['name']),
+                            text=str(restaurant['restaurant']['location']['address'])[:60],
+                            thumbnail_image_url=thumbnail_image,
+                            actions=[
+                            URITemplateAction(
+                                label='Cek Restoran',
+                                uri=restaurant['restaurant']['url']),
+                            PostbackTemplateAction(
+                                label='Pilihan Perjalanan',
+                                data='travel_option={origin}={destination}'.format(origin=origin, destination=destination))
+                        ])
 
-                                # Carousel Column
-                                restaurant_column = CarouselColumn(
-                                    title=str(restaurant['restaurant']['name']),
-                                    text=str(restaurant['restaurant']['location']['address'])[:60],
-                                    thumbnail_image_url=thumbnail_image,
-                                    actions=[
-                                    URITemplateAction(
-                                        label='Cek Restoran',
-                                        uri=restaurant['restaurant']['url']),
-                                    PostbackTemplateAction(
-                                        label='Pilihan Perjalanan',
-                                        data='travel_option={origin}={destination}'.format(origin=origin, destination=destination))
-                                ])
-
-                                # Force Stop by Counter
-                                counter += 1
-                                if counter < 6:
-                                    restaurant_carousel.append(restaurant_column)
-                                else :
-                                    break
-
-                            food_carousel = CarouselTemplate(columns=restaurant_carousel)
-                            line_bot_api.reply_message(
-                                event.reply_token,[
-                                TextSendMessage(text="Kami akan carikan tempat makan didekat posisi Anda..."),
-                                TemplateSendMessage(alt_text='Restaurant Carousel', template=food_carousel)
-                                ])
-
+                        # Force Stop by Counter
+                        counter += 1
+                        if counter < 6:
+                            restaurant_carousel.append(restaurant_column)
                         else :
-                            line_bot_api.reply_message(
-                                event.reply_token,
-                                TextSendMessage(text="Maaf...tapi saat ini kita tidak menemukan restaurant di dekat Anda"))
+                            break
 
-                    else :
-
-                        query = command[3]
-                        # Google Maps API Call
-                        # To Do:
-                        #   - Clean Up code
-                        search_places = GoogleMapsAPI().places(query=query, location=(findUser.latitude, findUser.longitude))
-                        places_list = search_places['results']
-
-                        # To calculate travel_option
-                        origin = '{lat},{lng}'.format(lat=findUser.latitude, lng=findUser.longitude)
-
-                        if (len(places_list) > 2 and places_list != None):
-                            counter = 0
-
-                            # The list of all the carousel columns
-                            places_carousel = []
-
-                            # Temporary thumbnail_image
-                            thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
-                            for places in places_list:
-                                destination = '{lat},{lng}'.format(lat=places['geometry']['location']['lat'], lng=places['geometry']['location']['lng'])
-
-                                # Carousel Column
-                                places_column = CarouselColumn(
-                                    title=str(places['name']),
-                                    text=str(places['formatted_address'])[:60],
-                                    thumbnail_image_url=thumbnail_image,
-                                    actions=[
-                                    URITemplateAction(
-                                        label='Cek Peta',
-                                        uri='https://www.google.com/maps/search/?api=1&query={destination}'.format(destination=destination)),
-                                    PostbackTemplateAction(
-                                        label='Pilihan Perjalanan',
-                                        data='travel_option={origin}={destination}'.format(origin=origin, destination=destination))
-                                ])
-
-                                # Force Stop by Counter
-                                counter += 1
-                                if counter < 6:
-                                    places_carousel.append(places_column)
-                                else :
-                                    break
-
-                            search_carousel = CarouselTemplate(columns=places_carousel)
-                            line_bot_api.reply_message(
-                                event.reply_token,[
-                                TextSendMessage(text="Kami akan carikan {query} didekat posisi Anda...".format(query=query)),
-                                TemplateSendMessage(alt_text='Places Carousel', template=search_carousel)
-                                ])
-
-                        else :
-                            line_bot_api.reply_message(
-                                event.reply_token,
-                                TextSendMessage(text="Maaf...tapi saat ini kita tidak menemukan {query} di dekat Anda".format(query=query)))
+                    food_carousel = CarouselTemplate(columns=restaurant_carousel)
+                    line_bot_api.reply_message(
+                        event.reply_token,[
+                        TextSendMessage(text="Kami akan carikan tempat makan didekat posisi Anda..."),
+                        TemplateSendMessage(alt_text='Restaurant Carousel', template=food_carousel)
+                        ])
 
                 else :
                     line_bot_api.reply_message(
                         event.reply_token,
-                        TextSendMessage(text="Sepertinya Anda belum registrasi, silahkan registrasi terlebih dahulu"))
+                        TextSendMessage(text="Maaf...tapi saat ini kita tidak menemukan restaurant di dekat Anda"))
+
             else :
-                line_bot_api.reply_message(
-                    event.reply_token,
-                    TextSendMessage(text="Baiklah, silahkan perbarui lokasi Anda dengan mengirimkan lokasi Anda"))
+                query = command[3]
+                search_places = GoogleMapsAPI().places(query=query, location=(findUser.latitude, findUser.longitude))
+                places_list = search_places['results']
 
-    elif (command[0] == 'travel_option'):
-        pass
+                # To calculate travel_option
+                origin = '{lat},{lng}'.format(lat=findUser.latitude, lng=findUser.longitude)
+                if (len(places_list) > 2 and places_list != None):
+                    counter = 0
 
-    else :
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text="Sepertinya ada masalah dalam PostbackEvent Anda"))
+                    # The list of all the carousel columns
+                    places_carousel = []
+                    # Temporary thumbnail_image
+                    thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
+                    for places in places_list:
+                        destination = '{lat},{lng}'.format(lat=places['geometry']['location']['lat'], lng=places['geometry']['location']['lng'])
+
+                        # Carousel Column
+                        places_column = CarouselColumn(
+                            title=str(places['name']),
+                            text=str(places['formatted_address'])[:60],
+                            thumbnail_image_url=thumbnail_image,
+                            actions=[
+                            URITemplateAction(
+                                label='Cek Peta',
+                                uri='https://www.google.com/maps/search/?api=1&query={destination}'.format(destination=destination)),
+                            PostbackTemplateAction(
+                                label='Pilihan Perjalanan',
+                                data='travel_option={origin}={destination}'.format(origin=origin, destination=destination))
+                        ])
+
+                        # Force Stop by Counter
+                        counter += 1
+                        if counter < 6:
+                            places_carousel.append(places_column)
+                        else :
+                            break
+
+                    search_carousel = CarouselTemplate(columns=places_carousel)
+                    line_bot_api.reply_message(
+                        event.reply_token,[
+                        TextSendMessage(text="Kami akan carikan {query} didekat posisi Anda...".format(query=query)),
+                        TemplateSendMessage(alt_text='Places Carousel', template=search_carousel)
+                        ])
+
+                else :
+                    line_bot_api.reply_message(
+                        event.reply_token,
+                        TextSendMessage(text="Maaf...tapi saat ini kita tidak menemukan {query} di dekat Anda".format(query=query)))
+
+
+        elif (command[0] == 'travel_option'):
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text="Baiklah, silahkan perbarui lokasi Anda dengan mengirimkan lokasi"))
+
+        elif (command[0] == 'location_update'):
+            pass
+
+        else :
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text="Sepertinya ada masalah dalam PostbackEvent Anda"))
 
 
 @handler.add(MessageEvent, message=LocationMessage)
@@ -313,8 +292,8 @@ def handle_message(event):
 
             location_confirm = ConfirmTemplate(text='Apakah anda sedang berada di {0}?'.format(findUser.location),
             actions=[
-                PostbackTemplateAction(label='Iya', text='Iya', data='search=location_confirm=True={search}'.format(search=data_search)),
-                PostbackTemplateAction(label='Tidak', text='Tidak', data='search=location_confirm=False'),
+                PostbackTemplateAction(label='Iya', text='Iya', data='search_location={search}'.format(search=data_search)),
+                PostbackTemplateAction(label='Tidak', text='Tidak', data='location_update')
                 ])
 
             line_bot_api.reply_message(
@@ -331,6 +310,11 @@ def handle_message(event):
             pass
         else :
             pass
+
+    else :
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text="Sepertinya Anda belum registrasi, silahkan registrasi terlebih dahulu"))
 
 
 @handler.default()
