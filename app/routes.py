@@ -108,8 +108,8 @@ def handle_postback(event):
                     TextSendMessage(text="Tahap registrasi di tunda, silahkan registrasi untuk menggunakan aplikasi secara lengkap :)"))
 
     else :
-        if (command[0] == 'search'):
-            if (command[3] == 'food'):
+        if (command[0] == 'search_location'):
+            if (command[1] == 'food'):
                 # Zomato API Call
                 restaurant_list = ZomatoAPI().geocode(latitude=findUser.latitude, longitude=findUser.longitude)
 
@@ -160,7 +160,7 @@ def handle_postback(event):
                         TextSendMessage(text="Maaf...tapi saat ini kita tidak menemukan restaurant di dekat Anda"))
 
             else :
-                query = command[3]
+                query = command[1]
                 search_places = GoogleMapsAPI().places(query=query, location=(findUser.latitude, findUser.longitude))
                 places_list = search_places['results']
 
@@ -211,12 +211,12 @@ def handle_postback(event):
 
 
         elif (command[0] == 'travel_option'):
+            pass
+
+        elif (command[0] == 'location_update'):
             line_bot_api.reply_message(
                 event.reply_token,
                 TextSendMessage(text="Baiklah, silahkan perbarui lokasi Anda dengan mengirimkan lokasi"))
-
-        elif (command[0] == 'location_update'):
-            pass
 
         else :
             line_bot_api.reply_message(
