@@ -261,9 +261,20 @@ def handle_location_message(event):
             findUser.longitude = event.message.longitude
             db.session.commit()
 
+            thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
+
+            image_option_template = ImageCarouselTemplate(columns=[
+                ImageCarouselColumn(image_url=thumbnail_image,
+                                    action=MessageTemplateAction(label='Cari Makan', text='Carikan tempat makan dekat lokasi saya')),
+                ImageCarouselColumn(image_url=thumbnail_image,
+                                    action=MessageTemplateAction(label='Cek Cuaca', data='Cek cuaca hari ini di lokasi saya'))
+            ])
+
             line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text="Lokasi Anda sudah diperbarui!"))
+                event.reply_token,[
+                TextSendMessage(text="Lokasi Anda sudah diperbarui!"),
+                TemplateSendMessage(alt_text='Pilihan Aplikasi', template=image_carousel_template)
+                ])
 
         except :
             line_bot_api.reply_message(
@@ -291,8 +302,6 @@ def handle_message(event):
                 data_search = 'minimarket'
             elif ('fotokopi' in msg or 'print' in msg):
                 data_search = 'print'
-            elif ('toilet' in msg):
-                data_search = 'toilet'
             elif ('busway' in msg or 'halte' in msg):
                 data_search = 'bus station'
             else :
@@ -313,6 +322,11 @@ def handle_message(event):
                 TemplateSendMessage(
                     alt_text='Location Confirmation', template=location_confirm)
                 ])
+
+        elif ('cuaca' in msg):
+            pass
+        else :
+            pass
 
 
 @handler.default()
