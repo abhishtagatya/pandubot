@@ -19,7 +19,3 @@ class GoogleMapsAPI:
     def places(self, query, location, radius=10, open_now=True):
         places = self.gmaps.places(query=query, location=location, radius=radius, open_now=open_now)
         return places
-
-    def place(self, id):
-        place = self.gmaps.place(id)
-        return place
