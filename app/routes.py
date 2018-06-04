@@ -265,13 +265,13 @@ def handle_location_message(event):
 
             image_option_template = ImageCarouselTemplate(columns=[
                 ImageCarouselColumn(image_url=thumbnail_image,
-                                    action=MessageTemplateAction(label='Cari Makan', text='Carikan tempat makan dekat lokasi saya')),
+                                    action=MessageTemplateAction(label='Makan', text='Carikan tempat makan dekat lokasi saya')),
                 ImageCarouselColumn(image_url=thumbnail_image,
-                                    action=MessageTemplateAction(label='Cari Bioskop', text='Carikan bioskop dekat lokasi saya')),
+                                    action=MessageTemplateAction(label='Bioskop', text='Carikan bioskop dekat lokasi saya')),
                 ImageCarouselColumn(image_url=thumbnail_image,
-                                    action=MessageTemplateAction(label='Cari Minimarket', text='Carikan minimartket dekat lokasi saya')),
+                                    action=MessageTemplateAction(label='Minimarket', text='Carikan minimartket dekat lokasi saya')),
                 ImageCarouselColumn(image_url=thumbnail_image,
-                                    action=MessageTemplateAction(label='Cek Cuaca', text='Cek cuaca hari ini di lokasi saya'))
+                                    action=MessageTemplateAction(label='Cuaca', text='Cek cuaca hari ini di lokasi saya'))
             ])
 
             line_bot_api.reply_message(
