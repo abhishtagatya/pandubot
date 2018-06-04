@@ -196,7 +196,7 @@ def handle_postback(event):
                                 # Carousel Column
                                 places_column = CarouselColumn(
                                     title=str(places['name']),
-                                    text=str(places['formatted_address'])[:60],
+                                    text=str('Lokasi')[:60],
                                     thumbnail_image_url=thumbnail_image,
                                     actions=[
                                     URITemplateAction(
