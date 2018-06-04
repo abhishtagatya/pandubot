@@ -114,7 +114,7 @@ def handle_postback(event):
                 restaurant_list = ZomatoAPI().geocode(latitude=findUser.latitude, longitude=findUser.longitude)
 
                 # To calculate travel_option
-                origin = '{lat},{lng}'.format(findUser.latitude, findUser.longitude)
+                origin = '{lat},{lng}'.format(lat=findUser.latitude, lng=findUser.longitude)
                 if (len(restaurant_list) > 2 and restaurant_list != None):
                     counter = 0
 
