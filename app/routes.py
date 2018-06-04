@@ -177,7 +177,8 @@ def handle_postback(event):
                         # Google Maps API Call
                         # To Do:
                         #   - Clean Up code
-                        places_list = GoogleMapsAPI().places(query=query, location=(findUser.latitude, findUser.longitude))
+                        search_places = GoogleMapsAPI().places(query=query, location=(findUser.latitude, findUser.longitude))
+                        places_list = search_places['results']
 
                         # To calculate travel_option
                         origin = ''
@@ -190,13 +191,13 @@ def handle_postback(event):
 
                             # Temporary thumbnail_image
                             thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
-                            for places in places_list['results']:
+                            for places in places_list:
                                 destination = ''
 
                                 # Carousel Column
                                 places_column = CarouselColumn(
                                     title=str(places['name']),
-                                    text=str('Lokasi')[:60],
+                                    text=str(places['formatted_address'])[:60],
                                     thumbnail_image_url=thumbnail_image,
                                     actions=[
                                     URITemplateAction(
