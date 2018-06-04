@@ -124,7 +124,7 @@ def handle_postback(event):
                     # Temporary thumbnail_image
                     thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
                     for restaurant in restaurant_list:
-                        destination = '{lat},{lng}'.format(restaurant['restaurant']['location']['latitude'], restaurant['restaurant']['location']['longitude'])
+                        destination = '{lat},{lng}'.format(lat=restaurant['restaurant']['location']['latitude'], lng=restaurant['restaurant']['location']['longitude'])
 
                         # Carousel Column
                         restaurant_column = CarouselColumn(
