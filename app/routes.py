@@ -267,7 +267,7 @@ def handle_location_message(event):
                 ImageCarouselColumn(image_url=thumbnail_image,
                                     action=MessageTemplateAction(label='Cari Makan', text='Carikan tempat makan dekat lokasi saya')),
                 ImageCarouselColumn(image_url=thumbnail_image,
-                                    action=MessageTemplateAction(label='Cek Cuaca', data='Cek cuaca hari ini di lokasi saya'))
+                                    action=MessageTemplateAction(label='Cek Cuaca', text='Cek cuaca hari ini di lokasi saya'))
             ])
 
             line_bot_api.reply_message(
