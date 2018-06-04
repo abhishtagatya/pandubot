@@ -16,6 +16,6 @@ class GoogleMapsAPI:
         location = self.gmaps.geocode(location)
         return location
 
-    def places(self, query, location, radius=10, open_now=True):
+    def places(self, query, location, radius=5000, open_now=False):
         places = self.gmaps.places(query=query, location=location, radius=radius, open_now=open_now)
         return places

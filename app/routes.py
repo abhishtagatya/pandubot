@@ -181,7 +181,7 @@ def handle_postback(event):
                         places_list = search_places['results']
 
                         # To calculate travel_option
-                        origin = ''
+                        origin = '{lat},{lng}'.format(lat=findUser.latitude, lng=findUser.longitude)
 
                         if (len(places_list) > 2 and places_list != None):
                             counter = 0
@@ -192,7 +192,7 @@ def handle_postback(event):
                             # Temporary thumbnail_image
                             thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
                             for places in places_list:
-                                destination = ''
+                                destination = '{lat},{lng}'.format(lat=places['geometry']['location']['lat'], lng=places['geometry']['location']['lng'])
 
                                 # Carousel Column
                                 places_column = CarouselColumn(
