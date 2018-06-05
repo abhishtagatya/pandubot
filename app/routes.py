@@ -150,7 +150,7 @@ def handle_postback(event):
                     food_carousel = CarouselTemplate(columns=restaurant_carousel)
                     line_bot_api.reply_message(
                         event.reply_token,[
-                        TextSendMessage(text="Kami akan carikan tempat makan didekat posisi Anda..."),
+                        TextSendMessage(text="Saya akan carikan tempat makan didekat posisi Anda..."),
                         TemplateSendMessage(alt_text='Restaurant Carousel', template=food_carousel)
                         ])
 
@@ -200,7 +200,7 @@ def handle_postback(event):
                     search_carousel = CarouselTemplate(columns=places_carousel)
                     line_bot_api.reply_message(
                         event.reply_token,[
-                        TextSendMessage(text="Kami akan carikan {query} didekat posisi Anda...".format(query=query)),
+                        TextSendMessage(text="Saya akan carikan {query} didekat posisi Anda...".format(query=query)),
                         TemplateSendMessage(alt_text='Places Carousel', template=search_carousel)
                         ])
 
@@ -211,7 +211,51 @@ def handle_postback(event):
 
 
         elif (command[0] == 'travel_option'):
-            pass
+            origin = command[1]
+            destination = command[2]
+
+            dist_calculation = GoogleMapsAPI().distanceCalculate(origin, destination)
+            dist_cut = dist_calculation['rows'][0]['elements'][0]
+            distance = {
+                "text" : dist_cut['distance']['text'],
+                "value" : dist_cut['distance']['value'],
+                "duration" : dist_cut['duration']['text']
+            }
+
+            travel_options = [
+            {'label' : 'Jalan Kaki', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'},
+            {'label' : 'GO-RIDE', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'},
+            {'label' : 'GO-CAR', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'},
+            {'label' : 'Naik Sepeda', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'},
+            {'label' : 'Menyetir', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'},
+            ]
+
+            travel_carousel = []
+            thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
+
+            for options in travel_options:
+
+                travel_column = ImageCarouselColumn(
+                    image_url=thumbnail_image,
+                    action=URITemplateAction(
+                        label=options['label'],
+                        uri=options['uri'])),
+
+                if (distance['value'] <= 5000):
+                    # Don't recommend walking more than 5km
+                    if (options['label'] != 'Jalan Kaki'):
+                        travel_carousel.append(travel_column)
+
+            travel_option_template = ImageCarouselTemplate(columns=travel_carousel)
+
+            line_bot_api.reply_message(
+                event.reply_token,[
+                TextSendMessage(text="Saya perkirakan bahwa Anda akan tiba pada lokasi dalam {time}".format(distance['duration'])),
+                TextSendMessage(text="Dengan jarak {range}, di bawah adalah rekomendasian perjalanan".format(distance['text'])),
+                TemplateSendMessage(alt_text='Pilihan Perjalanan', template=travel_option_template)
+                ])
+
+
 
         elif (command[0] == 'location_update'):
             line_bot_api.reply_message(

@@ -19,3 +19,7 @@ class GoogleMapsAPI:
     def places(self, query, location, radius=5000, open_now=False):
         places = self.gmaps.places(query=query, location=location, radius=radius, open_now=open_now)
         return places
+
+    def distanceCalculate(self, origins, destinations):
+        distance = self.gmaps.distance_matrix(origins, destinations)
+        return distance
