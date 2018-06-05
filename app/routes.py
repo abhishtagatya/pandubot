@@ -239,7 +239,7 @@ def handle_postback(event):
                     image_url=thumbnail_image,
                     action=URITemplateAction(
                         label=options['label'],
-                        uri=options['uri'])),
+                        uri=options['uri']))
 
                 if (distance['value'] <= 5000):
                     # Don't recommend walking more than 5km
@@ -249,15 +249,11 @@ def handle_postback(event):
             travel_option_template = ImageCarouselTemplate(columns=travel_carousel)
 
             line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text="{} {} {}".format(distance['text'], distance['value'], distance['duration'])))
-
-            #line_bot_api.reply_message(
-            #    event.reply_token,[
-            #    TextSendMessage(text="Saya perkirakan bahwa Anda akan tiba pada lokasi dalam {time}".format(time=distance['duration'])),
-            #    TextSendMessage(text="Dengan jarak {range}, di bawah adalah rekomendasian perjalanan".format(range=distance['text'])),
-            #    TemplateSendMessage(alt_text='Pilihan Perjalanan', template=travel_option_template)
-            #    ])
+                event.reply_token,[
+                TextSendMessage(text="Saya perkirakan bahwa Anda akan tiba pada lokasi dalam {time}".format(time=distance['duration'])),
+                TextSendMessage(text="Dengan jarak {range}, di bawah adalah rekomendasian perjalanan".format(range=distance['text'])),
+                TemplateSendMessage(alt_text='Pilihan Perjalanan', template=travel_option_template)
+                ])
 
 
 
