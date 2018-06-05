@@ -250,7 +250,7 @@ def handle_postback(event):
 
             line_bot_api.reply_message(
                 event.reply_token,
-                TextSendMessage(text="{} {}".format(origin, destination)))
+                TextSendMessage(text="{} {} {}".format(distance['text'], distance['value'], distance['duration'])))
 
             #line_bot_api.reply_message(
             #    event.reply_token,[
