@@ -249,11 +249,15 @@ def handle_postback(event):
             travel_option_template = ImageCarouselTemplate(columns=travel_carousel)
 
             line_bot_api.reply_message(
-                event.reply_token,[
-                TextSendMessage(text="Saya perkirakan bahwa Anda akan tiba pada lokasi dalam {time}".format(time=distance['duration'])),
-                TextSendMessage(text="Dengan jarak {range}, di bawah adalah rekomendasian perjalanan".format(range=distance['text'])),
-                TemplateSendMessage(alt_text='Pilihan Perjalanan', template=travel_option_template)
-                ])
+                event.reply_token,
+                TextSendMessage(text="{} {}".format(origin, destination)))
+
+            #line_bot_api.reply_message(
+            #    event.reply_token,[
+            #    TextSendMessage(text="Saya perkirakan bahwa Anda akan tiba pada lokasi dalam {time}".format(time=distance['duration'])),
+            #    TextSendMessage(text="Dengan jarak {range}, di bawah adalah rekomendasian perjalanan".format(range=distance['text'])),
+            #    TemplateSendMessage(alt_text='Pilihan Perjalanan', template=travel_option_template)
+            #    ])
 
 
 
