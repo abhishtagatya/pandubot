@@ -227,7 +227,7 @@ def handle_postback(event):
             {'label' : 'GO-RIDE', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'},
             {'label' : 'GO-CAR', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'},
             {'label' : 'Naik Sepeda', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'},
-            {'label' : 'Menyetir', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'},
+            {'label' : 'Menyetir', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'}
             ]
 
             travel_carousel = []
@@ -241,10 +241,12 @@ def handle_postback(event):
                         label=options['label'],
                         uri=options['uri']))
 
-                if (distance['value'] <= 5000):
+                if (distance['value'] >= 5000):
                     # Don't recommend walking more than 5km
                     if (options['label'] != 'Jalan Kaki'):
                         travel_carousel.append(travel_column)
+                else :
+                    travel_carousel.append(travel_column)
 
             travel_option_template = ImageCarouselTemplate(columns=travel_carousel)
 
