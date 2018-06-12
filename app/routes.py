@@ -326,6 +326,7 @@ def handle_message(event):
     msg = (event.message.text).lower()
     msg_define = msg.split()
     findUser = Users.query.filter_by(id=event.source.user_id).first()
+    price_range = ''
 
     if (findUser != None):
         with open('data/keyword.json', 'r') as keyword:
@@ -360,7 +361,7 @@ def handle_message(event):
 
             location_confirm = ConfirmTemplate(text='Apakah anda sedang berada di {location}?'.format(location=findUser.location),
             actions=[
-                PostbackTemplateAction(label='Iya', text='Iya', data='search_location={search}={prince}'.format(search=data_search, price=price_range)),
+                PostbackTemplateAction(label='Iya', text='Iya', data='search_location={search}={price}'.format(search=data_search, price=price_range)),
                 PostbackTemplateAction(label='Tidak', text='Tidak', data='location_update')
                 ])
 
