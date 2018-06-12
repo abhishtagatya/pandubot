@@ -330,7 +330,7 @@ def handle_message(event):
     if (findUser != None):
         with open('data/keyword.json', 'r') as keyword:
             query = json.load(keyword)
-        if any(word in msg for word in query['search']):
+        if any(word in msg for word in query['search']['call']):
             if any(word in msg for word in query['search']['food']):
                 data_search = 'food'
             elif any(word in msg for word in query['search']['movie_theater']):
