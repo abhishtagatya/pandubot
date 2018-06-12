@@ -224,10 +224,9 @@ def handle_postback(event):
 
             travel_options = [
             {'label' : 'Jalan Kaki', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'},
-            {'label' : 'GO-RIDE', 'uri' : 'gojek://goride?'},
-            {'label' : 'GO-CAR', 'uri' : 'gojek://gocar?'},
             {'label' : 'Naik Sepeda', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'},
-            {'label' : 'Menyetir', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'}
+            {'label' : 'Menyetir', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'},
+            {'label' : 'Naik Bus', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'}
             ]
 
             travel_carousel = []
