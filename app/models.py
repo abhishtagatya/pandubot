@@ -6,7 +6,7 @@ class Users(db.Model):
     __tablename__ = 'Users'
 
     id = db.Column(db.String(50), primary_key=True)
-    name = db.Column(db.String(20))
+    name = db.Column(db.String(50))
     location = db.Column(db.String(100))
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)

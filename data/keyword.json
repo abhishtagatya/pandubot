@@ -1,0 +1,17 @@
+{
+  "search" : {
+    "call" : ["cari", "dimana"],
+    "food" : ["makan", "lapar", "jajan", "kuliner"],
+    "movie_theater" : ["bioskop", "cinema", "film", "video"],
+    "mart" : ["mart", "market", "swalayan", "warung"],
+    "print" : ["fotokopi", "print", "cetak", "sablon"],
+    "bus_station" : ["busway", "halte", "stasiun bus", "bis", "stasiun bis"],
+    "books" : ["perpustakaan", "baca", "library", "perpus", "toko buku", "beli buku"],
+    "atm" : ["atm", "teller", "bni", "bca", "mandiri", "cimb", "bca"],
+    "bank" : ["bank", "deposit"],
+    "spbu" : ["spbu", "bensin", "pertamina", "shell", "total"],
+    "car_shop" : ["bengkel", "otomotif"],
+    "car_wash" : ["cuci mobil"],
+    "laundry" : ["laundry", "cuci baju"]
+  }
+}

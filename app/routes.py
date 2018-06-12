@@ -10,7 +10,6 @@ from app.module.zomato import ZomatoAPI
 from app.module.geomaps import GoogleMapsAPI
 from instance.config import LINE_CHANNEL_ACCESS_TOKEN, LINE_CHANNEL_SECRET_TOKEN
 
-
 from linebot import (
     LineBotApi, WebhookHandler
 )
@@ -52,13 +51,14 @@ def callback():
 @handler.add(FollowEvent)
 def handle_followevent(event):
     """ When a FollowEvent is done, it will activate the SignUp Flow"""
-    confirm_template = ConfirmTemplate(text='Untuk mengoptimalkan penggunaan aplikasi, apakah anda berkenan untuk registrasi secara otomatis?', actions=[
+    confirm_template = ConfirmTemplate(text='Untuk mengoptimalkan penggunaan aplikasi, apakah anda berkenan untuk registrasi secara otomatis?',
+     actions=[
         PostbackTemplateAction(label='Iya', text='Iya, registrasikan akun saya', data='create_user=confirm'),
         PostbackTemplateAction(label='Tidak', text='Tidak, jangan registrasikan akun saya', data='create_user=decline'),
     ])
     line_bot_api.reply_message(
         event.reply_token,[
-        TextSendMessage(text="Halo perkenalkan! Nama saya ... disini untuk membantu Anda"),
+        TextSendMessage(text="Halo perkenalkan! Nama saya Pandu, disini untuk membantu menjadi pemandu di Smart Environment kita!"),
         TemplateSendMessage(
             alt_text='User Confirmation', template=confirm_template)])
 
@@ -224,8 +224,8 @@ def handle_postback(event):
 
             travel_options = [
             {'label' : 'Jalan Kaki', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'},
-            {'label' : 'GO-RIDE', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'},
-            {'label' : 'GO-CAR', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'},
+            {'label' : 'GO-RIDE', 'uri' : 'gojek://goride?'},
+            {'label' : 'GO-CAR', 'uri' : 'gojek://gocar?'},
             {'label' : 'Naik Sepeda', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'},
             {'label' : 'Menyetir', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'}
             ]
@@ -257,12 +257,15 @@ def handle_postback(event):
                 TemplateSendMessage(alt_text='Pilihan Perjalanan', template=travel_option_template)
                 ])
 
-
-
         elif (command[0] == 'location_update'):
             line_bot_api.reply_message(
                 event.reply_token,
                 TextSendMessage(text="Baiklah, silahkan perbarui lokasi Anda dengan mengirimkan lokasi"))
+
+        elif (command[0] == 'create_user'):
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text="Anda sudah melakukan registrasi otomatis"))
 
         else :
             line_bot_api.reply_message(
@@ -290,11 +293,13 @@ def handle_location_message(event):
 
             image_option_template = ImageCarouselTemplate(columns=[
                 ImageCarouselColumn(image_url=thumbnail_image,
-                                    action=MessageTemplateAction(label='Makan', text='Carikan tempat makan dekat lokasi saya')),
+                                    action=MessageTemplateAction(label='Makan', text='Carikan tempat makan di dekat lokasi saya')),
                 ImageCarouselColumn(image_url=thumbnail_image,
-                                    action=MessageTemplateAction(label='Bioskop', text='Carikan bioskop dekat lokasi saya')),
+                                    action=MessageTemplateAction(label='Bioskop', text='Carikan bioskop di dekat lokasi saya')),
                 ImageCarouselColumn(image_url=thumbnail_image,
-                                    action=MessageTemplateAction(label='Minimarket', text='Carikan minimartket dekat lokasi saya')),
+                                    action=MessageTemplateAction(label='Minimarket', text='Carikan minimartket di dekat lokasi saya')),
+                ImageCarouselColumn(image_url=thumbnail_image,
+                                    action=MessageTemplateAction(label='Halte Bus', text='Carikan halte bus di dekat lokasi saya')),
                 ImageCarouselColumn(image_url=thumbnail_image,
                                     action=MessageTemplateAction(label='Cuaca', text='Cek cuaca hari ini di lokasi saya'))
             ])
@@ -319,26 +324,43 @@ def handle_location_message(event):
 def handle_message(event):
     """ Here's all the messages will be handled and processed by the program """
     msg = (event.message.text).lower()
+    msg_define = msg.split()
     findUser = Users.query.filter_by(id=event.source.user_id).first()
 
     if (findUser != None):
-        if ('cari' in msg):
-            if ('makan' in msg or 'jajan' in msg):
+        with open('data/keyword.json', 'r') as keyword:
+            query = json.load(keyword)
+        if any(word in msg for word in query['search']):
+            if any(word in msg for word in query['search']['food']):
                 data_search = 'food'
-            elif ('bioskop' in msg or 'cinema' in msg):
+            elif any(word in msg for word in query['search']['movie_theater']):
                 data_search = 'movie theater'
-            elif ('mart' in msg or 'market' in msg):
+            elif any(word in msg for word in query['search']['mart']):
                 data_search = 'minimarket'
-            elif ('fotokopi' in msg or 'print' in msg):
+            elif any(word in msg for word in query['search']['print']):
                 data_search = 'print'
-            elif ('busway' in msg or 'halte' in msg):
+            elif any(word in msg for word in query['search']['bus_station']):
                 data_search = 'bus station'
+            elif any(word in msg for word in query['search']['books']):
+                data_search = 'books'
+            elif any(word in msg for word in query['search']['atm']):
+                data_search = 'atm'
+            elif any(word in msg for word in query['search']['bank']):
+                data_search = 'bank'
+            elif any(word in msg for word in query['search']['spbu']):
+                data_search = 'spbu'
+            elif any(word in msg for word in query['search']['car_shop']):
+                data_search = 'car repair'
+            elif any(word in msg for word in query['search']['car_wash']):
+                data_search = 'car wash'
+            elif any(word in msg for word in query['search']['laundry']):
+                data_search = 'laundry'
             else :
                 data_search = 'else'
 
-            location_confirm = ConfirmTemplate(text='Apakah anda sedang berada di {0}?'.format(findUser.location),
+            location_confirm = ConfirmTemplate(text='Apakah anda sedang berada di {location}?'.format(location=findUser.location),
             actions=[
-                PostbackTemplateAction(label='Iya', text='Iya', data='search_location={search}'.format(search=data_search)),
+                PostbackTemplateAction(label='Iya', text='Iya', data='search_location={search}={prince}'.format(search=data_search, price=price_range)),
                 PostbackTemplateAction(label='Tidak', text='Tidak', data='location_update')
                 ])
 
