@@ -128,7 +128,7 @@ def handle_postback(event):
 
                         # Carousel Column
                         restaurant_column = CarouselColumn(
-                            title=str(restaurant['restaurant']['name']),
+                            title=str(restaurant['restaurant']['name'])[:40],
                             text=str(restaurant['restaurant']['location']['address'])[:60],
                             thumbnail_image_url=thumbnail_image,
                             actions=[
@@ -178,7 +178,7 @@ def handle_postback(event):
 
                         # Carousel Column
                         places_column = CarouselColumn(
-                            title=str(places['name']),
+                            title=str(places['name'])[:40],
                             text=str(places['formatted_address'])[:60],
                             thumbnail_image_url=thumbnail_image,
                             actions=[
