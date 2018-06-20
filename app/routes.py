@@ -112,6 +112,7 @@ def handle_postback(event):
             if (command[1] == 'food'):
                 # Zomato API Call
                 restaurant_list = ZomatoAPI().geocode(latitude=findUser.latitude, longitude=findUser.longitude)
+                price_range = command[2]
 
                 # To calculate travel_option
                 origin = '{lat},{lng}'.format(lat=findUser.latitude, lng=findUser.longitude)
@@ -125,7 +126,6 @@ def handle_postback(event):
                     thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
                     for restaurant in restaurant_list:
                         destination = '{lat},{lng}'.format(lat=restaurant['restaurant']['location']['latitude'], lng=restaurant['restaurant']['location']['longitude'])
-
                         # Carousel Column
                         restaurant_column = CarouselColumn(
                             title=str(restaurant['restaurant']['name'])[:40],
@@ -323,10 +323,9 @@ def handle_location_message(event):
 def handle_message(event):
     """ Here's all the messages will be handled and processed by the program """
     msg = (event.message.text).lower()
-    msg_define = msg.split()
-    findUser = Users.query.filter_by(id=event.source.user_id).first()
-    price_range = ''
+    price_range = None
 
+    findUser = Users.query.filter_by(id=event.source.user_id).first()
     if (findUser != None):
         with open('data/keyword.json', 'r') as keyword:
             query = json.load(keyword)
