@@ -330,10 +330,13 @@ def handle_message(event):
         with open('data/keyword.json', 'r') as keyword:
             query = json.load(keyword)
         if ('cari' in msg):
+            # In keyword.json, iterate over the multidimensional array
+            # to find a match to any keyword in msg
             for keyword_array in search_list:
                 for keyword in keyword_array:
                     if (keyword in msg):
                         data_search = keyword_array[0]
+                        break
 
             location_confirm = ConfirmTemplate(text='Apakah anda sedang berada di {location}?'.format(location=findUser.location),
             actions=[
