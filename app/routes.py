@@ -329,33 +329,11 @@ def handle_message(event):
     if (findUser != None):
         with open('data/keyword.json', 'r') as keyword:
             query = json.load(keyword)
-        if any(word in msg for word in query['search']['call']):
-            if any(word in msg for word in query['search']['food']):
-                data_search = 'food'
-            elif any(word in msg for word in query['search']['movie_theater']):
-                data_search = 'movie theater'
-            elif any(word in msg for word in query['search']['mart']):
-                data_search = 'minimarket'
-            elif any(word in msg for word in query['search']['print']):
-                data_search = 'print'
-            elif any(word in msg for word in query['search']['bus_station']):
-                data_search = 'bus station'
-            elif any(word in msg for word in query['search']['books']):
-                data_search = 'books'
-            elif any(word in msg for word in query['search']['atm']):
-                data_search = 'atm'
-            elif any(word in msg for word in query['search']['bank']):
-                data_search = 'bank'
-            elif any(word in msg for word in query['search']['spbu']):
-                data_search = 'spbu'
-            elif any(word in msg for word in query['search']['car_shop']):
-                data_search = 'car repair'
-            elif any(word in msg for word in query['search']['car_wash']):
-                data_search = 'car wash'
-            elif any(word in msg for word in query['search']['laundry']):
-                data_search = 'laundry'
-            else :
-                data_search = 'else'
+        if ('cari' in msg):
+            for keyword_array in search_list:
+                for keyword in keyword_array:
+                    if (keyword in msg):
+                        data_search = keyword_array[0]
 
             location_confirm = ConfirmTemplate(text='Apakah anda sedang berada di {location}?'.format(location=findUser.location),
             actions=[
