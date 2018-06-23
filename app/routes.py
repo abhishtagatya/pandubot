@@ -51,14 +51,18 @@ def callback():
 @handler.add(FollowEvent)
 def handle_followevent(event):
     """ When a FollowEvent is done, it will activate the SignUp Flow"""
-    confirm_template = ConfirmTemplate(text='Untuk mengoptimalkan penggunaan aplikasi, apakah anda berkenan untuk registrasi secara otomatis?',
+    confirm_template = ConfirmTemplate(
+        text='Untuk mengoptimalkan penggunaan aplikasi, apakah anda berkenan untuk registrasi secara otomatis?',
      actions=[
-        PostbackTemplateAction(label='Iya', text='Iya, registrasikan akun saya', data='create_user=confirm'),
-        PostbackTemplateAction(label='Tidak', text='Tidak, jangan registrasikan akun saya', data='create_user=decline'),
+        PostbackTemplateAction(
+            label='Iya', text='Iya, registrasikan akun saya', data='create_user=confirm'),
+        PostbackTemplateAction(
+            label='Tidak', text='Tidak, jangan registrasikan akun saya', data='create_user=decline'),
     ])
     line_bot_api.reply_message(
         event.reply_token,[
-        TextSendMessage(text="Halo perkenalkan! Nama saya Pandu, disini untuk membantu menjadi pemandu di Smart Environment kita!"),
+        TextSendMessage(
+            text="Halo perkenalkan! Nama saya Pandu, disini untuk membantu menjadi pemandu di Smart Environment kita!"),
         TemplateSendMessage(
             alt_text='User Confirmation', template=confirm_template)])
 
@@ -91,8 +95,13 @@ def handle_postback(event):
                     app.logger.info("Create User Request: " + user_profile.user_id)
                     line_bot_api.reply_message(
                         event.reply_token, [
-                            TextSendMessage(text='Berhasil membuat registrasi untuk user {user}'.format(user=user_profile.display_name)),
-                            TextSendMessage(text='Untuk mengetahui lingkungan Anda, dapatkah Anda membagikan lokasi Anda?')
+                            TextSendMessage(
+                                text='Berhasil membuat registrasi untuk user {user}'.format(
+                                    user=user_profile.display_name)),
+                            TextSendMessage(
+                                text='Untuk mengetahui lingkungan Anda, dapatkah Anda membagikan lokasi Anda dengan mengirimkan Send Location?'),
+                            TextSendMessage(
+                                text='Send Location dapat di temukan di bawah menu, silahkan klik tombol + dan klik Send Location')
                         ])
 
                     db.session.commit()
@@ -105,11 +114,14 @@ def handle_postback(event):
             else :
                 line_bot_api.reply_message(
                     event.reply_token,
-                    TextSendMessage(text="Tahap registrasi di tunda, silahkan registrasi untuk menggunakan aplikasi secara lengkap :)"))
+                    TextSendMessage(
+                        text="Tahap registrasi di tunda, silahkan registrasi untuk menggunakan aplikasi secara lengkap :)"))
 
     else :
         if (command[0] == 'search_location'):
-            if (command[1] == 'food'):
+            sub_command = (command[1]).split(':')
+            query, place_name = sub_command
+            if (query == 'food'):
                 # Zomato API Call
                 restaurant_list = ZomatoAPI().geocode(latitude=findUser.latitude, longitude=findUser.longitude)
                 price_range = command[2]
@@ -150,17 +162,20 @@ def handle_postback(event):
                     food_carousel = CarouselTemplate(columns=restaurant_carousel)
                     line_bot_api.reply_message(
                         event.reply_token,[
-                        TextSendMessage(text="Saya akan carikan tempat makan didekat posisi Anda..."),
-                        TemplateSendMessage(alt_text='Restaurant Carousel', template=food_carousel)
+                        TextSendMessage(
+                            text="Saya akan carikan tempat {place} didekat posisi Anda...".format(
+                                place=place_name)),
+                        TemplateSendMessage(
+                            alt_text='Restaurant Carousel', template=food_carousel)
                         ])
 
                 else :
                     line_bot_api.reply_message(
                         event.reply_token,
-                        TextSendMessage(text="Maaf...tapi saat ini kita tidak menemukan restaurant di dekat Anda"))
+                        TextSendMessage(
+                            text="Maaf...tapi saat ini kita tidak menemukan restaurant di dekat Anda"))
 
             else :
-                query = command[1]
                 search_places = GoogleMapsAPI().places(query=query, location=(findUser.latitude, findUser.longitude))
                 places_list = search_places['results']
 
@@ -174,7 +189,9 @@ def handle_postback(event):
                     # Temporary thumbnail_image
                     thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
                     for places in places_list:
-                        destination = '{lat},{lng}'.format(lat=places['geometry']['location']['lat'], lng=places['geometry']['location']['lng'])
+                        destination = '{lat},{lng}'.format(
+                            lat=places['geometry']['location']['lat'],
+                            lng=places['geometry']['location']['lng'])
 
                         # Carousel Column
                         places_column = CarouselColumn(
@@ -184,10 +201,12 @@ def handle_postback(event):
                             actions=[
                             URITemplateAction(
                                 label='Cek Peta',
-                                uri='https://www.google.com/maps/search/?api=1&query={destination}'.format(destination=destination)),
+                                uri='https://www.google.com/maps/search/?api=1&query={destination}'.format(
+                                    destination=destination)),
                             PostbackTemplateAction(
                                 label='Pilihan Perjalanan',
-                                data='travel_option={origin}={destination}'.format(origin=origin, destination=destination))
+                                data='travel_option={origin}={destination}'.format(
+                                    origin=origin, destination=destination))
                         ])
 
                         # Force Stop by Counter
@@ -200,14 +219,18 @@ def handle_postback(event):
                     search_carousel = CarouselTemplate(columns=places_carousel)
                     line_bot_api.reply_message(
                         event.reply_token,[
-                        TextSendMessage(text="Saya akan carikan {query} didekat posisi Anda...".format(query=query)),
-                        TemplateSendMessage(alt_text='Places Carousel', template=search_carousel)
+                        TextSendMessage(text="Saya akan carikan {place} didekat posisi Anda...".format(
+                            place=place_name)),
+                        TemplateSendMessage(
+                            alt_text='Places Carousel', template=search_carousel)
                         ])
 
                 else :
                     line_bot_api.reply_message(
                         event.reply_token,
-                        TextSendMessage(text="Maaf...tapi saat ini kita tidak menemukan {query} di dekat Anda".format(query=query)))
+                        TextSendMessage(
+                            text="Maaf...tapi saat ini kita tidak menemukan {query} di dekat Anda".format(
+                                query=query)))
 
 
         elif (command[0] == 'travel_option'):
@@ -251,25 +274,33 @@ def handle_postback(event):
 
             line_bot_api.reply_message(
                 event.reply_token,[
-                TextSendMessage(text="Saya perkirakan bahwa Anda akan tiba pada lokasi dalam {time}".format(time=distance['duration'])),
-                TextSendMessage(text="Dengan jarak {range}, di bawah adalah rekomendasian perjalanan".format(range=distance['text'])),
-                TemplateSendMessage(alt_text='Pilihan Perjalanan', template=travel_option_template)
+                TextSendMessage(
+                    text="Saya perkirakan bahwa Anda akan tiba pada lokasi dalam {time}".format(
+                        time=distance['duration'])),
+                TextSendMessage(
+                    text="Dengan jarak {range}, di bawah adalah rekomendasian perjalanan".format(
+                        range=distance['text'])),
+                TemplateSendMessage(
+                    alt_text='Pilihan Perjalanan', template=travel_option_template)
                 ])
 
         elif (command[0] == 'location_update'):
             line_bot_api.reply_message(
                 event.reply_token,
-                TextSendMessage(text="Baiklah, silahkan perbarui lokasi Anda dengan mengirimkan lokasi"))
+                TextSendMessage(
+                    text="Baiklah, silahkan perbarui lokasi Anda dengan mengirimkan lokasi"))
 
         elif (command[0] == 'create_user'):
             line_bot_api.reply_message(
                 event.reply_token,
-                TextSendMessage(text="Anda sudah melakukan registrasi otomatis"))
+                TextSendMessage(
+                    text="Anda sudah melakukan registrasi otomatis"))
 
         else :
             line_bot_api.reply_message(
                 event.reply_token,
-                TextSendMessage(text="Sepertinya ada masalah dalam PostbackEvent Anda"))
+                TextSendMessage(
+                    text="Sepertinya ada masalah dalam PostbackEvent Anda"))
 
 
 @handler.add(MessageEvent, message=LocationMessage)
@@ -292,21 +323,27 @@ def handle_location_message(event):
 
             image_option_template = ImageCarouselTemplate(columns=[
                 ImageCarouselColumn(image_url=thumbnail_image,
-                                    action=MessageTemplateAction(label='Makan', text='Carikan tempat makan di dekat lokasi saya')),
+                                    action=MessageTemplateAction(
+                                        label='Makan', text='Carikan tempat makan di dekat lokasi saya')),
                 ImageCarouselColumn(image_url=thumbnail_image,
-                                    action=MessageTemplateAction(label='Bioskop', text='Carikan bioskop di dekat lokasi saya')),
+                                    action=MessageTemplateAction(
+                                        label='Bioskop', text='Carikan bioskop di dekat lokasi saya')),
                 ImageCarouselColumn(image_url=thumbnail_image,
-                                    action=MessageTemplateAction(label='Minimarket', text='Carikan minimartket di dekat lokasi saya')),
+                                    action=MessageTemplateAction(
+                                        label='Minimarket', text='Carikan minimartket di dekat lokasi saya')),
                 ImageCarouselColumn(image_url=thumbnail_image,
-                                    action=MessageTemplateAction(label='Halte Bus', text='Carikan halte bus di dekat lokasi saya')),
+                                    action=MessageTemplateAction(
+                                        label='Halte Bus', text='Carikan halte bus di dekat lokasi saya')),
                 ImageCarouselColumn(image_url=thumbnail_image,
-                                    action=MessageTemplateAction(label='Cuaca', text='Cek cuaca hari ini di lokasi saya'))
+                                    action=MessageTemplateAction(
+                                        label='Cuaca', text='Cek cuaca hari ini di lokasi saya'))
             ])
 
             line_bot_api.reply_message(
                 event.reply_token,[
                 TextSendMessage(text="Lokasi Anda sudah diperbarui!"),
-                TemplateSendMessage(alt_text='Pilihan Aplikasi', template=image_option_template)
+                TemplateSendMessage(
+                    alt_text='Pilihan Aplikasi', template=image_option_template)
                 ])
 
         except :
@@ -317,7 +354,8 @@ def handle_location_message(event):
     else :
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text="Sepertinya Anda belum registrasi, silahkan registrasi terlebih dahulu"))
+            TextSendMessage(
+                text="Sepertinya Anda belum registrasi, silahkan registrasi terlebih dahulu"))
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
@@ -330,6 +368,7 @@ def handle_message(event):
         with open('data/keyword.json', 'r') as keyword:
             query = json.load(keyword)
         if ('cari' in msg):
+            data_search = None
             # In keyword.json, iterate over the multidimensional array
             # to find a match to any keyword in msg
             for keyword_array in query['search']:
@@ -338,21 +377,31 @@ def handle_message(event):
                         data_search = keyword_array[0]
                         break
 
-            location_confirm = ConfirmTemplate(text='Apakah anda sedang berada di {location}?'.format(location=findUser.location),
-            actions=[
-                PostbackTemplateAction(label='Iya', text='Iya', data='search_location={search}={price}'.format(search=data_search, price=price_range)),
-                PostbackTemplateAction(label='Tidak', text='Tidak', data='location_update')
-                ])
+            # If data_search is not updated, then search is not found
+            if (data_search is None):
+                line_bot_api.reply_message(
+                    event.reply_token,
+                    TextSendMessage(
+                    text="Wah tempat apa tuh?"))
 
-            line_bot_api.reply_message(
-                event.reply_token,[
-                LocationSendMessage(
-                    title='Posisi Terakhir Anda', address='{0}'.format(findUser.location),
-                    latitude=findUser.latitude, longitude=findUser.longitude
-                ),
-                TemplateSendMessage(
-                    alt_text='Location Confirmation', template=location_confirm)
-                ])
+            else :
+                location_confirm = ConfirmTemplate(text='Apakah anda sedang berada di {location}?'.format(location=findUser.location),
+                actions=[
+                    PostbackTemplateAction(
+                        label='Iya', text='Iya', data='search_location={search}={price}'.format(search=data_search, price=price_range)),
+                    PostbackTemplateAction(
+                        label='Tidak', text='Tidak', data='location_update')
+                    ])
+
+                line_bot_api.reply_message(
+                    event.reply_token,[
+                    LocationSendMessage(
+                        title='Posisi Terakhir Anda', address='{0}'.format(findUser.location),
+                        latitude=findUser.latitude, longitude=findUser.longitude
+                    ),
+                    TemplateSendMessage(
+                        alt_text='Location Confirmation', template=location_confirm)
+                    ])
 
         elif ('cuaca' in msg):
             pass
@@ -362,7 +411,8 @@ def handle_message(event):
     else :
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text="Sepertinya Anda belum registrasi, silahkan registrasi terlebih dahulu"))
+            TextSendMessage(
+                text="Sepertinya Anda belum registrasi, silahkan registrasi terlebih dahulu"))
 
 
 @handler.default()
@@ -370,4 +420,4 @@ def default(event):
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(
-        text="Jenis obrolan tidak didukung oleh ..."))
+            text="Jenis obrolan tidak didukung oleh ..."))

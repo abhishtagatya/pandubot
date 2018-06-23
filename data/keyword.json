@@ -10,6 +10,7 @@
     ["bank:bank", "bank", "deposit"],
     ["atm:atm", "teller", "bni", "bca", "mandiri", "cimb", "bca"],
     ["spbu:spbu", "spbu", "bensin", "pertamina", "shell", "total"],
+    ["car repair:bengkel", "car repair", "montir", "bengkel"],
     ["car wash:tempat cuci mobil", "car wash", "cuci mobil"],
     ["laundry:laundry", "cuci baju", "laundry", "londre"]
   ]
