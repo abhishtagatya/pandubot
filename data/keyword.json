@@ -8,10 +8,16 @@
     ["library:perpustakaan", "perpustakaan", "baca", "library", "perpus"],
     ["books:toko buku", "toko buku", "beli buku", "gramedia"],
     ["bank:bank", "bank", "deposit"],
-    ["atm:atm", "teller", "bni", "bca", "mandiri", "cimb", "bca"],
+    ["atm:atm", "atm", "teller", "bni", "bca", "mandiri", "cimb", "bca"],
     ["spbu:spbu", "spbu", "bensin", "pertamina", "shell", "total"],
     ["car repair:bengkel", "car repair", "montir", "bengkel"],
     ["car wash:tempat cuci mobil", "car wash", "cuci mobil"],
+    ["bowling alley:gelanggang bowling", "bowling", "boling", "bola guling"],
+    ["hotel:hotel", "hotel", "penginapan", "kamar tidur", "motel"],
+    ["spa:spa", "spa", "salon", "hairdresser", "facial", "beauty"],
+    ["barber shop:barber", "barber", "cukur", "potong rambut", "cuts"],
+    ["hospital:rumah sakit", "sakit", "rs", "ugd", "ambulans", "dokter", "praktek"],
+    ["pharmacy:apotek", "apotek", "farma", "herbal", "obat", "kimia farma", "apotik"],
     ["laundry:laundry", "cuci baju", "laundry", "londre"]
   ]
 }

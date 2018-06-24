@@ -1,0 +1,8 @@
+{
+  "speech" : {
+    "greet" : {
+      "keyword" : ["hi", "hello", "halo", "helo", "pagi", "siang", "malam"],
+      "answer" : []
+    }
+  }
+}
