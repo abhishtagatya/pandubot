@@ -412,7 +412,7 @@ def handle_message(event):
 
             for key, value in keyword['interaction'].items():
                 for word in value:
-                    if word in text:
+                    if (word in msg):
                         interaction_response = (random.choice(speech['speech'][key]['answer']).format(
                             name = findUser.name,
                             baseball = 'baseball'
