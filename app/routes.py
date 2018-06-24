@@ -410,7 +410,7 @@ def handle_message(event):
             with open('data/speech.json', 'r') as speechwords:
                 speech = json.load(speechwords)
 
-            for key, value in query['interaction'].items():
+            for key, value in keyword['interaction'].items():
                 for word in value:
                     if word in text:
                         interaction_response = (random.choice(speech['speech'][key]['answer']).format(
