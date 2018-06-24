@@ -130,5 +130,8 @@
       "shell",
       "total"
     ]
+  },
+  "interaction" : {
+    "greet" : ["hi", "helo", "hello", "halo", "hallo", "pagi", "siang", "sore", "malam", "malem", "pan", "pandu", "oi", "oy"]
   }
 }

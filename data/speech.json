@@ -1,8 +1,11 @@
 {
   "speech" : {
     "greet" : {
-      "keyword" : ["hi", "hello", "halo", "helo", "pagi", "siang", "malam"],
-      "answer" : []
+      "answer" : [
+        "Halo {name}, ada yang bisa saya bantu?",
+        "Hi juga {name}, ada yang bisa di bantu?",
+        "Pandu siap membantu {name}!"
+      ]
     }
   }
 }
