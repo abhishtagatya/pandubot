@@ -51,7 +51,13 @@
       "jajan",
       "laper",
       "kuliner",
-      "restoran"
+      "restoran",
+      "cafe"
+    ],
+    "mal:mal": [
+      "mal",
+      "mol",
+      "hangout"
     ],
     "hospital:rumah sakit": [
       "sakit",
@@ -107,10 +113,15 @@
     ],
     "spa:spa": [
       "spa",
-      "salon",
-      "hairdresser",
+      "skin care",
+      "bugar",
       "facial",
       "beauty"
+    ],
+    "salon:salon": [
+      "salon",
+      "hairdresser",
+      "cantik"
     ],
     "spbu:spbu": [
       "spbu",
