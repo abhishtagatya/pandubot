@@ -365,16 +365,16 @@ def handle_message(event):
 
     findUser = Users.query.filter_by(id=event.source.user_id).first()
     if (findUser != None):
-        with open('data/keyword.json', 'r') as keyword:
-            query = json.load(keyword)
+        with open('data/keyword.json', 'r') as keyword_list:
+            keyword = json.load(keyword)
         if ('cari' in msg):
             data_search = None
             # In keyword.json, iterate over the multidimensional array
             # to find a match to any keyword in msg
-            for keyword_array in query['search']:
-                for keyword in keyword_array:
-                    if (keyword in msg):
-                        data_search = keyword_array[0]
+            for key, value in keyword['search'].items():
+                for word in value:
+                    if (word in msg):
+                        data_search = key
                         break
 
             # If data_search is not updated, then search is not found

@@ -1,23 +1,123 @@
 {
-  "search" : [
-    ["food:restoran", "makan", "lapar", "jajan", "kuliner", "restoran"],
-    ["movie theater:bioskop", "bioskop", "cinema", "film", "video", "sinema"],
-    ["minimarket:minimarket", "mart", "market", "swalayan", "warung"],
-    ["print:fotokopi", "fotokopi", "print", "cetak", "sablon"],
-    ["bus station:halte bus","busway", "halte", "stasiun bus", "bis", "stasiun bis"],
-    ["library:perpustakaan", "perpustakaan", "baca", "library", "perpus"],
-    ["books:toko buku", "toko buku", "beli buku", "gramedia"],
-    ["bank:bank", "bank", "deposit"],
-    ["atm:atm", "atm", "teller", "bni", "bca", "mandiri", "cimb", "bca"],
-    ["spbu:spbu", "spbu", "bensin", "pertamina", "shell", "total"],
-    ["car repair:bengkel", "car repair", "montir", "bengkel"],
-    ["car wash:tempat cuci mobil", "car wash", "cuci mobil"],
-    ["bowling alley:gelanggang bowling", "bowling", "boling", "bola guling"],
-    ["hotel:hotel", "hotel", "penginapan", "kamar tidur", "motel"],
-    ["spa:spa", "spa", "salon", "hairdresser", "facial", "beauty"],
-    ["barber shop:barber", "barber", "cukur", "potong rambut", "cuts"],
-    ["hospital:rumah sakit", "sakit", "rs", "ugd", "ambulans", "dokter", "praktek"],
-    ["pharmacy:apotek", "apotek", "farma", "herbal", "obat", "kimia farma", "apotik"],
-    ["laundry:laundry", "cuci baju", "laundry", "londre"]
-  ]
+  "search": {
+    "atm:atm": [
+      "atm",
+      "teller",
+      "bni",
+      "bca",
+      "mandiri",
+      "cimb",
+      "bca"
+    ],
+    "bank:bank": [
+      "bank",
+      "deposit"
+    ],
+    "barber shop:barber": [
+      "barber",
+      "cukur",
+      "potong rambut",
+      "cuts"
+    ],
+    "books:toko buku": [
+      "toko buku",
+      "beli buku",
+      "gramedia"
+    ],
+    "bowling alley:gelanggang bowling": [
+      "bowling",
+      "boling",
+      "bola guling"
+    ],
+    "bus station:halte bus": [
+      "busway",
+      "halte",
+      "stasiun bus",
+      "bis",
+      "stasiun bis"
+    ],
+    "car repair:bengkel": [
+      "car repair",
+      "montir",
+      "bengkel"
+    ],
+    "car wash:tempat cuci mobil": [
+      "car wash",
+      "cuci mobil"
+    ],
+    "food:restoran": [
+      "makan",
+      "lapar",
+      "jajan",
+      "laper",
+      "kuliner",
+      "restoran"
+    ],
+    "hospital:rumah sakit": [
+      "sakit",
+      "rs",
+      "ugd",
+      "ambulans",
+      "dokter",
+      "praktek"
+    ],
+    "hotel:hotel": [
+      "hotel",
+      "penginapan",
+      "kamar tidur",
+      "motel"
+    ],
+    "laundry:laundry": [
+      "cuci baju",
+      "laundry",
+      "londre"
+    ],
+    "library:perpustakaan": [
+      "perpustakaan",
+      "baca",
+      "library",
+      "perpus"
+    ],
+    "minimarket:minimarket": [
+      "mart",
+      "market",
+      "swalayan",
+      "warung"
+    ],
+    "movie theater:bioskop": [
+      "bioskop",
+      "cinema",
+      "film",
+      "video",
+      "sinema"
+    ],
+    "pharmacy:apotek": [
+      "apotek",
+      "farma",
+      "herbal",
+      "obat",
+      "kimia farma",
+      "apotik"
+    ],
+    "print:fotokopi": [
+      "fotokopi",
+      "print",
+      "cetak",
+      "sablon"
+    ],
+    "spa:spa": [
+      "spa",
+      "salon",
+      "hairdresser",
+      "facial",
+      "beauty"
+    ],
+    "spbu:spbu": [
+      "spbu",
+      "bensin",
+      "pertamina",
+      "shell",
+      "total"
+    ]
+  }
 }
