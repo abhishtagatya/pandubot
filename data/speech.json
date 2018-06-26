@@ -4,7 +4,11 @@
       "answer" : [
         "Halo {name}, ada yang bisa saya bantu?",
         "Hi juga {name}, ada yang bisa di bantu?",
-        "Pandu siap membantu {name}!"
+        "Pandu siap membantu {name}!",
+        "Iya {name}, ada yang bisa di bantu?",
+        "Hello {name}, kita cari apa nih?",
+        "Hello {name}, gimana? kita cari apa?",
+        "Hi {name}"
       ]
     }
   }

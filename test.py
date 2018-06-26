@@ -14,11 +14,10 @@ with open('data/keyword.json', 'r') as keyword:
 with open('data/speech.json', 'r') as speechwords:
     speech = json.load(speechwords)
 
-for key, value in query['interaction'].items():
-    for word in value:
-        if word in text:
-            print(random.choice(speech['speech'][key]['answer']).format(
-                name = 'Name',
-                baseball = 'baseball'
-            ))
-            break
+places_list = [
+    "Hello",
+    "World"
+]
+
+for count, places in enumerate(places_list):
+    print(count, places)

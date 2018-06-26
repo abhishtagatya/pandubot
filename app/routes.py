@@ -120,24 +120,30 @@ def handle_postback(event):
 
     else :
         if (command[0] == 'search_location'):
+
             sub_command = (command[1]).split(':')
             query, place_name = sub_command
+
+            # To calculate travel_option
+            origin = '{lat},{lng}'.format(lat=findUser.latitude, lng=findUser.longitude)
+
             if (query == 'food'):
                 # Zomato API Call
                 restaurant_list = ZomatoAPI().geocode(latitude=findUser.latitude, longitude=findUser.longitude)
                 price_range = command[2]
+                # price_range
+                # 1 : < 80
+                # 2 : 80 - 150
+                # 3 : 150 - 400
+                # 4 : > 400
 
-                # To calculate travel_option
-                origin = '{lat},{lng}'.format(lat=findUser.latitude, lng=findUser.longitude)
                 if (len(restaurant_list) > 2 and restaurant_list != None):
-                    counter = 0
-
                     # The list of all the carousel columns
                     restaurant_carousel = []
 
                     # Temporary thumbnail_image
                     thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
-                    for restaurant in restaurant_list:
+                    for counter, restaurant in enumerate(restaurant_list):
                         destination = '{lat},{lng}'.format(lat=restaurant['restaurant']['location']['latitude'], lng=restaurant['restaurant']['location']['longitude'])
                         # Carousel Column
                         restaurant_column = CarouselColumn(
@@ -154,7 +160,6 @@ def handle_postback(event):
                         ])
 
                         # Force Stop by Counter
-                        counter += 1
                         if counter < 6:
                             restaurant_carousel.append(restaurant_column)
                         else :
@@ -180,16 +185,12 @@ def handle_postback(event):
                 search_places = GoogleMapsAPI().places(query=query, location=(findUser.latitude, findUser.longitude))
                 places_list = search_places['results']
 
-                # To calculate travel_option
-                origin = '{lat},{lng}'.format(lat=findUser.latitude, lng=findUser.longitude)
                 if (len(places_list) > 2 and places_list != None):
-                    counter = 0
-
                     # The list of all the carousel columns
                     places_carousel = []
                     # Temporary thumbnail_image
                     thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
-                    for places in places_list:
+                    for counter, places in enumerate(places_list):
                         destination = '{lat},{lng}'.format(
                             lat=places['geometry']['location']['lat'],
                             lng=places['geometry']['location']['lng'])
@@ -211,7 +212,6 @@ def handle_postback(event):
                         ])
 
                         # Force Stop by Counter
-                        counter += 1
                         if counter < 6:
                             places_carousel.append(places_column)
                         else :

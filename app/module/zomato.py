@@ -56,7 +56,7 @@ class ZomatoAPI:
         return response
 
 
-    def geocode(self, latitude, longitude):
+    def geocode(self, latitude, longitude, price_range=None):
         geocode_url = self.baseurl + 'geocode?lat={lat}&lon={lon}'.format(lat=latitude, lon=longitude)
         response = requests.get(url=geocode_url, headers=self.headers).json()
         #response_jsonify = response.json()
