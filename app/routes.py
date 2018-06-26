@@ -3,7 +3,7 @@ import sys
 import json
 import random
 import requests
-from flask import Flask, request, abort, url_for, current_app
+from flask import Flask, request, abort, url_for, current_app, send_from_directory
 
 from app import app, db
 from app.models import Users
@@ -31,6 +31,11 @@ from linebot.models import (
 
 line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET_TOKEN)
+
+@app.route('/serve')
+def serve_file():
+    filename = "IMG_OO41.jpg" # TODO: figure out your filename.
+    return send_from_directory(app.static_folder, filename)
 
 @app.route("/callback", methods=['POST'])
 def callback():
