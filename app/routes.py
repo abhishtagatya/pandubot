@@ -405,9 +405,15 @@ def handle_message(event):
                     ])
 
         elif ('cuaca' in msg):
-            pass
+            # Placeholder
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(
+                    text="Terlihat mendung sih di jalanan"))
+
         else :
             # Interaction
+            interaction_response = None
             with open('data/speech.json', 'r') as speechwords:
                 speech = json.load(speechwords)
 
@@ -420,10 +426,11 @@ def handle_message(event):
                         ))
                         break
 
-            line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(
-                    text=interaction_response))
+            if (interaction_response != None):
+                line_bot_api.reply_message(
+                    event.reply_token,
+                    TextSendMessage(
+                        text=interaction_response))
 
     else :
         line_bot_api.reply_message(
