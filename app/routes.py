@@ -409,7 +409,7 @@ def handle_message(event):
                     ),
                 actions=[
                     PostbackTemplateAction(
-                        label='Iya', text='Iya', data='search_location={search}'.format(search=msg)),
+                        label='Iya', text='Iya', data='search_location={search}'.format(search=msg + ':hasil pencarian')),
                     PostbackTemplateAction(
                         label='Tidak', text='Tidak', data='location_update=None')
                     ])
