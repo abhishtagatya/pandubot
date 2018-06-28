@@ -404,21 +404,24 @@ def handle_message(event):
                 # If no search is found by the keyword, then ask the user if they still want an answer
                 # By searching for the whole message
                 search_confirm = ConfirmTemplate(
-                    text='Sepertinya saya kurang mengetahui apa itu \'{message}\', apakah ingin tetap mencari?'.format(
+                    text='Sepertinya kata kunci ini belum di registrasikan secara resmi oleh Pandu, apakah ingin tetap mencari {message}?'.format(
                         message=msg
                     ),
                 actions=[
                     PostbackTemplateAction(
-                        label='Iya', text='Iya', data='search_location={search}'.format(search=msg + ':hasil pencarian')),
+                        label='Iya', text='Iya', data='search_for_unknown={search}'.format(search=msg + ':hasil pencarian')),
                     PostbackTemplateAction(
                         label='Tidak', text='Tidak', data='location_update=None')
                     ])
 
                 line_bot_api.reply_message(
-                    event.reply_token,
+                    event.reply_token,[
                     TemplateSendMessage(
-                        alt_text='Unknown Keyword Confirmation', template=search_confirm)
+                        alt_text='Unknown Keyword Confirmation', template=search_confirm),
+                    TextSendMessage(
+                        text='Harap diketahui oleh pengguna bahwa hasil pencarian mungkin tidak akurat karena kata kunci belum terdaftar secara resmi sebagai titik pencarian yang valid'
                     )
+                    ])
 
             else :
                 location_confirm = ConfirmTemplate(text='Apakah anda sedang berada di {location}?'.format(location=findUser.location),
