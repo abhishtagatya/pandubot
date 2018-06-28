@@ -59,6 +59,22 @@
       "mol",
       "hangout"
     ],
+    "masjid:masjid": [
+      "masjid",
+      "islam",
+      "muslim",
+      "quran",
+      "mosque",
+      "mesjid"
+    ],
+    "gereja:gereja": [
+      "gereja",
+      "church",
+      "jesus",
+      "kristen",
+      "christian",
+      "catholic"
+    ],
     "hospital:rumah sakit": [
       "sakit",
       "rs",

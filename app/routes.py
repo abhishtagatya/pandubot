@@ -3,7 +3,7 @@ import sys
 import json
 import random
 import requests
-from flask import Flask, request, abort, url_for, current_app, send_from_directory
+from flask import Flask, request, abort, url_for, current_app
 
 from app import app, db
 from app.models import Users
@@ -31,11 +31,6 @@ from linebot.models import (
 
 line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET_TOKEN)
-
-@app.route('/serve')
-def serve_file():
-    filename = "IMG_OO41.jpg" # TODO: figure out your filename.
-    return send_from_directory(app.static_folder, filename)
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -291,10 +286,31 @@ def handle_postback(event):
                 ])
 
         elif (command[0] == 'location_update'):
-            line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(
-                    text="Baiklah, silahkan perbarui lokasi Anda dengan mengirimkan lokasi"))
+            if (command[1] == 'search_for_unknown'):
+                data_search = command[2]
+                location_confirm = ConfirmTemplate(text='Apakah anda sedang berada di {location}?'.format(location=findUser.location),
+                actions=[
+                    PostbackTemplateAction(
+                        label='Iya', text='Iya', data='search_location={search}'.format(search=data_search)),
+                    PostbackTemplateAction(
+                        label='Tidak', text='Tidak', data='location_update=None')
+                    ])
+
+                line_bot_api.reply_message(
+                    event.reply_token,[
+                    LocationSendMessage(
+                        title='Posisi Terakhir Anda', address='{0}'.format(findUser.location),
+                        latitude=findUser.latitude, longitude=findUser.longitude
+                    ),
+                    TemplateSendMessage(
+                        alt_text='Location Confirmation', template=location_confirm)
+                    ])
+
+            else :
+                line_bot_api.reply_message(
+                    event.reply_token,
+                    TextSendMessage(
+                        text="Baiklah, silahkan perbarui lokasi Anda dengan mengirimkan lokasi"))
 
         elif (command[0] == 'create_user'):
             line_bot_api.reply_message(
@@ -385,10 +401,24 @@ def handle_message(event):
 
             # If data_search is not updated, then search is not found
             if (data_search is None):
+                # If no search is found by the keyword, then ask the user if they still want an answer
+                # By searching for the whole message
+                search_confirm = ConfirmTemplate(
+                    text='Sepertinya saya kurang mengetahui apa itu \'{message}\', apakah ingin tetap mencari?'.format(
+                        message=msg
+                    ),
+                actions=[
+                    PostbackTemplateAction(
+                        label='Iya', text='Iya', data='search_location={search}'.format(search=msg)),
+                    PostbackTemplateAction(
+                        label='Tidak', text='Tidak', data='location_update=None')
+                    ])
+
                 line_bot_api.reply_message(
                     event.reply_token,
-                    TextSendMessage(
-                    text="Wah tempat apa tuh?"))
+                    TemplateSendMessage(
+                        alt_text='Unknown Keyword Confirmation', template=search_confirm)
+                    )
 
             else :
                 location_confirm = ConfirmTemplate(text='Apakah anda sedang berada di {location}?'.format(location=findUser.location),
@@ -396,7 +426,7 @@ def handle_message(event):
                     PostbackTemplateAction(
                         label='Iya', text='Iya', data='search_location={search}={price}'.format(search=data_search, price=price_range)),
                     PostbackTemplateAction(
-                        label='Tidak', text='Tidak', data='location_update')
+                        label='Tidak', text='Tidak', data='location_update=None')
                     ])
 
                 line_bot_api.reply_message(
