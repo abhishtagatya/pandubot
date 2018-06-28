@@ -409,7 +409,8 @@ def handle_message(event):
                     ),
                 actions=[
                     PostbackTemplateAction(
-                        label='Iya', text='Iya', data='search_for_unknown={search}'.format(search=msg + ':hasil pencarian')),
+                        label='Iya', text='Iya', data='location_update=search_for_unknown={search}'.format(
+                            search=msg + ':hasil pencarian')),
                     PostbackTemplateAction(
                         label='Tidak', text='Tidak', data='location_update=None')
                     ])
@@ -419,7 +420,7 @@ def handle_message(event):
                     TemplateSendMessage(
                         alt_text='Unknown Keyword Confirmation', template=search_confirm),
                     TextSendMessage(
-                        text='Harap diketahui oleh pengguna bahwa hasil pencarian mungkin tidak akurat karena kata kunci belum terdaftar secara resmi sebagai titik pencarian yang valid'
+                        text='Hasil pencarian mungkin tidak akurat karena kata kunci belum terdaftar secara resmi sebagai titik pencarian yang valid.'
                     )
                     ])
 
