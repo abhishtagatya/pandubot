@@ -501,10 +501,8 @@ def handle_message(event):
 
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_qr_message(event):
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(
-            text=str(line_bot_api.get_message_content(event.message))))
+    message_content = line_bot_api.get_message_content(event.message.id)
+    app.logger.info(message_content)
 
 
 @handler.default()
