@@ -504,7 +504,7 @@ def handle_qr_message(event):
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(
-            text=str(event.message)))
+            text=str(get_message_content(event.message))))
 
 
 @handler.default()
