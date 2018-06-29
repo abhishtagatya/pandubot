@@ -501,11 +501,11 @@ def handle_message(event):
 
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_qr_message(event):
-    message_content = (event.message.thumbnail_image_url)
+    message_content = line_bot_api.get_message_content(event.message.id)
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(
-            text=str(message_content)
+            text=str(message_content.thumbnail_image_url)
         )
     )
 
