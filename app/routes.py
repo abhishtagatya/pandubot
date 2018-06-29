@@ -486,8 +486,9 @@ def handle_message(event):
                             provider_name=provider['name']
                         )),
                     TextSendMessage(
-                        text="Travel point Anda sekarang {point}".format(
+                        text="Travel point Anda sekarang {point} token entered : {token}".format(
                             point=findUser.travel_point
+                            token=input_token
                         ))
                     ])
             else :
