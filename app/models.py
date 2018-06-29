@@ -17,3 +17,15 @@ class Users(db.Model):
         self.location = location
         self.latitude = latitude
         self.longitude = longitude
+"""
+class VirtualStore(db.Model):
+
+    __tablename__ = 'VirtualStore'
+
+    id = db.Column(db.String(50), primary_key=True)
+    store_name = db.Column(db.String(50))
+    manager_name = db.Column(db.String(50))
+    location = db.Column(db.String(100))
+    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float)
+"""

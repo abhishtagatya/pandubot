@@ -1,0 +1,38 @@
+/*
+Navigation Bar
+*/
+
+* {
+  font-family: Comfortaa, Helvetica, Arial !important;
+}
+
+.jumbotron {
+  margin-bottom: 0 !important;
+}
+
+.custom-divider {
+  align-items: center;
+  text-align: center;
+  margin-top: 0 !important;
+  margin-bottom: 20px;
+  padding: 10px;
+}
+
+.custom-divider-title {
+  color: white !important;
+  font-weight: bold !important;
+  margin: 0;
+}
+
+.card-title {
+  font-weight: bold;
+}
+
+.jumbotron-image {
+
+}
+
+#custom-navbar-title {
+  font-family: Comfortaa, Helvetica, Arial !important;
+  font-weight: bold;
+}

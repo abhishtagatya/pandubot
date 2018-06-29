@@ -3,7 +3,9 @@ import sys
 import json
 import random
 import requests
-from flask import Flask, request, abort, url_for, current_app
+from flask import (
+    Flask, request, abort, url_for, current_app, render_template
+)
 
 from app import app, db
 from app.models import Users
@@ -31,6 +33,10 @@ from linebot.models import (
 
 line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET_TOKEN)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -425,6 +431,7 @@ def handle_message(event):
                     ])
 
             else :
+                # this line will execute if it has found a match in keyword.json
                 location_confirm = ConfirmTemplate(text='Apakah anda sedang berada di {location}?'.format(location=findUser.location),
                 actions=[
                     PostbackTemplateAction(
@@ -449,6 +456,20 @@ def handle_message(event):
                 event.reply_token,
                 TextSendMessage(
                     text="Terlihat mendung sih di jalanan"))
+
+        elif ('regist' in msg):
+            confirm_template = ConfirmTemplate(
+                text='Untuk mengoptimalkan penggunaan aplikasi, apakah anda berkenan untuk registrasi secara otomatis?',
+             actions=[
+                PostbackTemplateAction(
+                    label='Iya', text='Iya, registrasikan akun saya', data='create_user=confirm'),
+                PostbackTemplateAction(
+                    label='Tidak', text='Tidak, jangan registrasikan akun saya', data='create_user=decline'),
+            ])
+            line_bot_api.reply_message(
+                event.reply_token,
+                TemplateSendMessage(
+                    alt_text='User Confirmation', template=confirm_template))
 
         else :
             # Interaction
@@ -476,6 +497,14 @@ def handle_message(event):
             event.reply_token,
             TextSendMessage(
                 text="Sepertinya Anda belum registrasi, silahkan registrasi terlebih dahulu"))
+
+
+@handler.add(MessageEvent, message=ImageMessage)
+def handle_qr_message(event):
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(
+            text=str(event.message)))
 
 
 @handler.default()
