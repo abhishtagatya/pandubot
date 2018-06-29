@@ -458,19 +458,53 @@ def handle_message(event):
                 TextSendMessage(
                     text="Terlihat mendung sih di jalanan"))
 
-        elif ('incr' in msg):
+        elif ('token' in msg):
+            status = False
+            input_token = msg.split()[1]
 
-            value = int(msg.split()[1])
+            with open('data/token.json', 'r') as token_file:
+                token_list = json.load(token_file)
 
-            findUser.travel_point += value
-            db.session.commit()
+            for provider in token_list['token_list']:
+                if (input_token == provider['token']):
+                    status = True
+                    findUser.travel_point += provider['value']
+                    app.logger.info('{user} gained {value} points from {provider_name}'.format(
+                        user=findUser.id,
+                        value=provider['value'],
+                        provider_name=provider['name']
+                    ))
+                    db.session.commit()
+                    break
 
-            line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(
-                    text="Travel Point Updated"))
+            if (status) :
+                line_bot_api.reply_message(
+                    event.reply_token,[
+                    TextSendMessage(
+                        text="Selamat! Anda mendapatkan {value} Points dari {provider_name}".format(
+                            value=provider['value'],
+                            provider_name=provider['name']
+                        )),
+                    TextSendMessage(
+                        text="Travel point Anda sekarang {point}".format(
+                            point=findUser.travel_point
+                        ))
+                    ])
+            else :
+                status = False
+                line_bot_api.reply_message(
+                    event.reply_token,[
+                    TextSendMessage(
+                        text="Token tidak dikenal oleh Pandu, coba cek kembali token yang di berikan"),
+                    TextSendMessage(
+                        text="Travel point Anda sekarang {point}".format(
+                            point=findUser.travel_point
+                        ))
+                    ])
 
-        elif ('decr' in msg):
+
+
+        elif ('clear' in msg):
 
             value = int(msg.split()[1])
 
@@ -488,7 +522,9 @@ def handle_message(event):
             line_bot_api.reply_message(
                 event.reply_token,
                 TextSendMessage(
-                    text="Total Travel Point : {point}".format(point=findUser.travel_point)))
+                    text="Travel point Anda sekarang {point}".format(
+                        point=findUser.travel_point
+                    )))
 
         else :
             # Interaction
