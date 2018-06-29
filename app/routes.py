@@ -62,9 +62,9 @@ def handle_followevent(event):
         text='Untuk mengoptimalkan penggunaan aplikasi, apakah anda berkenan untuk registrasi secara otomatis?',
      actions=[
         PostbackTemplateAction(
-            label='Iya', text='Iya, registrasikan akun saya', data='create_user=confirm'),
+            label='Iya', text='Iya', data='create_user=confirm'),
         PostbackTemplateAction(
-            label='Tidak', text='Tidak, jangan registrasikan akun saya', data='create_user=decline'),
+            label='Tidak', text='Tidak', data='create_user=decline'),
     ])
     line_bot_api.reply_message(
         event.reply_token,[
@@ -95,7 +95,8 @@ def handle_postback(event):
                         name=user_profile.display_name,
                         location='Jakarta, Indonesia',
                         latitude=-6.17511,
-                        longitude=106.8650395
+                        longitude=106.8650395,
+                        travel_point=0
                     )
                     db.session.add(new_user)
                     # Logging
@@ -255,8 +256,8 @@ def handle_postback(event):
             travel_options = [
             {'label' : 'Jalan Kaki', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'},
             {'label' : 'Naik Sepeda', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'},
-            {'label' : 'Menyetir', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'},
-            {'label' : 'Naik Bus', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'}
+            {'label' : 'Naik Bus', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'},
+            {'label' : 'Menyetir', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'}
             ]
 
             travel_carousel = []
@@ -462,14 +463,46 @@ def handle_message(event):
                 text='Untuk mengoptimalkan penggunaan aplikasi, apakah anda berkenan untuk registrasi secara otomatis?',
              actions=[
                 PostbackTemplateAction(
-                    label='Iya', text='Iya, registrasikan akun saya', data='create_user=confirm'),
+                    label='Iya', text='Iya', data='create_user=confirm'),
                 PostbackTemplateAction(
-                    label='Tidak', text='Tidak, jangan registrasikan akun saya', data='create_user=decline'),
+                    label='Tidak', text='Tidak', data='create_user=decline'),
             ])
             line_bot_api.reply_message(
                 event.reply_token,
                 TemplateSendMessage(
                     alt_text='User Confirmation', template=confirm_template))
+
+        elif ('incr' in msg):
+
+            value = msg.split()[1]
+
+            findUser.travel_point += value
+            db.session.commit()
+
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(
+                    text="Travel Point Updated"))
+
+        elif ('decr' in msg):
+
+            value = msg.split()[1]
+
+            findUser.travel_point += value
+            db.session.commit()
+
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(
+                    text="Travel Point Updated"))
+
+
+        elif ('cek' in msg):
+
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(
+                    text="Total Travel Point : {point}".format(point=findUser.travel_point)))
 
         else :
             # Interaction
@@ -497,17 +530,6 @@ def handle_message(event):
             event.reply_token,
             TextSendMessage(
                 text="Sepertinya Anda belum registrasi, silahkan registrasi terlebih dahulu"))
-
-
-@handler.add(MessageEvent, message=ImageMessage)
-def handle_qr_message(event):
-    message_content = (event.message.id)
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(
-            text=str(message_content)
-        )
-    )
 
 
 @handler.default()

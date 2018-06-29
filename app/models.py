@@ -10,13 +10,15 @@ class Users(db.Model):
     location = db.Column(db.String(100))
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
+    travel_point = db.Column(db.Integer)
 
-    def __init__(self, id, name, location, latitude, longitude):
+    def __init__(self, id, name, location, latitude, longitude, travel_point):
         self.id = id
         self.name = name
         self.location = location
         self.latitude = latitude
         self.longitude = longitude
+        self.travel_point = travel_point
 """
 class VirtualStore(db.Model):
 

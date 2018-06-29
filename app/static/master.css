@@ -8,6 +8,7 @@ Navigation Bar
 
 .jumbotron {
   margin-bottom: 0 !important;
+  text-align : center !important;
 }
 
 .custom-divider {
@@ -30,6 +31,16 @@ Navigation Bar
 
 .jumbotron-image {
 
+}
+
+.custom-feature-list {
+  text-align: center !important;
+  padding: 10px 60px !important;
+}
+
+.carousel-img {
+  max-width: 500px !important;
+  max-height: 500px !important;
 }
 
 #custom-navbar-title {
