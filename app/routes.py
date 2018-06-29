@@ -460,7 +460,7 @@ def handle_message(event):
 
         elif ('token' in msg):
             status = False
-            input_token = msg.split()[1]
+            input_token = (msg.split()[1]).upper()
 
             with open('data/token.json', 'r') as token_file:
                 token_list = json.load(token_file)
