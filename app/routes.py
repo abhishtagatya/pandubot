@@ -487,7 +487,7 @@ def handle_message(event):
                         )),
                     TextSendMessage(
                         text="Travel point Anda sekarang {point} token entered : {token}".format(
-                            point=findUser.travel_point
+                            point=findUser.travel_point,
                             token=input_token
                         ))
                     ])
