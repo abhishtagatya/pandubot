@@ -458,23 +458,9 @@ def handle_message(event):
                 TextSendMessage(
                     text="Terlihat mendung sih di jalanan"))
 
-        elif ('regist' in msg):
-            confirm_template = ConfirmTemplate(
-                text='Untuk mengoptimalkan penggunaan aplikasi, apakah anda berkenan untuk registrasi secara otomatis?',
-             actions=[
-                PostbackTemplateAction(
-                    label='Iya', text='Iya', data='create_user=confirm'),
-                PostbackTemplateAction(
-                    label='Tidak', text='Tidak', data='create_user=decline'),
-            ])
-            line_bot_api.reply_message(
-                event.reply_token,
-                TemplateSendMessage(
-                    alt_text='User Confirmation', template=confirm_template))
-
         elif ('incr' in msg):
 
-            value = msg.split()[1]
+            value = int(msg.split()[1])
 
             findUser.travel_point += value
             db.session.commit()
@@ -486,9 +472,9 @@ def handle_message(event):
 
         elif ('decr' in msg):
 
-            value = msg.split()[1]
+            value = int(msg.split()[1])
 
-            findUser.travel_point += value
+            findUser.travel_point -= value
             db.session.commit()
 
             line_bot_api.reply_message(
