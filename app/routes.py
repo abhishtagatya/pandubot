@@ -8,7 +8,7 @@ from flask import (
 )
 
 from app import app, db
-from app.models import Users
+from app.models import Users, TravelPointToken
 from app.module.zomato import ZomatoAPI
 from app.module.geomaps import GoogleMapsAPI
 from instance.config import LINE_CHANNEL_ACCESS_TOKEN, LINE_CHANNEL_SECRET_TOKEN
@@ -459,25 +459,20 @@ def handle_message(event):
                     text="Terlihat mendung sih di jalanan"))
 
         elif ('token' in msg):
-            status = False
             input_token = (msg.split()[1]).upper()
 
-            with open('data/token.json', 'r') as token_file:
-                token_list = json.load(token_file)
+            find_token = TravelPointToken.query.filter_by(token_id=input_token).first()
 
-            for provider in token_list['token_list']:
-                if (input_token == provider['token']):
-                    status = True
-                    findUser.travel_point += provider['value']
-                    app.logger.info('{user} gained {value} points from {provider_name}'.format(
-                        user=findUser.id,
-                        value=provider['value'],
-                        provider_name=provider['name']
-                    ))
-                    db.session.commit()
-                    break
+            if (find_token != None):
+                findUser.travel_point += find_token.token_point_value
+                app.logger.info('{user} gained {value} points from {provider_name}'.format(
+                    user=findUser.id,
+                    value=find_token.token_point_value,
+                    provider_name=find_token.token_name
+                ))
+                find_token.token_point_visitor += 1
+                db.session.commit()
 
-            if (status) :
                 line_bot_api.reply_message(
                     event.reply_token,[
                     TextSendMessage(
@@ -491,6 +486,7 @@ def handle_message(event):
                             token=input_token
                         ))
                     ])
+
             else :
                 status = False
                 line_bot_api.reply_message(
