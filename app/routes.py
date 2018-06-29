@@ -477,8 +477,8 @@ def handle_message(event):
                     event.reply_token,[
                     TextSendMessage(
                         text="Selamat! Anda mendapatkan {value} Points dari {provider_name}".format(
-                            value=provider['value'],
-                            provider_name=provider['name']
+                            value=find_token.token_point_value,
+                            provider_name=find_token.token_name
                         )),
                     TextSendMessage(
                         text="Travel point Anda sekarang {point} token entered : {token}".format(
@@ -488,7 +488,6 @@ def handle_message(event):
                     ])
 
             else :
-                status = False
                 line_bot_api.reply_message(
                     event.reply_token,[
                     TextSendMessage(
