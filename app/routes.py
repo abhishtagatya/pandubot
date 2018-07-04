@@ -509,6 +509,7 @@ def handle_message(event):
                     ])
 
         elif ('tukar' in msg or 'tuker' in msg):
+            thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
             exchange_option_template = ImageCarouselTemplate(columns=[
                 ImageCarouselColumn(image_url=thumbnail_image,
                                     action=PostbackTemplateAction(
