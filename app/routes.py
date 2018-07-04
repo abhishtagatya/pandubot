@@ -525,7 +525,7 @@ def handle_message(event):
                                         label='Isi Pulsa', data='point_exchange=pulsa')),
                 ImageCarouselColumn(image_url=thumbnail_image,
                                     action=PostbackTemplateAction(
-                                        label='Tiket Murah', text='Cek cuaca hari ini di lokasi saya'))
+                                        label='Tiket Murah', data='point_exchange=tiket'))
             ])
 
             line_bot_api.reply_message(
