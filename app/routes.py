@@ -9,7 +9,7 @@ from flask import (
 )
 
 from app import app, db
-from app.models import Users, TravelPointToken
+from app.models import Users, TravelPointToken, TravelPointPromotion, MarketPlaceDatabase
 from app.module.zomato import ZomatoAPI
 from app.module.geomaps import GoogleMapsAPI
 from instance.config import LINE_CHANNEL_ACCESS_TOKEN, LINE_CHANNEL_SECRET_TOKEN
@@ -324,10 +324,20 @@ def handle_postback(event):
             promotion_category = command[1]
 
             # Find Categories from database and iterate over them like a list
+            findPromotion = TravelPointPromotion.query.filter_by(promotion_category=promotion_category).first()
+
             line_bot_api.reply_message(
                 event.reply_token,
                 TextSendMessage(
-                    text="Anda sudah melakukan registrasi otomatis"))
+                    text="{id}\n{name}\n{desc}\n{category}\n{cost}\n{secret}".format(
+                        id=findPromotion.promotion_id,
+                        name=findPromotion.promotion_name,
+                        desc=findPromotion.promotion_description,
+                        category=findPromotion.promotion_category,
+                        cost=findPromotion.promotion_cost,
+                        secret=findPromotion.promotion_secret
+                    )))
+
 
         elif (command[0] == 'create_user'):
             line_bot_api.reply_message(
