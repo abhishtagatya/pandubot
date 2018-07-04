@@ -1,3 +1,4 @@
+import re
 import os
 import sys
 import json
@@ -240,6 +241,33 @@ def handle_postback(event):
                             text="Maaf...tapi saat ini kita tidak menemukan {query} di dekat Anda".format(
                                 query=query)))
 
+        elif (command[0] == 'location_update'):
+            if (command[1] == 'search_for_unknown'):
+                data_search = command[2]
+                location_confirm = ConfirmTemplate(text='Apakah anda sedang berada di {location}?'.format(location=findUser.location),
+                actions=[
+                    PostbackTemplateAction(
+                        label='Iya', text='Iya', data='search_location={search}'.format(search=data_search)),
+                    PostbackTemplateAction(
+                        label='Tidak', text='Tidak', data='location_update=None')
+                    ])
+
+                line_bot_api.reply_message(
+                    event.reply_token,[
+                    LocationSendMessage(
+                        title='Posisi Terakhir Anda', address='{0}'.format(findUser.location),
+                        latitude=findUser.latitude, longitude=findUser.longitude
+                    ),
+                    TemplateSendMessage(
+                        alt_text='Location Confirmation', template=location_confirm)
+                    ])
+
+            else :
+                line_bot_api.reply_message(
+                    event.reply_token,
+                    TextSendMessage(
+                        text="Baiklah, silahkan perbarui lokasi Anda dengan mengirimkan lokasi"))
+
 
         elif (command[0] == 'travel_option'):
             origin = command[1]
@@ -292,32 +320,14 @@ def handle_postback(event):
                     alt_text='Pilihan Perjalanan', template=travel_option_template)
                 ])
 
-        elif (command[0] == 'location_update'):
-            if (command[1] == 'search_for_unknown'):
-                data_search = command[2]
-                location_confirm = ConfirmTemplate(text='Apakah anda sedang berada di {location}?'.format(location=findUser.location),
-                actions=[
-                    PostbackTemplateAction(
-                        label='Iya', text='Iya', data='search_location={search}'.format(search=data_search)),
-                    PostbackTemplateAction(
-                        label='Tidak', text='Tidak', data='location_update=None')
-                    ])
+        elif (command[0] == 'point_exchange'):
+            promotion_category = command[1]
 
-                line_bot_api.reply_message(
-                    event.reply_token,[
-                    LocationSendMessage(
-                        title='Posisi Terakhir Anda', address='{0}'.format(findUser.location),
-                        latitude=findUser.latitude, longitude=findUser.longitude
-                    ),
-                    TemplateSendMessage(
-                        alt_text='Location Confirmation', template=location_confirm)
-                    ])
-
-            else :
-                line_bot_api.reply_message(
-                    event.reply_token,
-                    TextSendMessage(
-                        text="Baiklah, silahkan perbarui lokasi Anda dengan mengirimkan lokasi"))
+            # Find Categories from database and iterate over them like a list
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(
+                    text="Anda sudah melakukan registrasi otomatis"))
 
         elif (command[0] == 'create_user'):
             line_bot_api.reply_message(
@@ -498,20 +508,31 @@ def handle_message(event):
                         ))
                     ])
 
-
-
-        elif ('clear' in msg):
-
-            value = int(msg.split()[1])
-
-            findUser.travel_point -= value
-            db.session.commit()
+        elif ('tukar' in msg or 'tuker' in msg):
+            exchange_option_template = ImageCarouselTemplate(columns=[
+                ImageCarouselColumn(image_url=thumbnail_image,
+                                    action=PostbackTemplateAction(
+                                        label='Belanja', data='point_exchange=shop')),
+                ImageCarouselColumn(image_url=thumbnail_image,
+                                    action=PostbackTemplateAction(
+                                        label='Makan Murah', data='point_exchange=food')),
+                ImageCarouselColumn(image_url=thumbnail_image,
+                                    action=PostbackTemplateAction(
+                                        label='Voucher Game', data='point_exchange=game')),
+                ImageCarouselColumn(image_url=thumbnail_image,
+                                    action=PostbackTemplateAction(
+                                        label='Isi Pulsa', data='point_exchange=pulsa')),
+                ImageCarouselColumn(image_url=thumbnail_image,
+                                    action=PostbackTemplateAction(
+                                        label='Tiket Murah', text='Cek cuaca hari ini di lokasi saya'))
+            ])
 
             line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(
-                    text="Travel Point Updated"))
-
+                event.reply_token,[
+                TextSendMessage(text="Silahkan Pilih dari kategori yang kami sediakan!"),
+                TemplateSendMessage(
+                    alt_text='Pilihan Tukar Point', template=exchange_option_template)
+                ])
 
         elif ('cek' in msg):
 
