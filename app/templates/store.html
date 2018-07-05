@@ -1,0 +1,18 @@
+{% extends "app.html" %}
+{% block content %}
+
+<div class="jumbotron jumbotron-image">
+  <h1 class="display-4">Waste Market</h1>
+  <p class="lead">Gimana kalau kita ubah sampah dan limbah di sekitar kita menjadi uang?</p>
+  <hr class="my-4">
+  <p>Pandu telah membuka pasar untuk menjual beli limbah yang bisa digunakan ulang untuk di daur ulang. Memberikan peluang bisnis untuk masyarakat Smart City kita.</p>
+  <p class="lead">
+    <a class="btn btn-succes btn-lg text-light bg-success" href="{{ url_for('store_add') }}" role="button">Pasang Iklan</a>
+  </p>
+</div>
+
+<div class="custom-divider container-fluid bg-success">
+  <h4 class="custom-divider-title">Iklan Terpasang</h4>
+</div>
+
+{% endblock %}

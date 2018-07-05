@@ -39,6 +39,34 @@ handler = WebhookHandler(LINE_CHANNEL_SECRET_TOKEN)
 def index():
     return render_template('index.html')
 
+@app.route('/store')
+def store():
+    return render_template('store.html')
+
+@app.route('/store/add')
+def store_add():
+    return render_template('store_adding.html')
+
+@app.route('/store/add', methods=['POST', 'GET'])
+def store_form():
+
+    if request.method == 'POST':
+        marketName = request.form['username']
+        marketDemand = request.form['url']
+        marketPrice = request.form['a']
+        marketDescription = request.form['url']
+        marketAdditional = request.form['ad']
+
+        ownerName = request.form['email']
+        ownerLINE = request.form['type']
+        ownerNumber = request.form['brand']
+
+
+    return redirect('store.html')
+
+
+# LINE BOT Starts Here!
+
 @app.route("/callback", methods=['POST'])
 def callback():
     # Get X-Line-Signature header value
@@ -552,6 +580,16 @@ def handle_message(event):
                 TextSendMessage(
                     text="Travel point Anda sekarang {point}".format(
                         point=findUser.travel_point
+                    )))
+
+        elif ('pandu' in msg and 'id' in msg):
+
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(
+                    text="Full {id} \n\n12c {id2}".format(
+                        id=findUser.id,
+                        id2=(findUser.id)[:12]
                     )))
 
         else :

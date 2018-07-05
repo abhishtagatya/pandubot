@@ -1,0 +1,51 @@
+{% extends "app.html" %} {% block content %}
+<div class="container" style="margin-top: 30px">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title text-success" title="* are required">Pasang Iklan</h5>
+      <form method="post">
+        <div class="form-group">
+          <div class="row">
+            <div class="col">
+              <label for="exampleFormControlInput1">Nama Iklan</label>
+              <input type="text" class="form-control" placeholder="Recycle R Us" maxlength="50" required>
+            </div>
+            <div class="col">
+              <label for="exampleFormControlInput1">Material</label>
+              <select class="form-control" id="exampleFormControlSelect1" required>
+                {% for option in ['plastik', 'kertas', 'kardus', 'alumunium', 'kayu', 'besi', 'gelas', 'beling', 'baterai','electronic waste', 'lainnya'] %}
+                  <option value="{{option}}">{{option|capitalize}}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <br>
+          <label for="exampleFormControlInput1">Harga Per Kilogram</label>
+          <input type="number" class="form-control" placeholder="Rp50000" required>
+          <br>
+          <label for="exampleFormControlInput1">Deskripsi</label>
+          <input type="text" class="form-control" placeholder="Tambahkan Deskripsi" required>
+          <br>
+          <label for="exampleFormControlInput1">Additonal</label>
+          <input type="text" class="form-control" placeholder="Tambahan Informasi" required>
+          <hr class="my-4">
+          <h5 class="card-title text-success" title="* are required">Informasi Pengguna</h5>
+          <label for="exampleFormControlInput1">Nama Lengkap</label>
+          <input type="text" class="form-control" placeholder="John Doe" maxlength="20" required>
+          <br>
+          <label for="exampleFormControlInput1">ID LINE</label>
+          <input type="text" class="form-control" placeholder="LINE ID" maxlength="20" required>
+          <br>
+          <label for="exampleFormControlInput1">ID Pandu</label>
+          <input type="text" class="form-control" placeholder="Tanyakan Pandu ID String" maxlength="12" required>
+          <br>
+          <label for="exampleFormControlInput1">Nomor Telpon</label>
+          <input type="tel" class="form-control" placeholder="+62" maxlength="15" required>
+          <br>
+          <button type="submit" class="btn text-light bg-success btn-lg btn-block">Submit Form</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
