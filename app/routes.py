@@ -400,8 +400,8 @@ def handle_postback(event):
             for promotion in findPromotion:
 
                 promotion_column = CarouselColumn(
-                    title=str(promotion.promotion_name),
-                    text=str(promotion.promotion_description),
+                    title=str(promotion.promotion_name)[:40],
+                    text=str(promotion.promotion_description)[:60],
                     actions=[
                     PostbackTemplateAction(
                         label='Tukar Point',
