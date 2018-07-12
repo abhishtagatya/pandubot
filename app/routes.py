@@ -402,13 +402,13 @@ def handle_postback(event):
                 promotion_column = CarouselColumn(
                     title=str(promotion.promotion_name),
                     text=str(promotion.promotion_description),
-                    action=
+                    actions=[
                     PostbackTemplateAction(
                         label='Tukar Point',
                         data="point_exchange_confirm={promotion_id}".format(
                             promotion_id=promotion.promotion_id
                         ))
-                    )
+                    ])
 
                 promotion_carousel.append(promotion_column)
 
