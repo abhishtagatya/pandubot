@@ -15,4 +15,45 @@
   <h4 class="custom-divider-title">Iklan Terpasang</h4>
 </div>
 
+<div class="container-fluid">
+  <div class="card">
+    <div class="card-body">
+
+  {% for store in store_list %}
+
+  <div class="row" style="margin: 0">
+    {% for store_information in store %}
+           <div class="col-sm-3" style="margin-top: 10px; margin-bottom: 10px">
+             <div class="card" style="max-width: 18rem;">
+                <img class="card-img-top" src="{{ url_for('static', filename='img/placeholder_100.jpeg') }}" alt="Card image cap">
+                <div class="card-body">
+                  <h5 class="card-title">{{ store_information['market_name'] }}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">{{ store_information['market_demand'] }}</h6>
+                  <p class="card-text">{{ store_information['market_description'] }}</p>
+                  <p class="card-text">{{ store_information['market_owner'] }} - {{ store_information['market_owner_number'] }}</p>
+                </div>
+              </div>
+           </div>
+    {% endfor %}
+   </div>
+   {% endfor %}
+
+   <nav aria-label="Page navigation example">
+ <ul class="pagination justify-content-center">
+   <li class="page-item disabled">
+     <a class="page-link" href="#" tabindex="-1">Previous</a>
+   </li>
+   <li class="page-item"><a class="page-link text-success" href="#">1</a></li>
+   <li class="page-item"><a class="page-link text-success" href="#">2</a></li>
+   <li class="page-item"><a class="page-link text-success" href="#">3</a></li>
+   <li class="page-item">
+     <a class="page-link text-success" href="#">Next</a>
+   </li>
+ </ul>
+</nav>
+
+ </div>
+</div>
+</div>
+
 {% endblock %}

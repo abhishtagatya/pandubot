@@ -8,12 +8,12 @@
           <div class="row">
             <div class="col">
               <label for="exampleFormControlInput1">Nama Iklan</label>
-              <input type="text" class="form-control" placeholder="Recycle R Us" maxlength="50" required>
+              <input type="text" class="form-control" placeholder="Recycle R Us" maxlength="50" name="market-name" required>
             </div>
             <div class="col">
               <label for="exampleFormControlInput1">Material</label>
-              <select class="form-control" id="exampleFormControlSelect1" required>
-                {% for option in ['plastik', 'kertas', 'kardus', 'alumunium', 'kayu', 'besi', 'gelas', 'beling', 'baterai','electronic waste', 'lainnya'] %}
+              <select class="form-control" id="exampleFormControlSelect1" name="market-demand" required>
+                {% for option in ['plastik', 'kertas', 'kardus', 'kayu', 'gelas', 'beling', 'baterai','electronic waste', 'lainnya'] %}
                   <option value="{{option}}">{{option|capitalize}}</option>
                 {% endfor %}
               </select>
@@ -21,26 +21,26 @@
           </div>
           <br>
           <label for="exampleFormControlInput1">Harga Per Kilogram</label>
-          <input type="number" class="form-control" placeholder="Rp50000" required>
+          <input type="number" class="form-control" placeholder="Rp50000" name="market-price" required>
           <br>
           <label for="exampleFormControlInput1">Deskripsi</label>
-          <input type="text" class="form-control" placeholder="Tambahkan Deskripsi" required>
+          <input type="text" class="form-control" placeholder="Tambahkan Deskripsi" name="market-description" maxlength="70" required>
           <br>
           <label for="exampleFormControlInput1">Additonal</label>
-          <input type="text" class="form-control" placeholder="Tambahan Informasi" required>
+          <input type="text" class="form-control" placeholder="Tambahan Informasi" name="market-additional" maxlength="100">
           <hr class="my-4">
           <h5 class="card-title text-success" title="* are required">Informasi Pengguna</h5>
           <label for="exampleFormControlInput1">Nama Lengkap</label>
-          <input type="text" class="form-control" placeholder="John Doe" maxlength="20" required>
+          <input type="text" class="form-control" placeholder="John Doe" maxlength="20" name="owner-name" required>
           <br>
           <label for="exampleFormControlInput1">ID LINE</label>
-          <input type="text" class="form-control" placeholder="LINE ID" maxlength="20" required>
+          <input type="text" class="form-control" placeholder="LINE ID" maxlength="20" name="owner-line-id" required>
           <br>
           <label for="exampleFormControlInput1">ID Pandu</label>
-          <input type="text" class="form-control" placeholder="Tanyakan Pandu ID String" maxlength="12" required>
+          <input type="text" class="form-control" placeholder="Tanyakan Pandu ID String" maxlength="12" name="owner-pandu-id" required>
           <br>
           <label for="exampleFormControlInput1">Nomor Telpon</label>
-          <input type="tel" class="form-control" placeholder="+62" maxlength="15" required>
+          <input type="tel" class="form-control" placeholder="+62" maxlength="15" name="owner-telephone" required>
           <br>
           <button type="submit" class="btn text-light bg-success btn-lg btn-block">Submit Form</button>
       </form>

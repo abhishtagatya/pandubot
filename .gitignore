@@ -1,2 +1,4 @@
 */__pycache__/*
 *.pyc
+content_inject/
+content_manager.*

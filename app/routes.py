@@ -1,11 +1,8 @@
 import re
-import os
-import sys
 import json
 import random
-import requests
 from flask import (
-    Flask, request, abort, url_for, current_app, render_template
+    Flask, request, abort, url_for, current_app, render_template, redirect
 )
 
 from app import app, db
@@ -41,7 +38,21 @@ def index():
 
 @app.route('/store')
 def store():
-    return render_template('store.html')
+    row_limit = 5
+    col_limit = 4
+
+    query_all_market = MarketPlaceDatabase.query.all()
+    chunked_all_market = []
+    temp_all_market = []
+
+    for i in range(len(query_all_market)):
+        temp_all_market.append(query_all_market[i])
+        if (len(temp_all_market) % col_limit == 0):
+            chunked_all_market.append(temp_all_market)
+            temp_all_market = []
+
+    print(chunked_all_market)
+    return render_template('store.html', store_list=chunked_all_market, row_limit=row_limit, col_limit=col_limit)
 
 @app.route('/store/add')
 def store_add():
@@ -51,18 +62,48 @@ def store_add():
 def store_form():
 
     if request.method == 'POST':
-        marketName = request.form['username']
-        marketDemand = request.form['url']
-        marketPrice = request.form['a']
-        marketDescription = request.form['url']
-        marketAdditional = request.form['ad']
 
-        ownerName = request.form['email']
-        ownerLINE = request.form['type']
-        ownerNumber = request.form['brand']
+        marktetId = request.form['owner-pandu-id']
+        marketName = request.form['market-name']
+        marketDemand = request.form['market-demand']
+        marketPrice = request.form['market-price']
+        marketDescription = request.form['market-description']
+        marketAdditional = request.form['market-additional']
 
+        ownerName = request.form['owner-name']
+        ownerLINE = request.form['owner-line-id']
+        ownerNumber = request.form['owner-telephone']
 
-    return redirect('store.html')
+        # Additonal not required
+        if (marketAdditional == '' or marketAdditional == None):
+            marketAdditional = "{name} tidak menambahkan informasi lebih".format(
+                name=ownerName
+            )
+
+        # Checking for valid Pandu ID
+        valid_id = False
+        for users in Users.query.all():
+            if (users.id[:12] == marktetId):
+                valid_id = True
+
+        findMarket = MarketPlaceDatabase.query.filter_by(market_id=marktetId).first()
+        if (findMarket == None and valid_id):
+            new_market = MarketPlaceDatabase(
+                market_id=marktetId,
+                market_name=marketName,
+                market_owner=ownerName,
+                market_owner_line_id=ownerLINE,
+                market_owner_number=ownerNumber,
+                market_description=marketDescription,
+                market_demand=marketDemand,
+                market_price=marketPrice,
+                market_additional=marketAdditional
+            )
+            db.session.add(new_market)
+            db.session.commit()
+        else :
+            print('Error')
+    return redirect('store')
 
 
 # LINE BOT Starts Here!
@@ -352,19 +393,35 @@ def handle_postback(event):
             promotion_category = command[1]
 
             # Find Categories from database and iterate over them like a list
-            findPromotion = TravelPointPromotion.query.filter_by(promotion_category=promotion_category).first()
+            findPromotion = TravelPointPromotion.query.filter_by(promotion_category=promotion_category)
 
+            promotion_carousel = []
+
+            for promotion in findPromotion:
+
+                promotion_column = CarouselColumn(
+                    title=str(promotion.promotion_name),
+                    text=str(promotion.description),
+                    actions=
+                    PostbackTemplateAction(
+                        label='Tukar Point',
+                        data="point_exchange_confirm={promotion_id}".format(
+                            promotion_id=promotion.promotion_id
+                        ))
+                    )
+
+                promotion_carousel.append(promotion_column)
+
+
+            promotion_template_carousel = CarouselTemplate(columns=promotion_carousel)
             line_bot_api.reply_message(
-                event.reply_token,
+                event.reply_token,[
                 TextSendMessage(
-                    text="{id}\n{name}\n{desc}\n{category}\n{cost}\n{secret}".format(
-                        id=findPromotion.promotion_id,
-                        name=findPromotion.promotion_name,
-                        desc=findPromotion.promotion_description,
-                        category=findPromotion.promotion_category,
-                        cost=findPromotion.promotion_cost,
-                        secret=findPromotion.promotion_secret
-                    )))
+                    text="Saya akan carikan point exchange untuk kategori {category}".format(
+                        category=promotion_category)),
+                TemplateSendMessage(
+                    alt_text='Promotion Carousel', template=promotion_template_carousel)
+                ])
 
 
         elif (command[0] == 'create_user'):
@@ -587,10 +644,52 @@ def handle_message(event):
             line_bot_api.reply_message(
                 event.reply_token,
                 TextSendMessage(
-                    text="Full {id} \n\n12c {id2}".format(
-                        id=findUser.id,
-                        id2=(findUser.id)[:12]
+                    text="Pandu ID : {id}\nTolong di rahasiakan.".format(
+                        id=(findUser.id)[:12]
                     )))
+
+        elif ('pasar' in msg and 'limbah' in msg):
+
+            thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
+            market_option_template = ImageCarouselTemplate(columns=[
+                ImageCarouselColumn(image_url=thumbnail_image,
+                                    action=PostbackTemplateAction(
+                                        label='Plastik', data='waste_market=plastik')),
+                ImageCarouselColumn(image_url=thumbnail_image,
+                                    action=PostbackTemplateAction(
+                                        label='Kertas', data='waste_market=kertas')),
+                ImageCarouselColumn(image_url=thumbnail_image,
+                                    action=PostbackTemplateAction(
+                                        label='Kardus', data='waste_market=kardus')),
+                ImageCarouselColumn(image_url=thumbnail_image,
+                                    action=PostbackTemplateAction(
+                                        label='Kayu', data='waste_market=kayu')),
+                ImageCarouselColumn(image_url=thumbnail_image,
+                                    action=PostbackTemplateAction(
+                                        label='Gelas', data='waste_market=gelas')),
+                ImageCarouselColumn(image_url=thumbnail_image,
+                                    action=PostbackTemplateAction(
+                                        label='Beling', data='waste_market=beling')),
+                ImageCarouselColumn(image_url=thumbnail_image,
+                                    action=PostbackTemplateAction(
+                                        label='Baterai', data='waste_market=baterai')),
+                ImageCarouselColumn(image_url=thumbnail_image,
+                                    action=PostbackTemplateAction(
+                                        label='E-Waste', data='waste_market=electronic waste')),
+                ImageCarouselColumn(image_url=thumbnail_image,
+                                    action=PostbackTemplateAction(
+                                        label='Lainnya', data='waste_market=lainnya'))
+            ])
+
+            line_bot_api.reply_message(
+                event.reply_token,[
+                TextSendMessage(text="Silahkan cari dari kategori yang kami sediakan!"),
+                TemplateSendMessage(
+                    alt_text='Pilihan Kategori Pasar Limbah', template=market_option_template)
+                ])
+
+
+
 
         else :
             # Interaction
