@@ -497,8 +497,9 @@ def handle_location_message(event):
             thumbnail_image = (
                 'https://location-linebot.herokuapp.com/static/img/location_thumbnail/restaurant.png',
                 'https://location-linebot.herokuapp.com/static/img/location_thumbnail/ticketbooth.png',
-                'https://location-linebot.herokuapp.com/static/img/location_thumbnail/',
-                'https://location-linebot.herokuapp.com/static/img/location_thumbnail/'
+                'https://location-linebot.herokuapp.com/static/img/location_thumbnail/mart.png',
+                'https://location-linebot.herokuapp.com/static/img/location_thumbnail/busstation.png',
+                'https://location-linebot.herokuapp.com/static/img/location_thumbnail/qm.png'
             )
 
             image_option_template = ImageCarouselTemplate(columns=[
