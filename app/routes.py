@@ -742,9 +742,6 @@ def handle_message(event):
                     alt_text='Pilihan Kategori Pasar Limbah', template=market_option_template)
                 ])
 
-
-
-
         else :
             # Interaction
             interaction_response = None
@@ -766,20 +763,21 @@ def handle_message(event):
                     TextSendMessage(
                         text=interaction_response))
             else :
+                thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
                 image_option_template = ImageCarouselTemplate(columns=[
-                    ImageCarouselColumn(image_url=thumbnail_image[0],
+                    ImageCarouselColumn(image_url=thumbnail_image,
                                         action=MessageTemplateAction(
                                             label='Cari Lokasi', text='Carikan tempat makan di dekat lokasi saya')),
-                    ImageCarouselColumn(image_url=thumbnail_image[1],
+                    ImageCarouselColumn(image_url=thumbnail_image,
                                         action=MessageTemplateAction(
                                             label='Cuaca Kini', text='Carikan bioskop di dekat lokasi saya')),
-                    ImageCarouselColumn(image_url=thumbnail_image[2],
+                    ImageCarouselColumn(image_url=thumbnail_image,
                                         action=MessageTemplateAction(
                                             label='Pasar Limbah', text='Carikan minimartket di dekat lokasi saya')),
-                    ImageCarouselColumn(image_url=thumbnail_image[3],
+                    ImageCarouselColumn(image_url=thumbnail_image,
                                         action=MessageTemplateAction(
                                             label='Travel Point', text='Carikan halte bus di dekat lokasi saya')),
-                    ImageCarouselColumn(image_url=thumbnail_image[4],
+                    ImageCarouselColumn(image_url=thumbnail_image,
                                         action=MessageTemplateAction(
                                             label='Jaga Bersih', text='location_feedback')),
                 ])
