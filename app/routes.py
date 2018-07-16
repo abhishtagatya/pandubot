@@ -445,7 +445,7 @@ def handle_postback(event):
                         text="Promotion Secret : {secret}".format(
                             secret=findPromotion.promotion_secret
                         ))])
-                db.commit()
+                db.session.commit()
             else :
                 line_bot_api.reply_message(
                     event.reply_token,
@@ -453,14 +453,13 @@ def handle_postback(event):
                         text="Point Anda kurang untuk melakukan transaksi ini"))
 
         elif (command[0] == 'check_promotion_price'):
-            promotion_search = command[1]
-            findPromotion = TravelPointPromotion.query.filter_by(promotion_id=promotion_search).first()
+            cost_of_promotion = command[1]
 
             line_bot_api.reply_message(
                 event.reply_token,
                 TextSendMessage(
                     text="Dibutuhkan {cost} point untuk melakukan transaksi ini, Anda memiliki {point}".format(
-                        cost=findPromotion.promotion_cost,
+                        cost=cost_of_promotion,
                         point=findUser.travel_point
                     )))
 
@@ -679,6 +678,12 @@ def handle_message(event):
                     text="Travel point Anda sekarang {point}".format(
                         point=findUser.travel_point
                     )))
+
+        elif ('up' in msg):
+
+            findUser.travel_point += 1000
+            db.session.commit()
+
 
         elif ('pandu' in msg and 'id' in msg):
 
