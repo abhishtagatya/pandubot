@@ -444,7 +444,7 @@ def handle_postback(event):
                         )),
                     TextSendMessage(
                         text="Promotion Secret : {secret}".format(
-                            secret=findPromotion.promotion_secret
+                            secret=findPromotion.name
                         ))
                     ])
             else :
