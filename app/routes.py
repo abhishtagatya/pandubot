@@ -436,15 +436,15 @@ def handle_postback(event):
                 findUser.travel_point -= findPromotion.promotion_cost
                 db.session.commit()
                 line_bot_api.reply_message(
-                    event.reply_token[
+                    event.reply_token,[
                     TextSendMessage(
                         text="Selamat Anda telah membeli promosi {name}, sisa poin Anda sekarang {point}".format(
                             name=findPromotion.promotion_name,
                             point=findUser.travel_point
                         )),
                     TextSendMessage(
-                        text="Promotion Secret : {secret}".format(
-                            secret=findPromotion.promotion_name
+                        text="Promotion Secret : {sec} ".format(
+                            sec=findPromotion.promotion_secret
                         ))
                     ])
             else :
@@ -525,7 +525,8 @@ def handle_location_message(event):
             line_bot_api.reply_message(
                 event.reply_token,[
                 TextSendMessage(text="Lokasi Anda tidak berhasil diperbarui!"),
-                TextSendMessage(text="Silahkan coba lagi nanti")])
+                TextSendMessage(text="Silahkan coba lagi nanti")
+                ])
     else :
         line_bot_api.reply_message(
             event.reply_token,
