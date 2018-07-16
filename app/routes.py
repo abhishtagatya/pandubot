@@ -407,6 +407,12 @@ def handle_postback(event):
                         label='Tukar Point',
                         data="point_exchange_confirm={promotion_id}".format(
                             promotion_id=promotion.promotion_id
+                        )),
+                    MessageTemplateAction(
+                        label='Cek Harga Point',
+                        text="Dibutuhkan minimal {cost} untuk melakukan transaksi, point Anda sekarang {point}".format(
+                            cost=promotion.promotion_cost,
+                            point=findUser.travel_point
                         ))
                     ])
 
@@ -422,6 +428,30 @@ def handle_postback(event):
                 TemplateSendMessage(
                     alt_text='Promotion Carousel', template=promotion_template_carousel)
                 ])
+
+        elif (command[0] == 'point_exchange_confirm'):
+            promotion_onconfirm = command[1]
+            findPromotion = TravelPointPromotion.query.filter_by(promotion_id=promotion_onconfirm).first()
+
+            if (findUser.travel_point > findPromotion.promotion_cost):
+                findUser.travel_point -= findPromotion.promotion_cost
+                line_bot_api.reply_message(
+                    event.reply_token[
+                    TextSendMessage(
+                        text="Selamat Anda telah membeli promosi {name}, sisa poin Anda sekarang {point}".format(
+                            name=findPromotion.promotion_name,
+                            point=findUser.travel_point
+                        )),
+                    TextSendMessage(
+                        text="Promotion Secret : {secret}".format(
+                            secret=findPromotion.promotion_secret
+                        ))])
+                db.commit()
+            else :
+                line_bot_api.reply_message(
+                    event.reply_token,
+                    TextSendMessage(
+                        text="Point Anda kurang untuk melakukan transaksi ini"))
 
 
         elif (command[0] == 'create_user'):
