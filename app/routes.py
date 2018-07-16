@@ -515,7 +515,7 @@ def handle_location_message(event):
                 ImageCarouselColumn(image_url=thumbnail_image[3],
                                     action=MessageTemplateAction(
                                         label='Halte Bus', text='Carikan halte bus di dekat lokasi saya')),
-                ImageCarouselColumn(image_url=thumbnail_image[0],
+                ImageCarouselColumn(image_url=thumbnail_image[4],
                                     action=PostbackTemplateAction(
                                         label='Lainnya', data='location_feedback')),
             ])
@@ -766,10 +766,30 @@ def handle_message(event):
                     TextSendMessage(
                         text=interaction_response))
             else :
+                image_option_template = ImageCarouselTemplate(columns=[
+                    ImageCarouselColumn(image_url=thumbnail_image[0],
+                                        action=MessageTemplateAction(
+                                            label='Cari Lokasi', text='Carikan tempat makan di dekat lokasi saya')),
+                    ImageCarouselColumn(image_url=thumbnail_image[1],
+                                        action=MessageTemplateAction(
+                                            label='Cuaca Kini', text='Carikan bioskop di dekat lokasi saya')),
+                    ImageCarouselColumn(image_url=thumbnail_image[2],
+                                        action=MessageTemplateAction(
+                                            label='Pasar Limbah', text='Carikan minimartket di dekat lokasi saya')),
+                    ImageCarouselColumn(image_url=thumbnail_image[3],
+                                        action=MessageTemplateAction(
+                                            label='Travel Point', text='Carikan halte bus di dekat lokasi saya')),
+                    ImageCarouselColumn(image_url=thumbnail_image[4],
+                                        action=MessageTemplateAction(
+                                            label='Jaga Bersih', text='location_feedback')),
+                ])
+
                 line_bot_api.reply_message(
-                    event.reply_token,
-                    TextSendMessage(
-                        text="Pandu tidak mengenal kata-kata dalam percakapan, mungkin ada yang bisa Pandu bantu?"))
+                    event.reply_token,[
+                    TextSendMessage(text="Pandu tidak mengenal kata-kata dalam percakapan, mungkin ada yang bisa Pandu bantu?"),
+                    TemplateSendMessage(
+                        alt_text='Guide Pandu Bot', template=image_option_template)
+                    ])
 
     else :
         line_bot_api.reply_message(
