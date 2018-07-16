@@ -408,11 +408,10 @@ def handle_postback(event):
                         data="point_exchange_confirm={promotion_id}".format(
                             promotion_id=promotion.promotion_id
                         )),
-                    MessageTemplateAction(
+                    PostbackTemplateAction(
                         label='Cek Harga Point',
-                        text="Dibutuhkan minimal {cost} untuk melakukan transaksi, point Anda sekarang {point}".format(
-                            cost=promotion.promotion_cost,
-                            point=findUser.travel_point
+                        data="check_promotion_price={cost}".format(
+                            cost=promotion.promotion_cost
                         ))
                     ])
 
@@ -452,6 +451,18 @@ def handle_postback(event):
                     event.reply_token,
                     TextSendMessage(
                         text="Point Anda kurang untuk melakukan transaksi ini"))
+
+        elif (command[0] == 'check_promotion_price'):
+            promotion_search = command[1]
+            findPromotion = TravelPointPromotion.query.filter_by(promotion_id=promotion_search).first()
+
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(
+                    text="Dibutuhkan {cost} point untuk melakukan transaksi ini, Anda memiliki {point}".format(
+                        cost=findPromotion.promotion_cost,
+                        point=findUser.travel_point
+                    )))
 
 
         elif (command[0] == 'create_user'):
@@ -729,7 +740,7 @@ def handle_message(event):
 
             for key, value in keyword['interaction'].items():
                 for word in value:
-                    if (word in msg):
+                    if (word in msg.split()):
                         interaction_response = (random.choice(speech['speech'][key]['answer']).format(
                             name = findUser.name,
                             baseball = 'baseball'
@@ -741,6 +752,11 @@ def handle_message(event):
                     event.reply_token,
                     TextSendMessage(
                         text=interaction_response))
+            else :
+                line_bot_api.reply_message(
+                    event.reply_token,
+                    TextSendMessage(
+                        text="Pandu tidak mengenal kata-kata dalam percakapan, mungkin ada yang bisa Pandu bantu?"))
 
     else :
         line_bot_api.reply_message(
