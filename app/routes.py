@@ -434,6 +434,7 @@ def handle_postback(event):
 
             if (findUser.travel_point > findPromotion.promotion_cost):
                 findUser.travel_point -= findPromotion.promotion_cost
+                db.session.commit()
                 line_bot_api.reply_message(
                     event.reply_token[
                     TextSendMessage(
@@ -444,8 +445,8 @@ def handle_postback(event):
                     TextSendMessage(
                         text="Promotion Secret : {secret}".format(
                             secret=findPromotion.promotion_secret
-                        ))])
-                db.session.commit()
+                        ))
+                    ])
             else :
                 line_bot_api.reply_message(
                     event.reply_token,
