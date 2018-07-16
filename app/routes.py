@@ -436,7 +436,7 @@ def handle_postback(event):
                 findUser.travel_point -= findPromotion.promotion_cost
                 db.session.commit()
                 line_bot_api.reply_message(
-                    event.reply_token,[
+                    event.reply_token, [
                     TextSendMessage(
                         text="Selamat Anda telah membeli promosi {name}, sisa poin Anda sekarang {point}".format(
                             name=findPromotion.promotion_name,
@@ -494,24 +494,29 @@ def handle_location_message(event):
             findUser.longitude = event.message.longitude
             db.session.commit()
 
-            thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
+            thumbnail_image = (
+                'https://location-linebot.herokuapp.com/static/img/location_thumbnail/restaurant.png',
+                'https://location-linebot.herokuapp.com/static/img/location_thumbnail/ticketbooth.png',
+                'https://location-linebot.herokuapp.com/static/img/location_thumbnail/',
+                'https://location-linebot.herokuapp.com/static/img/location_thumbnail/'
+            )
 
             image_option_template = ImageCarouselTemplate(columns=[
-                ImageCarouselColumn(image_url=thumbnail_image,
+                ImageCarouselColumn(image_url=thumbnail_image[0],
                                     action=MessageTemplateAction(
                                         label='Makan', text='Carikan tempat makan di dekat lokasi saya')),
-                ImageCarouselColumn(image_url=thumbnail_image,
+                ImageCarouselColumn(image_url=thumbnail_image[1],
                                     action=MessageTemplateAction(
                                         label='Bioskop', text='Carikan bioskop di dekat lokasi saya')),
-                ImageCarouselColumn(image_url=thumbnail_image,
+                ImageCarouselColumn(image_url=thumbnail_image[2],
                                     action=MessageTemplateAction(
                                         label='Minimarket', text='Carikan minimartket di dekat lokasi saya')),
-                ImageCarouselColumn(image_url=thumbnail_image,
+                ImageCarouselColumn(image_url=thumbnail_image[3],
                                     action=MessageTemplateAction(
                                         label='Halte Bus', text='Carikan halte bus di dekat lokasi saya')),
-                ImageCarouselColumn(image_url=thumbnail_image,
-                                    action=MessageTemplateAction(
-                                        label='Cuaca', text='Cek cuaca hari ini di lokasi saya'))
+                ImageCarouselColumn(image_url=thumbnail_image[0],
+                                    action=PostbackTemplateAction(
+                                        label='Lainnya', data='location_feedback')),
             ])
 
             line_bot_api.reply_message(
