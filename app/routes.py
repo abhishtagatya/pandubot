@@ -181,7 +181,7 @@ def handle_postback(event):
                             TextSendMessage(
                                 text='Untuk mengetahui lingkungan Anda, dapatkah Anda membagikan lokasi Anda dengan mengirimkan Send Location?'),
                             TextSendMessage(
-                                text='Send Location dapat di temukan di bawah menu, silahkan klik tombol + dan klik Send Location')
+                                text='Send Location dapat di temukan di bawah menu, silahkan klik tombol + dan klik Send Location atau bisa klik link ini line://nv/location')
                         ])
 
                     db.session.commit()
@@ -337,7 +337,7 @@ def handle_postback(event):
                 line_bot_api.reply_message(
                     event.reply_token,
                     TextSendMessage(
-                        text="Baiklah, silahkan perbarui lokasi Anda dengan mengirimkan lokasi"))
+                        text="Baiklah, silahkan perbarui lokasi Anda dengan mengirimkan lokasi line://nv/location"))
 
 
         elif (command[0] == 'travel_option'):
@@ -474,6 +474,49 @@ def handle_postback(event):
                         cost=cost_of_promotion,
                         point=findUser.travel_point
                     )))
+
+        elif (command[0] == 'waste_market'):
+            waste_category = command[1]
+
+            findMarket = MarketPlaceDatabase.query.filter_by(market_demand=waste_category)
+
+            if (len(findMarket) > 2):
+                market_carousel = []
+
+                for market in findMarket:
+
+                    market_column = CarouselColumn(
+                        title=str(market.market_name)[:40],
+                        text="Rp" + str(market.price) + "/kg"[:60],
+                        actions=[
+                        PostbackTemplateAction(
+                            label='Deskripsi',
+                            data="waste_market_info=description={market_id}".format(
+                                promotion_id=market.market_id
+                            )),
+                        URITemplateAction(
+                            label='Contact',
+                            uri="tel:{number}".format(
+                                number=market.market_owner_number
+                            ))
+                        ])
+
+                    market_carousel.append(market_column)
+
+
+                market_template_carousel = CarouselTemplate(columns=market_carousel)
+                line_bot_api.reply_message(
+                    event.reply_token,[
+                    TextSendMessage(
+                        text="Mencari Pasar limbah dalam kategori {category}".format(
+                            category=waste_category)),
+                    TemplateSendMessage(
+                        alt_text='Waste Market Carousel', template=market_template_carousel)
+                    ])
+
+
+        elif (command[0] == 'guidance'):
+            pass
 
         elif (command[0] == 'create_user'):
             line_bot_api.reply_message(
@@ -794,20 +837,20 @@ def handle_message(event):
                     thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
                     image_option_template = ImageCarouselTemplate(columns=[
                         ImageCarouselColumn(image_url=thumbnail_image,
-                                            action=MessageTemplateAction(
-                                                label='Cari Lokasi', text='Carikan tempat makan di dekat lokasi saya')),
+                                            action=PostbackTemplateAction(
+                                                label='Cari Lokasi', data='guidance=location')),
                         ImageCarouselColumn(image_url=thumbnail_image,
-                                            action=MessageTemplateAction(
-                                                label='Cuaca Kini', text='Carikan bioskop di dekat lokasi saya')),
+                                            action=PostbackTemplateAction(
+                                                label='Cuaca Kini', data='guidance=weather')),
                         ImageCarouselColumn(image_url=thumbnail_image,
-                                            action=MessageTemplateAction(
-                                                label='Pasar Limbah', text='Carikan minimartket di dekat lokasi saya')),
+                                            action=PostbackTemplateAction(
+                                                label='Pasar Limbah', data='guidance=wastemarket')),
                         ImageCarouselColumn(image_url=thumbnail_image,
-                                            action=MessageTemplateAction(
-                                                label='Travel Point', text='Carikan halte bus di dekat lokasi saya')),
+                                            action=PostbackTemplateAction(
+                                                label='Travel Point', data='guidance=travelpoint')),
                         ImageCarouselColumn(image_url=thumbnail_image,
-                                            action=MessageTemplateAction(
-                                                label='Jaga Bersih', text='location_feedback')),
+                                            action=PostbackTemplateAction(
+                                                label='Tips Bersih', data='guidance=envtips')),
                     ])
 
                     line_bot_api.reply_message(

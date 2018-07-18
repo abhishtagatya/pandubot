@@ -55,6 +55,8 @@ class TravelPointPromotion(db.Model):
         self.promotion_cost = promotion_cost
         self.promotion_secret = promotion_secret
 
+'Untuk mengetahui lingkungan Anda, dapatkah Anda membagikan lokasi Anda dengan mengirimkan Send Location?'
+
 class MarketPlaceDatabase(db.Model):
 
     __tablename__ = 'MarketPlaceDatabase'
