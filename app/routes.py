@@ -877,21 +877,27 @@ def handle_message(event):
                         text=interaction_response))
             else :
                 if ('iya' not in msg.split() and 'tidak' not in msg.split()):
-                    thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
+                    thumbnail_image = (
+                        'https://location-linebot.herokuapp.com/static/img/feature_thumbnail/location.png',
+                        'https://location-linebot.herokuapp.com/static/img/feature_thumbnail/weather.png',
+                        'https://location-linebot.herokuapp.com/static/img/feature_thumbnail/3R.png',
+                        'https://location-linebot.herokuapp.com/static/img/feature_thumbnail/coin.png',
+                        'https://location-linebot.herokuapp.com/static/img/feature_thumbnail/gogreen.png'
+                    )
                     image_option_template = ImageCarouselTemplate(columns=[
-                        ImageCarouselColumn(image_url=thumbnail_image,
+                        ImageCarouselColumn(image_url=thumbnail_image[0],
                                             action=PostbackTemplateAction(
                                                 label='Cari Lokasi', data='guidance=location')),
-                        ImageCarouselColumn(image_url=thumbnail_image,
+                        ImageCarouselColumn(image_url=thumbnail_image[1],
                                             action=PostbackTemplateAction(
                                                 label='Cuaca Kini', data='guidance=weather')),
-                        ImageCarouselColumn(image_url=thumbnail_image,
+                        ImageCarouselColumn(image_url=thumbnail_image[2],
                                             action=PostbackTemplateAction(
                                                 label='Pasar Limbah', data='guidance=wastemarket')),
-                        ImageCarouselColumn(image_url=thumbnail_image,
+                        ImageCarouselColumn(image_url=thumbnail_image[3],
                                             action=PostbackTemplateAction(
                                                 label='Travel Point', data='guidance=travelpoint')),
-                        ImageCarouselColumn(image_url=thumbnail_image,
+                        ImageCarouselColumn(image_url=thumbnail_image[4],
                                             action=PostbackTemplateAction(
                                                 label='Tips Bersih', data='guidance=envtips')),
                     ])
