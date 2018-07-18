@@ -494,7 +494,7 @@ def handle_postback(event):
                         actions=[
                         PostbackTemplateAction(
                             label='Deskripsi',
-                            data="waste_market_info=description={market_id}".format(
+                            data="waste_market_info={market_id}".format(
                                 market_id=market.market_id
                             )),
                         URITemplateAction(
@@ -523,6 +523,25 @@ def handle_postback(event):
                     TextSendMessage(
                         text="Masalah dalam mencari pasar limbah, silahkan coba lagi dalam sesaat..."))
 
+        elif (command[0] == 'waste_market_info'):
+            passed_market_id = command[1]
+            findMarket = MarketPlaceDatabase.query.filter_by(market_id=passed_market_id).first()
+
+            description_string = "{name}\n{owner}\n\n{demand}\n{description}\n\n{additional}\n\nRp{price}/kg\n\nContact\n{line} - {number}".format(
+                name=findMarket.market_name,
+                owner=findMarket.market_owner,
+                demand=findMarket.market_demand,
+                description=findMarket.market_description,
+                additional=findMarket.market_additional,
+                price=findMarket.market_price,
+                line=findMarket.market_owner_line_id,
+                number=findMarket.market_owner_number
+            )
+
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(
+                    text=description_string))
 
         elif (command[0] == 'guidance'):
             pass
