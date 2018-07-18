@@ -478,40 +478,41 @@ def handle_postback(event):
         elif (command[0] == 'waste_market'):
             waste_category = command[1]
 
-            findMarket = MarketPlaceDatabase.query.filter_by(market_demand=waste_category)
+            findMarket = MarketPlaceDatabase.query.filter_by(market_demand=waste_category).all()
 
-            market_carousel = []
+            if (len(findMarket) > 2):
+                market_carousel = []
 
-            for market in findMarket:
+                for market in findMarket:
 
-                market_column = CarouselColumn(
-                    title=str(market.market_name)[:40],
-                    text="Rp" + str(market.price) + "/kg"[:60],
-                    actions=[
-                    PostbackTemplateAction(
-                        label='Deskripsi',
-                        data="waste_market_info=description={market_id}".format(
-                            promotion_id=market.market_id
-                        )),
-                    URITemplateAction(
-                        label='Contact',
-                        uri="tel:{number}".format(
-                            number=market.market_owner_number
-                        ))
+                    market_column = CarouselColumn(
+                        title=str(market.market_name)[:40],
+                        text="Rp" + str(market.price) + "/kg"[:60],
+                        actions=[
+                        PostbackTemplateAction(
+                            label='Deskripsi',
+                            data="waste_market_info=description={market_id}".format(
+                                promotion_id=market.market_id
+                            )),
+                        URITemplateAction(
+                            label='Contact',
+                            uri="tel:{number}".format(
+                                number=market.market_owner_number
+                            ))
+                        ])
+
+                    market_carousel.append(market_column)
+
+
+                market_template_carousel = CarouselTemplate(columns=market_carousel)
+                line_bot_api.reply_message(
+                    event.reply_token,[
+                    TextSendMessage(
+                        text="Mencari Pasar limbah dalam kategori {category}".format(
+                            category=waste_category)),
+                    TemplateSendMessage(
+                        alt_text='Waste Market Carousel', template=market_template_carousel)
                     ])
-
-                market_carousel.append(market_column)
-
-
-            market_template_carousel = CarouselTemplate(columns=market_carousel)
-            line_bot_api.reply_message(
-                event.reply_token,[
-                TextSendMessage(
-                    text="Mencari Pasar limbah dalam kategori {category}".format(
-                        category=waste_category)),
-                TemplateSendMessage(
-                    alt_text='Waste Market Carousel', template=market_template_carousel)
-                ])
 
 
         elif (command[0] == 'guidance'):
