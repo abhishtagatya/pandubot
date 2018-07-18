@@ -9,6 +9,8 @@ from app import app, db
 from app.models import Users, TravelPointToken, TravelPointPromotion, MarketPlaceDatabase
 from app.module.zomato import ZomatoAPI
 from app.module.geomaps import GoogleMapsAPI
+from app.module.openweather import OpenWeatherAPI
+from app.module.speech_map import *
 from instance.config import LINE_CHANNEL_ACCESS_TOKEN, LINE_CHANNEL_SECRET_TOKEN
 
 from linebot import (
@@ -443,8 +445,8 @@ def handle_postback(event):
                             point=findUser.travel_point
                         )),
                     TextSendMessage(
-                        text="Promotion Secret : {sec} ".format(
-                            sec=findPromotion.promotion_secret
+                        text="Promotion Secret : {secret} ".format(
+                            secret=findPromotion.promotion_secret
                         ))
                     ])
             else :
@@ -463,7 +465,6 @@ def handle_postback(event):
                         cost=cost_of_promotion,
                         point=findUser.travel_point
                     )))
-
 
         elif (command[0] == 'create_user'):
             line_bot_api.reply_message(
@@ -606,10 +607,24 @@ def handle_message(event):
 
         elif ('cuaca' in msg):
             # Placeholder
-            line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(
-                    text="Terlihat mendung sih di jalanan"))
+            coordinate = [findUser.latitude, findUser.longitude]
+            get_weather = OpenWeatherAPI().current_weather(coordinate=coordinate)
+            key_descriptor = get_weather['weather'][0]['description']
+
+            if (get_weather['cod'] == 200):
+                line_bot_api.reply_message(
+                    event.reply_token,
+                    TextSendMessage(
+                        text="Cuaca di luar terlihat {weather}, {prompt}.".format(
+                            weather=weather_mapping[key_descriptor]['name'],
+                            prompt=weather_mapping[key_descriptor]['prompt']
+                        )))
+            else :
+                line_bot_api.reply_message(
+                    event.reply_token,
+                    TextSendMessage(
+                        text="Sepertinya kita sedang mengalami masalah mendapatkan cuaca tempat Anda, silahkan mencoba lagi dalam beberapa saat."))
+
 
         elif ('token' in msg):
             input_token = (msg.split()[1]).upper()
