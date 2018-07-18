@@ -790,31 +790,32 @@ def handle_message(event):
                     TextSendMessage(
                         text=interaction_response))
             else :
-                thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
-                image_option_template = ImageCarouselTemplate(columns=[
-                    ImageCarouselColumn(image_url=thumbnail_image,
-                                        action=MessageTemplateAction(
-                                            label='Cari Lokasi', text='Carikan tempat makan di dekat lokasi saya')),
-                    ImageCarouselColumn(image_url=thumbnail_image,
-                                        action=MessageTemplateAction(
-                                            label='Cuaca Kini', text='Carikan bioskop di dekat lokasi saya')),
-                    ImageCarouselColumn(image_url=thumbnail_image,
-                                        action=MessageTemplateAction(
-                                            label='Pasar Limbah', text='Carikan minimartket di dekat lokasi saya')),
-                    ImageCarouselColumn(image_url=thumbnail_image,
-                                        action=MessageTemplateAction(
-                                            label='Travel Point', text='Carikan halte bus di dekat lokasi saya')),
-                    ImageCarouselColumn(image_url=thumbnail_image,
-                                        action=MessageTemplateAction(
-                                            label='Jaga Bersih', text='location_feedback')),
-                ])
-
-                line_bot_api.reply_message(
-                    event.reply_token,[
-                    TextSendMessage(text="Pandu tidak mengenal kata-kata dalam percakapan, mungkin ada yang bisa Pandu bantu?"),
-                    TemplateSendMessage(
-                        alt_text='Guide Pandu Bot', template=image_option_template)
+                if ('iya' not in msg.split() and 'tidak' not in msg.split()):
+                    thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
+                    image_option_template = ImageCarouselTemplate(columns=[
+                        ImageCarouselColumn(image_url=thumbnail_image,
+                                            action=MessageTemplateAction(
+                                                label='Cari Lokasi', text='Carikan tempat makan di dekat lokasi saya')),
+                        ImageCarouselColumn(image_url=thumbnail_image,
+                                            action=MessageTemplateAction(
+                                                label='Cuaca Kini', text='Carikan bioskop di dekat lokasi saya')),
+                        ImageCarouselColumn(image_url=thumbnail_image,
+                                            action=MessageTemplateAction(
+                                                label='Pasar Limbah', text='Carikan minimartket di dekat lokasi saya')),
+                        ImageCarouselColumn(image_url=thumbnail_image,
+                                            action=MessageTemplateAction(
+                                                label='Travel Point', text='Carikan halte bus di dekat lokasi saya')),
+                        ImageCarouselColumn(image_url=thumbnail_image,
+                                            action=MessageTemplateAction(
+                                                label='Jaga Bersih', text='location_feedback')),
                     ])
+
+                    line_bot_api.reply_message(
+                        event.reply_token,[
+                        TextSendMessage(text="Pandu tidak mengenal kata-kata dalam percakapan, mungkin ada yang bisa Pandu bantu?"),
+                        TemplateSendMessage(
+                            alt_text='Guide Pandu Bot', template=image_option_template)
+                        ])
 
     else :
         line_bot_api.reply_message(
