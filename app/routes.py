@@ -686,12 +686,28 @@ def handle_message(event):
                     ])
 
         elif ('cuaca' in msg):
-            # Placeholder
             coordinate = [findUser.latitude, findUser.longitude]
             get_weather = OpenWeatherAPI().current_weather(coordinate=coordinate)
-            key_descriptor = get_weather['weather'][0]['description']
 
-            if (get_weather['cod'] == 200):
+            # Mapping to the Weather ID
+            weather_code_range = [
+            (range(200,233), 'thunderstorm'),
+            (range(300, 532), 'rain'),
+            (range(600, 622), 'snow'),
+            (range(701,782), 'mist'),
+            ([800], 'clear sky'),
+            ([801], 'few clouds'),
+            ([802], 'scattered clouds'),
+            ([803,804], 'broken clouds')
+            ]
+
+            current_weather = None
+
+            for id, name in weather_code_range:
+                if (get_weather['weather'][0]['id'] in id):
+                    current_weather = name
+
+            if (get_weather['cod'] == 200 and current_weather != None):
                 line_bot_api.reply_message(
                     event.reply_token,[
                     TextSendMessage(
@@ -699,8 +715,8 @@ def handle_message(event):
                     ),
                     TextSendMessage(
                         text="Cuaca di luar terlihat {weather}, {prompt}.".format(
-                            weather=weather_mapping[key_descriptor]['name'],
-                            prompt=weather_mapping[key_descriptor]['prompt']
+                            weather=weather_mapping[current_weather]['name'],
+                            prompt=weather_mapping[current_weather]['prompt']
                         ))])
             else :
                 line_bot_api.reply_message(
