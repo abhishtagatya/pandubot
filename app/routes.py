@@ -708,6 +708,21 @@ def handle_message(event):
                     TextSendMessage(
                         text="Sepertinya kita sedang mengalami masalah mendapatkan cuaca tempat Anda, silahkan mencoba lagi dalam beberapa saat."))
 
+        elif ('bersih' in msg or 'lingkungan' in msg):
+            with open('data/envtips.json') as envtips:
+                env_json = json.load(envtips)
+
+            randomize_article = random.choice(env_json)
+            article_string = "{title}\n\n{tips}\n\n{source}".format(
+                title=randomize_article['title'],
+                tips=randomize_article['tips'],
+                source=randomize_article['source']
+            )
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(
+                    text=article_string))
+
 
         elif ('token' in msg):
             input_token = (msg.split()[1]).upper()

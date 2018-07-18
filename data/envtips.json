@@ -1,0 +1,27 @@
+[
+  {
+    "title" : "Limbah bisa jadi uang?",
+    "tips" : "Pandu menyediakan pasar limbah dimana kalian bisa menjual dan membeli limbah dengan cepat dan langsung. Makanaya, jangan suka buang sembarangan.",
+    "source" : "https://location-linebot.herokuapp.com/store"
+  },
+  {
+    "title" : "Daur Ulang Botol Plastik",
+    "tips" : "Video ini menunjukan bahwa plastik bisa digunakan lagi untuk hal-hal yang kreatif. Yuk kita lihat!",
+    "source" : "https://www.youtube.com/watch?v=GwCU0rW--S0"
+  },
+  {
+    "title" : "Polusi Plastik",
+    "tips" : "Video ini menunjukan bahwa plastik berkembang dengan pesat dan menimbulkan masalah yang besar jika di diamkan.",
+    "source" : "https://www.youtube.com/watch?v=RS7IzU2VJIQ"
+  },
+  {
+    "title" : "Bahaya Polusi E-Waste",
+    "tips" : "Menurut berita, polusi barang bekas elektronik akan terus menambahkan masalah jika tidak diatasi dengan benar.",
+    "source" : "https://www.youtube.com/watch?v=UyIpG7UJKyI"
+  },
+  {
+    "title" : "7 Cara untuk mengurangi jejak karbon kita",
+    "tips" : "Jika kita ingin menabung dan juga melindungi lingkungan kami, bacalah artikel ini mengenai tips dan tricks untuk mengurangi jejak karbon kami.",
+    "source" : "https://www.worldwildlife.org/pages/green-tips-for-a-cleaner-environment"
+  }
+]
