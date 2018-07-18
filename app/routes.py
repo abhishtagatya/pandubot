@@ -344,6 +344,10 @@ def handle_postback(event):
             origin = command[1]
             destination = command[2]
 
+            coordinate = [findUser.latitude, findUser.longitude]
+            get_weather = OpenWeatherAPI().current_weather(coordinate=coordinate)
+            key_descriptor = get_weather['weather'][0]['description']
+
             dist_calculation = GoogleMapsAPI().distanceCalculate(origin, destination)
             dist_cut = dist_calculation['rows'][0]['elements'][0]
             distance = {
@@ -388,7 +392,12 @@ def handle_postback(event):
                     text="Dengan jarak {range}, di bawah adalah rekomendasian perjalanan".format(
                         range=distance['text'])),
                 TemplateSendMessage(
-                    alt_text='Pilihan Perjalanan', template=travel_option_template)
+                    alt_text='Pilihan Perjalanan', template=travel_option_template),
+                TextSendMessage(
+                    text="Cuaca di luar terlihat {weather}, {prompt}.".format(
+                        weather=weather_mapping[key_descriptor]['name'],
+                        prompt=weather_mapping[key_descriptor]['prompt']
+                    ))
                 ])
 
         elif (command[0] == 'point_exchange'):
@@ -613,12 +622,15 @@ def handle_message(event):
 
             if (get_weather['cod'] == 200):
                 line_bot_api.reply_message(
-                    event.reply_token,
+                    event.reply_token,[
+                    TextSendMessage(
+                        text="Coba Pandu cek di openweathermap.org"
+                    ),
                     TextSendMessage(
                         text="Cuaca di luar terlihat {weather}, {prompt}.".format(
                             weather=weather_mapping[key_descriptor]['name'],
                             prompt=weather_mapping[key_descriptor]['prompt']
-                        )))
+                        ))])
             else :
                 line_bot_api.reply_message(
                     event.reply_token,
