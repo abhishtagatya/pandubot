@@ -492,7 +492,7 @@ def handle_postback(event):
                         PostbackTemplateAction(
                             label='Deskripsi',
                             data="waste_market_info=description={market_id}".format(
-                                promotion_id=market.market_id
+                                market_id=market.market_id
                             )),
                         URITemplateAction(
                             label='Contact',
