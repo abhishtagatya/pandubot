@@ -404,7 +404,7 @@ def handle_postback(event):
             promotion_category = command[1]
 
             # Find Categories from database and iterate over them like a list
-            findPromotion = TravelPointPromotion.query.filter_by(promotion_category=promotion_category)
+            findPromotion = TravelPointPromotion.query.filter_by(promotion_category=promotion_category).all()
 
             promotion_carousel = []
 
@@ -480,14 +480,14 @@ def handle_postback(event):
 
             findMarket = MarketPlaceDatabase.query.filter_by(market_demand=waste_category).all()
 
-            if (len(findMarket) > 2):
+            if (len(findMarket) >= 2):
                 market_carousel = []
 
                 for market in findMarket:
 
                     market_column = CarouselColumn(
                         title=str(market.market_name)[:40],
-                        text="Rp" + str(market.price) + "/kg"[:60],
+                        text="Rp" + str(market.market_price) + "/kg",
                         actions=[
                         PostbackTemplateAction(
                             label='Deskripsi',
@@ -513,6 +513,12 @@ def handle_postback(event):
                     TemplateSendMessage(
                         alt_text='Waste Market Carousel', template=market_template_carousel)
                     ])
+
+            else :
+                line_bot_api.reply_message(
+                    event.reply_token,
+                    TextSendMessage(
+                        text="Masalah dalam mencari pasar limbah, silahkan coba lagi dalam sesaat..."))
 
 
         elif (command[0] == 'guidance'):
