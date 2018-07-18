@@ -487,7 +487,10 @@ def handle_postback(event):
 
                     market_column = CarouselColumn(
                         title=str(market.market_name)[:40],
-                        text="Rp" + str(market.market_price) + "/kg",
+                        text="Rp{price}/kg\n{description}\nMore...".format(
+                            price=str(market.market_price),
+                            description=market.market_description[:45]
+                        ),
                         actions=[
                         PostbackTemplateAction(
                             label='Deskripsi',
