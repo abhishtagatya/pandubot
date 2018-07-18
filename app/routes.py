@@ -794,11 +794,15 @@ def handle_message(event):
         elif ('cek' in msg):
 
             line_bot_api.reply_message(
-                event.reply_token,
+                event.reply_token, [
                 TextSendMessage(
                     text="Travel point Anda sekarang {point}".format(
                         point=findUser.travel_point
-                    )))
+                    )),
+                TextSendMessage(
+                    text="Ingin menukar point Anda? Tinggal minta aja sama Pandu!"
+                )
+            ])
 
         elif ('up' in msg):
 
@@ -886,20 +890,22 @@ def handle_message(event):
                     )
                     image_option_template = ImageCarouselTemplate(columns=[
                         ImageCarouselColumn(image_url=thumbnail_image[0],
-                                            action=PostbackTemplateAction(
-                                                label='Cari Lokasi', data='guidance=location')),
+                                            action=MessageTemplateAction(
+                                                label='Cari Lokasi', text='Pandu, tolong cariin {place} deket sini'.format(
+                                                    place=random.choice(['restoran', 'atm', 'tempat poton rambut', 'salon', 'halte bus', 'warung', 'bioskop'])
+                                                ))),
                         ImageCarouselColumn(image_url=thumbnail_image[1],
-                                            action=PostbackTemplateAction(
-                                                label='Cuaca Kini', data='guidance=weather')),
+                                            action=MessageTemplateAction(
+                                                label='Cuaca Kini', text='Hari ini cuaca nya seperti apa Pan?')),
                         ImageCarouselColumn(image_url=thumbnail_image[2],
-                                            action=PostbackTemplateAction(
-                                                label='Pasar Limbah', data='guidance=wastemarket')),
+                                            action=MessageTemplateAction(
+                                                label='Pasar Limbah', text='Pan, tolong buka Pasar Limbah')),
                         ImageCarouselColumn(image_url=thumbnail_image[3],
-                                            action=PostbackTemplateAction(
-                                                label='Travel Point', data='guidance=travelpoint')),
+                                            action=MessageTemplateAction(
+                                                label='Travel Point', text='Pandu, tolong cek deh travel point')),
                         ImageCarouselColumn(image_url=thumbnail_image[4],
-                                            action=PostbackTemplateAction(
-                                                label='Tips Bersih', data='guidance=envtips')),
+                                            action=MessageTemplateAction(
+                                                label='Tips Bersih', text='Tips and tricks dong untuk jaga lingkungan kita!')),
                     ])
 
                     line_bot_api.reply_message(
