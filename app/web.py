@@ -1,3 +1,5 @@
+import json
+
 from app import app, db
 from app.models import *
 
@@ -77,3 +79,11 @@ def store_form():
         else :
             print('Error')
     return redirect('store')
+
+@app.route('/greenlight')
+def green_light():
+
+    with open('data/envtips.json', 'r') as envtips:
+        env_tips = json.load(envtips)
+
+    return render_template('greenlight.html', tips=env_tips)

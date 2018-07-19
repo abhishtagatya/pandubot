@@ -10,6 +10,23 @@
         "Hello {name}, gimana? kita cari apa?",
         "Hi {name}"
       ]
+    },
+    "feature" : {
+      "answer" : [
+        "Pandu bisa mencari lokasi, apakah itu tempat makan ataupun bengkel terdekat",
+        "Pandu punya sistem point setiap kali kalian jalan-jalan ke tempat yang mendukung Pandu Bot",
+        "Pandu punya hobi untuk berkreasi dengan barang bekas, sampai Pandu membuat Online Store khusus untuk jual beli limbah",
+        "Pandu punya banyak tips and tricks untuk menjaga lingkungan, kalo mau tau tinggal tanya Pandu aja!",
+        "Pandu itu pinter, bisa prediksiin cuaca, coba tanya Pandu cuacanya seperti apa?"
+      ]
+    },
+    "hobby" : {
+      "answer" : [
+        "Pandu hobbynya itu... Mendaur Ulang. Jadi setiap ada botol plastik bekas, pasti lama-lama jadi kreasi yang menarik",
+        "Hmm...seru sih jalan-jalan, Jadi pingin lihat-lihat kan menjelajah sekalian jajan deh hehehe",
+        "Biasanya sih daur ulang, tapi sering sih jalan-jalan. Apalagi jalan-jalan di kota.",
+        "Kadang sih suka ikutan peduli lingkungan... Pernah coba ikut gak?"
+      ]
     }
   }
 }

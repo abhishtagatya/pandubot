@@ -269,7 +269,7 @@ def handle_postback(event):
                 "duration" : dist_cut['duration']['text']
             }
 
-            with open('data/travelopt.json') as travelopt:
+            with open('data/travelopt.json', 'r') as travelopt:
                 travel_options = json.load(travelopt)
 
             travel_carousel = []
@@ -293,7 +293,7 @@ def handle_postback(event):
             travel_option_template = ImageCarouselTemplate(columns=travel_carousel)
 
             # Weather API
-            with open('data/weathermapping.json') as wm:
+            with open('data/weathermapping.json', 'r') as wm:
                 weather_mapping = json.load(wm)
 
             get_weather = OpenWeatherAPI().current_weather(coordinate=coordinate)
@@ -464,9 +464,6 @@ def handle_postback(event):
                 TextSendMessage(
                     text=description_string))
 
-        elif (command[0] == 'guidance'):
-            pass
-
         elif (command[0] == 'create_user'):
             line_bot_api.reply_message(
                 event.reply_token,
@@ -482,10 +479,6 @@ def handle_postback(event):
 
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_location_message(event):
-    #current_location = {}
-    #current_location['location'] = event.message.address
-    #current_location['latitude'] = event.message.latitude
-    #current_location['longitude'] = event.message.longitude
 
     findUser = Users.query.filter_by(id=event.source.user_id).first()
 
@@ -518,8 +511,10 @@ def handle_location_message(event):
                                     action=MessageTemplateAction(
                                         label='Halte Bus', text='Carikan halte bus di dekat lokasi saya')),
                 ImageCarouselColumn(image_url=thumbnail_image[4],
-                                    action=PostbackTemplateAction(
-                                        label='Lainnya', data='location_feedback')),
+                                    action=MessageTemplateAction(
+                                        label='Lainnya', text='Carikan {place} di dekat lokasi saya'.format(
+                                            place=random.choice(['restoran', 'atm', 'tempat poton rambut', 'salon', 'halte bus', 'warung', 'bioskop'])
+                                        ))),
             ])
 
             line_bot_api.reply_message(
@@ -545,7 +540,6 @@ def handle_location_message(event):
 def handle_message(event):
     """ Here's all the messages will be handled and processed by the program """
     msg = (event.message.text).lower()
-    price_range = None
 
     findUser = Users.query.filter_by(id=event.source.user_id).first()
     if (findUser != None):
@@ -610,10 +604,8 @@ def handle_message(event):
             coordinate = [findUser.latitude, findUser.longitude]
             get_weather = OpenWeatherAPI().current_weather(coordinate=coordinate)
 
-            with open('data/weathermapping.json') as wm:
+            with open('data/weathermapping.json', 'r') as wm:
                 weather_mapping = json.load(wm)
-
-            current_weather = None
 
             for id, name in weather_code_range:
                 if (get_weather['weather'][0]['id'] in id):
@@ -638,7 +630,7 @@ def handle_message(event):
                         text="Sepertinya kita sedang mengalami masalah mendapatkan cuaca tempat Anda, silahkan mencoba lagi dalam beberapa saat."))
 
         elif ('bersih' in msg or 'lingkungan' in msg):
-            with open('data/envtips.json') as envtips:
+            with open('data/envtips.json', 'r') as envtips:
                 env_json = json.load(envtips)
 
             randomize_article = random.choice(env_json)
@@ -651,7 +643,6 @@ def handle_message(event):
                 event.reply_token,
                 TextSendMessage(
                     text=article_string))
-
 
         elif ('token' in msg):
             input_token = (msg.split()[1]).upper()
@@ -785,7 +776,8 @@ def handle_message(event):
                 event.reply_token,[
                 TextSendMessage(text="Silahkan cari dari kategori yang kami sediakan!"),
                 TemplateSendMessage(
-                    alt_text='Pilihan Kategori Pasar Limbah', template=market_option_template)
+                    alt_text='Pilihan Kategori Pasar Limbah', template=market_option_template),
+                TextSendMessage(text="Ingin membuka pasar sendiri? Tinggal buka link ini http://location-linebot.herokuapp.com/store/add")
                 ])
 
         else :

@@ -1,0 +1,52 @@
+{% extends "app.html" %}
+{% block content %}
+
+<div class="jumbotron jumbotron-image">
+  <h1 class="display-4">Tips Go Green</h1>
+  <p class="lead">Disini berisi beberapa artikel dan video bertujuan untuk mengedukasi masyarakat tentang pentingnya menjaga lingkungan.</p>
+  <hr class="my-4">
+  <p>Penasaran sama Pandu? Yuk kenalan sama Pandu lewat LINE</p>
+  <p class="lead">
+    <a class="btn btn-succes btn-lg text-light bg-success" href="#" role="button">Kenalan Yuk</a>
+  </p>
+</div>
+
+<div class="custom-divider container-fluid bg-success">
+  <h4 class="custom-divider-title">Keep Our Planet Clean</h4>
+</div>
+
+<div class="container-fluid">
+  <div class="card">
+    <div class="card-body">
+
+      {% for tip in tips %}
+
+      <div class="card text-center" style="margin : 10px">
+        <div class="card-body">
+          <h5 class="card-title">{{ tip['title'] }}</h5>
+          <p class="card-text">{{ tip['tips'] }}</p>
+          <a href="{{ tip['source'] }}" class="btn btn-success">Source</a>
+        </div>
+      </div>
+
+      {% endfor %}
+
+   <nav aria-label="Page navigation example">
+ <ul class="pagination justify-content-center">
+   <li class="page-item disabled">
+     <a class="page-link" href="#" tabindex="-1">Previous</a>
+   </li>
+   <li class="page-item"><a class="page-link text-success" href="#">1</a></li>
+   <li class="page-item"><a class="page-link text-success" href="#">2</a></li>
+   <li class="page-item"><a class="page-link text-success" href="#">3</a></li>
+   <li class="page-item">
+     <a class="page-link text-success" href="#">Next</a>
+   </li>
+ </ul>
+</nav>
+
+ </div>
+</div>
+</div>
+
+{% endblock %}
