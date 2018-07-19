@@ -150,6 +150,6 @@
   "interaction" : {
     "greet" : ["hi", "hey", "helo", "hello", "halo", "hallo", "pagi", "siang", "sore", "malam", "malem", "pan", "pandu", "oi", "oy"],
     "feature" : ["fitur", "feature", "abilitas"],
-    "hobby" : ["hobby", "kesukaan", "kepandaian", "talent", "talenta"]
+    "hobby" : ["hobi", "hobby", "kesukaan", "kepandaian", "talent", "talenta"]
   }
 }

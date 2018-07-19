@@ -741,7 +741,7 @@ def handle_message(event):
 
         elif ('pasar' in msg and 'limbah' in msg):
 
-            thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
+            thumbnail_image = 'https://location-linebot.herokuapp.com/static/img/feature_thumbnail/3R.png'
             market_option_template = ImageCarouselTemplate(columns=[
                 ImageCarouselColumn(image_url=thumbnail_image,
                                     action=PostbackTemplateAction(
