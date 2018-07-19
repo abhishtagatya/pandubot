@@ -160,6 +160,8 @@ def handle_postback(event):
                                     origin=origin, destination=destination))
                         ])
 
+                        restaurant_carousel.append(restaurant_column)
+
                     food_carousel = CarouselTemplate(columns=restaurant_carousel)
                     line_bot_api.reply_message(
                         event.reply_token,[
@@ -205,6 +207,8 @@ def handle_postback(event):
                                 data='travel_option={origin}={destination}'.format(
                                     origin=origin, destination=destination))
                         ])
+
+                        places_carousel.append(places_column)
 
                     search_carousel = CarouselTemplate(columns=places_carousel)
                     line_bot_api.reply_message(
