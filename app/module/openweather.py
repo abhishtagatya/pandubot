@@ -5,6 +5,19 @@ import requests
 
 from instance.config import WEATHER_MAP_API
 
+# Mapping to the Weather ID
+weather_code_range = [
+    (range(200,233), 'thunderstorm'),
+    (range(300, 332), 'rain'),
+    (range(500, 532), 'shower rain'),
+    (range(600, 622), 'snow'),
+    (range(701,782), 'mist'),
+    ([800], 'clear sky'),
+    ([801], 'few clouds'),
+    ([802], 'scattered clouds'),
+    ([803,804], 'broken clouds')
+]
+
 class OpenWeatherAPI(object):
 
     def __init__(self, key=WEATHER_MAP_API, headers=None, debug_mode=False, *args,**kwargs):

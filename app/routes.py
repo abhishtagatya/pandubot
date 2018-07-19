@@ -10,7 +10,6 @@ from app.models import Users, TravelPointToken, TravelPointPromotion, MarketPlac
 from app.module.zomato import ZomatoAPI
 from app.module.geomaps import GoogleMapsAPI
 from app.module.openweather import OpenWeatherAPI
-from app.module.speech_map import *
 from instance.config import LINE_CHANNEL_ACCESS_TOKEN, LINE_CHANNEL_SECRET_TOKEN
 
 from linebot import (
@@ -345,8 +344,6 @@ def handle_postback(event):
             destination = command[2]
 
             coordinate = [findUser.latitude, findUser.longitude]
-            get_weather = OpenWeatherAPI().current_weather(coordinate=coordinate)
-            key_descriptor = get_weather['weather'][0]['description']
 
             dist_calculation = GoogleMapsAPI().distanceCalculate(origin, destination)
             dist_cut = dist_calculation['rows'][0]['elements'][0]
@@ -383,6 +380,18 @@ def handle_postback(event):
 
             travel_option_template = ImageCarouselTemplate(columns=travel_carousel)
 
+            # Weather API
+            with open('data/weathermapping.json') as wm:
+                weather_mapping = json.load(wm)
+
+            get_weather = OpenWeatherAPI().current_weather(coordinate=coordinate)
+            current_weather = None
+
+            for id, name in weather_code_range:
+                if (get_weather['weather'][0]['id'] in id):
+                    current_weather = name
+                    break
+
             line_bot_api.reply_message(
                 event.reply_token,[
                 TextSendMessage(
@@ -395,8 +404,8 @@ def handle_postback(event):
                     alt_text='Pilihan Perjalanan', template=travel_option_template),
                 TextSendMessage(
                     text="Cuaca di luar terlihat {weather}, {prompt}.".format(
-                        weather=weather_mapping[key_descriptor]['name'],
-                        prompt=weather_mapping[key_descriptor]['prompt']
+                        weather=weather_mapping[current_weather]['name'],
+                        prompt=weather_mapping[current_weather]['prompt']
                     ))
                 ])
 
@@ -689,23 +698,15 @@ def handle_message(event):
             coordinate = [findUser.latitude, findUser.longitude]
             get_weather = OpenWeatherAPI().current_weather(coordinate=coordinate)
 
-            # Mapping to the Weather ID
-            weather_code_range = [
-            (range(200,233), 'thunderstorm'),
-            (range(300, 532), 'rain'),
-            (range(600, 622), 'snow'),
-            (range(701,782), 'mist'),
-            ([800], 'clear sky'),
-            ([801], 'few clouds'),
-            ([802], 'scattered clouds'),
-            ([803,804], 'broken clouds')
-            ]
+            with open('data/weathermapping.json') as wm:
+                weather_mapping = json.load(wm)
 
             current_weather = None
 
             for id, name in weather_code_range:
                 if (get_weather['weather'][0]['id'] in id):
                     current_weather = name
+                    break
 
             if (get_weather['cod'] == 200 and current_weather != None):
                 line_bot_api.reply_message(
@@ -921,7 +922,7 @@ def handle_message(event):
                                                 label='Travel Point', text='Pandu, tolong cek deh travel point')),
                         ImageCarouselColumn(image_url=thumbnail_image[4],
                                             action=MessageTemplateAction(
-                                                label='Tips Bersih', text='Tips and tricks dong untuk jaga lingkungan kita!')),
+                                                label='Go Green', text='Tips and tricks dong untuk jaga lingkungan kita!')),
                     ])
 
                     line_bot_api.reply_message(
