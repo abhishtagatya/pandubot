@@ -60,9 +60,12 @@ class ZomatoAPI:
         geocode_url = self.baseurl + 'geocode?lat={lat}&lon={lon}'.format(lat=latitude, lon=longitude)
         response = requests.get(url=geocode_url, headers=self.headers).json()
         #response_jsonify = response.json()
-
-        restaurant_list = response['nearby_restaurants']
-        return restaurant_list
+        try :
+            restaurant_list = response['nearby_restaurants']
+            return restaurant_list
+        except :
+            print("Err 404 : 'nearby_restaurants' Not Found")
+            return None
 
     def location_details(self, entity_id, entity_type):
         locdetails_url = self.baseurl + 'location_details?entity_id={id}&entity_type={type}'.format(

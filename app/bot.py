@@ -7,7 +7,7 @@ from app.module import *
 from instance.config import LINE_CHANNEL_ACCESS_TOKEN, LINE_CHANNEL_SECRET_TOKEN
 
 from flask import (
-    Flask, request, abort, url_for, current_app, render_template, redirect
+    Flask, request, abort
 )
 
 from linebot import (
@@ -62,7 +62,7 @@ def handle_followevent(event):
     line_bot_api.reply_message(
         event.reply_token,[
         TextSendMessage(
-            text="Halo perkenalkan! Nama saya Pandu, disini untuk membantu menjadi pemandu di Smart Environment kita!"),
+            text="Halo perkenalkan! Nama saya Pandu, disini untuk membantu menjadi pemandu Anda di Smart Environment kita!"),
         TemplateSendMessage(
             alt_text='User Confirmation', template=confirm_template)])
 
@@ -78,6 +78,7 @@ def handle_postback(event):
 
     findUser = Users.query.filter_by(id=event.source.user_id).first()
     if (findUser == None):
+        # If the user is not found on our database
         if (command[0] == 'create_user'):
             if (command[1] == 'confirm'):
 
@@ -119,9 +120,11 @@ def handle_postback(event):
                         text="Tahap registrasi di tunda, silahkan registrasi untuk menggunakan aplikasi secara lengkap :)"))
 
     else :
+        # If the user is found
         if (command[0] == 'search_location'):
+            carousel_limit = 9
 
-            sub_command = (command[1]).split(':')
+            sub_command = command[1].split(':')
             query, place_name = sub_command
 
             # To calculate travel_option
@@ -130,21 +133,18 @@ def handle_postback(event):
             if (query == 'food'):
                 # Zomato API Call
                 restaurant_list = ZomatoAPI().geocode(latitude=findUser.latitude, longitude=findUser.longitude)
-                price_range = command[2]
-                # price_range
-                # 1 : < 80
-                # 2 : 80 - 150
-                # 3 : 150 - 400
-                # 4 : > 400
 
                 if (len(restaurant_list) > 2 and restaurant_list != None):
                     # The list of all the carousel columns
                     restaurant_carousel = []
 
                     # Temporary thumbnail_image
-                    thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
-                    for counter, restaurant in enumerate(restaurant_list):
-                        destination = '{lat},{lng}'.format(lat=restaurant['restaurant']['location']['latitude'], lng=restaurant['restaurant']['location']['longitude'])
+                    thumbnail_image = 'https://location-linebot.herokuapp.com/static/img/location_thumbnail/restaurant.png'
+                    for restaurant in restaurant_list[:carousel_limit]:
+                        destination = '{lat},{lng}'.format(
+                            lat=restaurant['restaurant']['location']['latitude'],
+                            lng=restaurant['restaurant']['location']['longitude'])
+
                         # Carousel Column
                         restaurant_column = CarouselColumn(
                             title=str(restaurant['restaurant']['name'])[:40],
@@ -156,14 +156,9 @@ def handle_postback(event):
                                 uri=restaurant['restaurant']['url']),
                             PostbackTemplateAction(
                                 label='Pilihan Perjalanan',
-                                data='travel_option={origin}={destination}'.format(origin=origin, destination=destination))
+                                data='travel_option={origin}={destination}'.format(
+                                    origin=origin, destination=destination))
                         ])
-
-                        # Force Stop by Counter
-                        if counter < 6:
-                            restaurant_carousel.append(restaurant_column)
-                        else :
-                            break
 
                     food_carousel = CarouselTemplate(columns=restaurant_carousel)
                     line_bot_api.reply_message(
@@ -190,7 +185,7 @@ def handle_postback(event):
                     places_carousel = []
                     # Temporary thumbnail_image
                     thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
-                    for counter, places in enumerate(places_list):
+                    for places in places_list[:carousel_limit]:
                         destination = '{lat},{lng}'.format(
                             lat=places['geometry']['location']['lat'],
                             lng=places['geometry']['location']['lng'])
@@ -211,12 +206,6 @@ def handle_postback(event):
                                     origin=origin, destination=destination))
                         ])
 
-                        # Force Stop by Counter
-                        if counter < 6:
-                            places_carousel.append(places_column)
-                        else :
-                            break
-
                     search_carousel = CarouselTemplate(columns=places_carousel)
                     line_bot_api.reply_message(
                         event.reply_token,[
@@ -235,6 +224,8 @@ def handle_postback(event):
 
         elif (command[0] == 'location_update'):
             if (command[1] == 'search_for_unknown'):
+                # If places not supported in keyword.json, make an attempt
+                # to search via passed in string as argument
                 data_search = command[2]
                 location_confirm = ConfirmTemplate(text='Apakah anda sedang berada di {location}?'.format(location=findUser.location),
                 actions=[
@@ -260,7 +251,6 @@ def handle_postback(event):
                     TextSendMessage(
                         text="Baiklah, silahkan perbarui lokasi Anda dengan mengirimkan lokasi line://nv/location"))
 
-
         elif (command[0] == 'travel_option'):
             origin = command[1]
             destination = command[2]
@@ -275,12 +265,8 @@ def handle_postback(event):
                 "duration" : dist_cut['duration']['text']
             }
 
-            travel_options = [
-            {'label' : 'Jalan Kaki', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'},
-            {'label' : 'Naik Sepeda', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'},
-            {'label' : 'Naik Bus', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'},
-            {'label' : 'Menyetir', 'uri' : 'https://www.google.com/maps/dir/?api=1&parameters'}
-            ]
+            with open('data/travelopt.json') as travelopt:
+                travel_options = json.load(travelopt)
 
             travel_carousel = []
             thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
@@ -288,7 +274,7 @@ def handle_postback(event):
             for options in travel_options:
 
                 travel_column = ImageCarouselColumn(
-                    image_url=thumbnail_image,
+                    image_url=options['thumbnail_image'],
                     action=URITemplateAction(
                         label=options['label'],
                         uri=options['uri']))
@@ -563,7 +549,7 @@ def handle_message(event):
             keyword = json.load(keyword_list)
         if ('cari' in msg):
             data_search = None
-            # In keyword.json, iterate over the multidimensional array
+            # In keyword.json, iterate over the json
             # to find a match to any keyword in msg
             for key, value in keyword['search'].items():
                 for word in value:
@@ -601,7 +587,7 @@ def handle_message(event):
                 location_confirm = ConfirmTemplate(text='Apakah anda sedang berada di {location}?'.format(location=findUser.location),
                 actions=[
                     PostbackTemplateAction(
-                        label='Iya', text='Iya', data='search_location={search}={price}'.format(search=data_search, price=price_range)),
+                        label='Iya', text='Iya', data='search_location={search}'.format(search=data_search)),
                     PostbackTemplateAction(
                         label='Tidak', text='Tidak', data='location_update=None')
                     ])
@@ -609,7 +595,7 @@ def handle_message(event):
                 line_bot_api.reply_message(
                     event.reply_token,[
                     LocationSendMessage(
-                        title='Posisi Terakhir Anda', address='{0}'.format(findUser.location),
+                        title='Posisi Terakhir Anda', address=findUser.location,
                         latitude=findUser.latitude, longitude=findUser.longitude
                     ),
                     TemplateSendMessage(
