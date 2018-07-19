@@ -1,9 +1,9 @@
+from app import app, db
+from app.models import *
+
 from flask import (
     Flask, request, abort, url_for, current_app, render_template, redirect
 )
-
-from app import app, db
-from app.models import Users, TravelPointToken, TravelPointPromotion, MarketPlaceDatabase
 
 @app.route('/')
 def index():
