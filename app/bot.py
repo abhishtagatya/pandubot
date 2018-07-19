@@ -831,7 +831,7 @@ def handle_message(event):
                         ImageCarouselColumn(image_url=thumbnail_image[4],
                                             action=MessageTemplateAction(
                                                 label='Go Green', text='Tips and tricks dong untuk jaga lingkungan kita!')),
-                        ImageCarouselColumn(image_url=thumbnail_image[4],
+                        ImageCarouselColumn(image_url=thumbnail_image[5],
                                             action=MessageTemplateAction(
                                                 label='Buka Web', text='Pandu buka website Official dari Digibot Solution'))
                     ])
