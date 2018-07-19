@@ -122,7 +122,7 @@ def handle_postback(event):
     else :
         # If the user is found
         if (command[0] == 'search_location'):
-            carousel_limit = 9
+            carousel_limit = 6
 
             sub_command = command[1].split(':')
             query, place_name = sub_command
