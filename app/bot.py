@@ -724,10 +724,13 @@ def handle_message(event):
                 )
             ])
 
-        elif ('up' in msg):
+        elif ('web' in msg):
 
-            findUser.travel_point += 1000
-            db.session.commit()
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(
+                    text="Ini website buatan Digibot Solution http://location-linebot.herokuapp.com"
+                ))
 
 
         elif ('pandu' in msg and 'id' in msg):
@@ -769,7 +772,7 @@ def handle_message(event):
                                         label='E-Waste', data='waste_market=electronic waste')),
                 ImageCarouselColumn(image_url=thumbnail_image,
                                     action=PostbackTemplateAction(
-                                        label='Lainnya', data='waste_market=lainnya'))
+                                        label='Lainnya', data='waste_market=lainnya')),
             ])
 
             line_bot_api.reply_message(
@@ -807,7 +810,8 @@ def handle_message(event):
                         'https://location-linebot.herokuapp.com/static/img/feature_thumbnail/weather.png',
                         'https://location-linebot.herokuapp.com/static/img/feature_thumbnail/3R.png',
                         'https://location-linebot.herokuapp.com/static/img/feature_thumbnail/coin.png',
-                        'https://location-linebot.herokuapp.com/static/img/feature_thumbnail/gogreen.png'
+                        'https://location-linebot.herokuapp.com/static/img/feature_thumbnail/gogreen.png',
+                        'https://location-linebot.herokuapp.com/static/img/feature_thumbnail/www.png'
                     )
                     image_option_template = ImageCarouselTemplate(columns=[
                         ImageCarouselColumn(image_url=thumbnail_image[0],
@@ -827,6 +831,9 @@ def handle_message(event):
                         ImageCarouselColumn(image_url=thumbnail_image[4],
                                             action=MessageTemplateAction(
                                                 label='Go Green', text='Tips and tricks dong untuk jaga lingkungan kita!')),
+                        ImageCarouselColumn(image_url=thumbnail_image[4],
+                                            action=MessageTemplateAction(
+                                                label='Buka Web', text='Pandu buka website Official dari Digibot Solution'))
                     ])
 
                     line_bot_api.reply_message(
