@@ -9,7 +9,7 @@ from app import app, db
 from app.models import Users, TravelPointToken, TravelPointPromotion, MarketPlaceDatabase
 from app.module.zomato import ZomatoAPI
 from app.module.geomaps import GoogleMapsAPI
-from app.module.openweather import OpenWeatherAPI
+from app.module.openweather import OpenWeatherAPI, weather_code_range
 from instance.config import LINE_CHANNEL_ACCESS_TOKEN, LINE_CHANNEL_SECRET_TOKEN
 
 from linebot import (
