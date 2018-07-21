@@ -288,6 +288,35 @@ def handle_postback(event):
                             search=data_search
                         )))
 
+            elif (command[2] == 'list'):
+                image_option_template = ImageCarouselTemplate(columns=[
+                    ImageCarouselColumn(image_url=places_thumbnail['food'],
+                                        action=MessageTemplateAction(
+                                            label='Makan', text='Carikan tempat makan di dekat lokasi saya')),
+                    ImageCarouselColumn(image_url=places_thumbnail['movie theater'],
+                                        action=MessageTemplateAction(
+                                            label='Bioskop', text='Carikan bioskop di dekat lokasi saya')),
+                    ImageCarouselColumn(image_url=places_thumbnail['minimarket'],
+                                        action=MessageTemplateAction(
+                                            label='Minimarket', text='Carikan minimartket di dekat lokasi saya')),
+                    ImageCarouselColumn(image_url=places_thumbnail['bus station'],
+                                        action=MessageTemplateAction(
+                                            label='Halte Bus', text='Carikan halte bus di dekat lokasi saya')),
+                    ImageCarouselColumn(image_url=places_thumbnail['else'],
+                                        action=MessageTemplateAction(
+                                            label='Lainnya', text='Carikan {place} di dekat lokasi saya'.format(
+                                                place=random.choice(['barber', 'atm', 'toko buku', 'salon', 'bengkel', 'rumah sakit', 'perpustakaan'])
+                                            ))),
+                ])
+
+                line_bot_api.reply_message(
+                    event.reply_token,[
+                    TextSendMessage(text="Berikut adalah hanya beberapa pilihan dari fitur Location Finder, jangan lupa untuk memperbarui lokasi Anda untuk mengoptimalkan penggunaan"),
+                    TemplateSendMessage(
+                        alt_text='Pilihan Lokasi Pencarian', template=image_option_template),
+                    TextSendMessage(text="Pandu bisa mencari tempat lebih banyak dari ini, coba tanyakan saja sama Pandu")
+                ])
+
             else :
                 line_bot_api.reply_message(
                     event.reply_token,
@@ -529,19 +558,19 @@ def handle_location_message(event):
             db.session.commit()
 
             image_option_template = ImageCarouselTemplate(columns=[
-                ImageCarouselColumn(image_url=thumbnail_image[0],
+                ImageCarouselColumn(image_url=places_thumbnail['food'],
                                     action=MessageTemplateAction(
                                         label='Makan', text='Carikan tempat makan di dekat lokasi saya')),
-                ImageCarouselColumn(image_url=thumbnail_image[1],
+                ImageCarouselColumn(image_url=places_thumbnail['movie theater'],
                                     action=MessageTemplateAction(
                                         label='Bioskop', text='Carikan bioskop di dekat lokasi saya')),
-                ImageCarouselColumn(image_url=thumbnail_image[2],
+                ImageCarouselColumn(image_url=places_thumbnail['minimarket'],
                                     action=MessageTemplateAction(
                                         label='Minimarket', text='Carikan minimartket di dekat lokasi saya')),
-                ImageCarouselColumn(image_url=thumbnail_image[3],
+                ImageCarouselColumn(image_url=places_thumbnail['bus station'],
                                     action=MessageTemplateAction(
                                         label='Halte Bus', text='Carikan halte bus di dekat lokasi saya')),
-                ImageCarouselColumn(image_url=thumbnail_image[4],
+                ImageCarouselColumn(image_url=places_thumbnail['else'],
                                     action=MessageTemplateAction(
                                         label='Lainnya', text='Carikan {place} di dekat lokasi saya'.format(
                                             place=random.choice(['restoran', 'atm', 'tempat potong rambut', 'salon', 'halte bus', 'warung', 'bioskop'])
@@ -552,7 +581,8 @@ def handle_location_message(event):
                 event.reply_token,[
                 TextSendMessage(text="Lokasi Anda sudah diperbarui!"),
                 TemplateSendMessage(
-                    alt_text='Pilihan Aplikasi', template=image_option_template)
+                    alt_text='Pilihan Aplikasi', template=image_option_template),
+                TextSendMessage(text='Pandu bisa mencari tempat lebih banyak dari ini, coba tanyakan saja sama Pandu')
                 ])
 
         except :
@@ -719,7 +749,7 @@ def handle_message(event):
                     ])
 
         elif ('tukar' in msg or 'tuker' in msg):
-            thumbnail_image = 'https://location-linebot.herokuapp.com/static/img/feature_thumbnail/coin.png'
+            thumbnail_image = feature_thumbnail['3']
             exchange_option_template = ImageCarouselTemplate(columns=[
                 ImageCarouselColumn(image_url=thumbnail_image,
                                     action=PostbackTemplateAction(
@@ -778,7 +808,7 @@ def handle_message(event):
 
         elif ('pasar' in msg and 'limbah' in msg):
 
-            thumbnail_image = 'https://location-linebot.herokuapp.com/static/img/feature_thumbnail/3R.png'
+            thumbnail_image = feature_thumbnail[2]
             market_option_template = ImageCarouselTemplate(columns=[
                 ImageCarouselColumn(image_url=thumbnail_image,
                                     action=PostbackTemplateAction(
@@ -847,10 +877,8 @@ def handle_message(event):
 
                     image_option_template = ImageCarouselTemplate(columns=[
                         ImageCarouselColumn(image_url=feature_thumbnail[0],
-                                            action=MessageTemplateAction(
-                                                label='Cari Lokasi', text='Pandu, tolong cariin {place} deket sini'.format(
-                                                    place=random.choice(['restoran', 'atm', 'tempat poton rambut', 'salon', 'halte bus', 'warung', 'bioskop'])
-                                                ))),
+                                            action=PostbackTemplateAction(
+                                                label='Cari Lokasi', data='location_unregistered=list')),
                         ImageCarouselColumn(image_url=feature_thumbnail[1],
                                             action=MessageTemplateAction(
                                                 label='Cuaca Kini', text='Hari ini cuaca nya seperti apa Pan?')),
