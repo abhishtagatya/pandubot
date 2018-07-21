@@ -168,7 +168,10 @@ def handle_postback(event):
                             text="Saya akan carikan tempat {place} didekat posisi Anda...".format(
                                 place=place_name)),
                         TemplateSendMessage(
-                            alt_text='Restaurant Carousel', template=food_carousel)
+                            alt_text='Restaurant Carousel', template=food_carousel),
+                        TextSendMessage(
+                            text="Jika ingin mencari tempat lain, silahkan tanyakan saja sama Pandu. Jika ingin mengetahui fitur lain, bisa minta guide sama Pandu."
+                        )
                         ])
 
                 else :
@@ -803,7 +806,13 @@ def handle_message(event):
                     TextSendMessage(
                         text=interaction_response))
             else :
-                if ('iya' not in msg.split() and 'tidak' not in msg.split()):
+                if (('iya' not in msg.split() and 'tidak' not in msg.split()) or 'guide' in msg.split()):
+
+                    if ('guide' in msg.split()):
+                        guide_string = "Ini adalah semua fitur yang Pandu bisa lakukan saat ini, jika ingin bertanya apapun sama Pandu, silahkan tanya saja."
+                    else :
+                        guide_string = "Pandu tidak mengenal kata-kata dalam percakapan, mungkin ada yang bisa Pandu bantu?"
+
                     thumbnail_image = (
                         'https://location-linebot.herokuapp.com/static/img/feature_thumbnail/location.png',
                         'https://location-linebot.herokuapp.com/static/img/feature_thumbnail/weather.png',
@@ -837,7 +846,7 @@ def handle_message(event):
 
                     line_bot_api.reply_message(
                         event.reply_token,[
-                        TextSendMessage(text="Pandu tidak mengenal kata-kata dalam percakapan, mungkin ada yang bisa Pandu bantu?"),
+                        TextSendMessage(text=guide_string),
                         TemplateSendMessage(
                             alt_text='Guide Pandu Bot', template=image_option_template)
                         ])
