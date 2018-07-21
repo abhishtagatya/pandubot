@@ -97,10 +97,8 @@ def handle_postback(event):
                     db.session.commit()
                     image_option_template = ImageCarouselTemplate(columns=[
                         ImageCarouselColumn(image_url=feature_thumbnail[0],
-                                            action=MessageTemplateAction(
-                                                label='Cari Lokasi', text='Pandu, tolong cariin {place} deket sini'.format(
-                                                    place=random.choice(['restoran', 'atm', 'tempat poton rambut', 'salon', 'halte bus', 'warung', 'bioskop'])
-                                                ))),
+                                            action=PostbackTemplateAction(
+                                                label='Cari Lokasi', data='location_unregistered=list=None')),
                         ImageCarouselColumn(image_url=feature_thumbnail[1],
                                             action=MessageTemplateAction(
                                                 label='Cuaca Kini', text='Hari ini cuaca nya seperti apa Pan?')),
@@ -878,7 +876,7 @@ def handle_message(event):
                     image_option_template = ImageCarouselTemplate(columns=[
                         ImageCarouselColumn(image_url=feature_thumbnail[0],
                                             action=PostbackTemplateAction(
-                                                label='Cari Lokasi', data='location_unregistered=list')),
+                                                label='Cari Lokasi', data='location_unregistered=list=None')),
                         ImageCarouselColumn(image_url=feature_thumbnail[1],
                                             action=MessageTemplateAction(
                                                 label='Cuaca Kini', text='Hari ini cuaca nya seperti apa Pan?')),
