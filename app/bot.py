@@ -698,7 +698,7 @@ def handle_message(event):
                     ])
 
         elif ('tukar' in msg or 'tuker' in msg):
-            thumbnail_image = 'https://i.imgur.com/EFkDB2M.png'
+            thumbnail_image = 'https://location-linebot.herokuapp.com/static/img/feature_thumbnail/coin.png'
             exchange_option_template = ImageCarouselTemplate(columns=[
                 ImageCarouselColumn(image_url=thumbnail_image,
                                     action=PostbackTemplateAction(
