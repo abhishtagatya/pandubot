@@ -228,17 +228,17 @@ def handle_postback(event):
                             text="Maaf...tapi saat ini kita tidak menemukan {query} di dekat Anda".format(
                                 query=query)))
 
-        elif (command[0] == 'location_update'):
-            if (command[1] == 'search_for_unknown'):
+        elif (command[0] == 'location_unregistered'):
+            data_search = command[2]
+            if (command[1] == 'confirm'):
                 # If places not supported in keyword.json, make an attempt
                 # to search via passed in string as argument
-                data_search = command[2]
                 location_confirm = ConfirmTemplate(text='Apakah anda sedang berada di {location}?'.format(location=findUser.location),
                 actions=[
                     PostbackTemplateAction(
                         label='Iya', text='Iya', data='search_location={search}'.format(search=data_search)),
                     PostbackTemplateAction(
-                        label='Tidak', text='Tidak', data='location_update=None')
+                        label='Tidak', text='Tidak', data='location_unregistered=decline')
                     ])
 
                 line_bot_api.reply_message(
@@ -250,6 +250,14 @@ def handle_postback(event):
                     TemplateSendMessage(
                         alt_text='Location Confirmation', template=location_confirm)
                     ])
+
+            elif (command[1] == 'decline'):
+                line_bot_api.reply_message(
+                    event.reply_token,
+                    TextSendMessage(
+                        text='Baiklah, membatalkan mencari lokasi "{search}"'.format(
+                            search=data_search
+                        )))
 
             else :
                 line_bot_api.reply_message(
@@ -515,7 +523,7 @@ def handle_location_message(event):
                 ImageCarouselColumn(image_url=thumbnail_image[4],
                                     action=MessageTemplateAction(
                                         label='Lainnya', text='Carikan {place} di dekat lokasi saya'.format(
-                                            place=random.choice(['restoran', 'atm', 'tempat poton rambut', 'salon', 'halte bus', 'warung', 'bioskop'])
+                                            place=random.choice(['restoran', 'atm', 'tempat potong rambut', 'salon', 'halte bus', 'warung', 'bioskop'])
                                         ))),
             ])
 
@@ -561,16 +569,19 @@ def handle_message(event):
             if (data_search is None):
                 # If no search is found by the keyword, then ask the user if they still want an answer
                 # By searching for the whole message
+                search_for = msg + ':hasil pencarian'
                 search_confirm = ConfirmTemplate(
-                    text='Sepertinya kata kunci ini belum di registrasikan secara resmi oleh Pandu, apakah ingin tetap mencari {message}?'.format(
+                    text='Sepertinya kata kunci ini belum di registrasikan secara resmi oleh Pandu, apakah ingin tetap mencari "{message}"?'.format(
                         message=msg
                     ),
                 actions=[
                     PostbackTemplateAction(
-                        label='Iya', text='Iya', data='location_update=search_for_unknown={search}'.format(
-                            search=msg + ':hasil pencarian')),
+                        label='Iya', text='Iya', data='location_unregistered=confirm={search}'.format(
+                            search=search_for)),
                     PostbackTemplateAction(
-                        label='Tidak', text='Tidak', data='location_update=None')
+                        label='Tidak', text='Tidak', data='location_unregistered=decline={search}'.format(
+                            search=search_for
+                        ))
                     ])
 
                 line_bot_api.reply_message(
