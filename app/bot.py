@@ -265,7 +265,7 @@ def handle_postback(event):
                     PostbackTemplateAction(
                         label='Iya', text='Iya', data='search_location={search}'.format(search=data_search)),
                     PostbackTemplateAction(
-                        label='Tidak', text='Tidak', data='location_unregistered=decline')
+                        label='Tidak', text='Tidak', data='location_unregistered=decline=None')
                     ])
 
                 line_bot_api.reply_message(
@@ -649,7 +649,7 @@ def handle_message(event):
                     PostbackTemplateAction(
                         label='Iya', text='Iya', data='search_location={search}'.format(search=data_search)),
                     PostbackTemplateAction(
-                        label='Tidak', text='Tidak', data='location_unregistered=None')
+                        label='Tidak', text='Tidak', data='location_unregistered=None=None')
                     ])
 
                 line_bot_api.reply_message(
