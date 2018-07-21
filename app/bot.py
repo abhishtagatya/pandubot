@@ -70,7 +70,6 @@ def handle_followevent(event):
 def handle_unfollow(event):
     app.logger.info("Got Unfollow event")
 
-
 @handler.add(PostbackEvent)
 def handle_postback(event):
 
@@ -844,10 +843,11 @@ def handle_message(event):
                         ])
 
     else :
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(
-                text="Sepertinya Anda belum registrasi, silahkan registrasi terlebih dahulu"))
+        if ('iya' not in msg and 'tidak' not in msg):
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(
+                    text="Sepertinya Anda belum registrasi, silahkan registrasi terlebih dahulu"))
 
 
 @handler.default()
