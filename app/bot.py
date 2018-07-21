@@ -94,6 +94,29 @@ def handle_postback(event):
                     db.session.add(new_user)
                     # Logging
                     app.logger.info("Create User Request: " + user_profile.user_id)
+                    db.session.commit()
+                    image_option_template = ImageCarouselTemplate(columns=[
+                        ImageCarouselColumn(image_url=feature_thumbnail[0],
+                                            action=MessageTemplateAction(
+                                                label='Cari Lokasi', text='Pandu, tolong cariin {place} deket sini'.format(
+                                                    place=random.choice(['restoran', 'atm', 'tempat poton rambut', 'salon', 'halte bus', 'warung', 'bioskop'])
+                                                ))),
+                        ImageCarouselColumn(image_url=feature_thumbnail[1],
+                                            action=MessageTemplateAction(
+                                                label='Cuaca Kini', text='Hari ini cuaca nya seperti apa Pan?')),
+                        ImageCarouselColumn(image_url=feature_thumbnail[2],
+                                            action=MessageTemplateAction(
+                                                label='Pasar Limbah', text='Pan, tolong buka Pasar Limbah')),
+                        ImageCarouselColumn(image_url=feature_thumbnail[3],
+                                            action=MessageTemplateAction(
+                                                label='Travel Point', text='Pandu, tolong cek deh travel point')),
+                        ImageCarouselColumn(image_url=feature_thumbnail[4],
+                                            action=MessageTemplateAction(
+                                                label='Go Green', text='Tips and tricks dong untuk jaga lingkungan kita!')),
+                        ImageCarouselColumn(image_url=feature_thumbnail[5],
+                                            action=MessageTemplateAction(
+                                                label='Buka Web', text='Pandu buka website Official dari Digibot Solution'))
+                    ])
                     line_bot_api.reply_message(
                         event.reply_token, [
                             TextSendMessage(
@@ -102,10 +125,11 @@ def handle_postback(event):
                             TextSendMessage(
                                 text='Untuk mengetahui lingkungan Anda, dapatkah Anda membagikan lokasi Anda dengan mengirimkan Send Location?'),
                             TextSendMessage(
-                                text='Send Location dapat di temukan di bawah menu, silahkan klik tombol + dan klik Send Location atau bisa klik link ini line://nv/location')
+                                text='Send Location dapat di temukan di bawah menu, silahkan klik tombol + dan klik Send Location atau bisa klik link ini line://nv/location'),
+                            TemplateSendMessage(
+                                alt_text='Feature List', template=image_option_template
+                            )
                         ])
-
-                    db.session.commit()
 
                 except :
                     line_bot_api.reply_message(
@@ -125,6 +149,10 @@ def handle_postback(event):
 
             sub_command = command[1].split(':')
             query, place_name = sub_command
+            thumnail_query = 'else'
+
+            if query in places_thumbnail:
+                thumnail_query = query
 
             # To calculate travel_option
             origin = '{lat},{lng}'.format(lat=findUser.latitude, lng=findUser.longitude)
@@ -137,8 +165,6 @@ def handle_postback(event):
                     # The list of all the carousel columns
                     restaurant_carousel = []
 
-                    # Temporary thumbnail_image
-                    thumbnail_image = 'https://location-linebot.herokuapp.com/static/img/location_thumbnail/restaurant.png'
                     for restaurant in restaurant_list[:carousel_limit]:
                         destination = '{lat},{lng}'.format(
                             lat=restaurant['restaurant']['location']['latitude'],
@@ -148,7 +174,7 @@ def handle_postback(event):
                         restaurant_column = CarouselColumn(
                             title=str(restaurant['restaurant']['name'])[:40],
                             text=str(restaurant['restaurant']['location']['address'])[:60],
-                            thumbnail_image_url=thumbnail_image,
+                            thumbnail_image_url=places_thumbnail[thumnail_query],
                             actions=[
                             URITemplateAction(
                                 label='Cek Restoran',
@@ -170,7 +196,7 @@ def handle_postback(event):
                         TemplateSendMessage(
                             alt_text='Restaurant Carousel', template=food_carousel),
                         TextSendMessage(
-                            text="Jika ingin mencari tempat lain, silahkan tanyakan saja sama Pandu. Jika ingin mengetahui fitur lain, bisa minta guide sama Pandu."
+                            text="Jika ingin mencari tempat lain, silahkan tanyakan saja sama Pandu. Pandu tau banyak tempat loh!"
                         )
                         ])
 
@@ -198,7 +224,7 @@ def handle_postback(event):
                         places_column = CarouselColumn(
                             title=str(places['name'])[:40],
                             text=str(places['formatted_address'])[:60],
-                            thumbnail_image_url=thumbnail_image,
+                            thumbnail_image_url=places_thumbnail[thumnail_query],
                             actions=[
                             URITemplateAction(
                                 label='Cek Peta',
@@ -218,7 +244,10 @@ def handle_postback(event):
                         TextSendMessage(text="Saya akan carikan {place} didekat posisi Anda...".format(
                             place=place_name)),
                         TemplateSendMessage(
-                            alt_text='Places Carousel', template=search_carousel)
+                            alt_text='Places Carousel', template=search_carousel),
+                        TextSendMessage(
+                            text="Jika ingin mencari tempat lain, silahkan tanyakan saja sama Pandu. Pandu tau banyak tempat loh!"
+                        )
                         ])
 
                 else :
@@ -499,14 +528,6 @@ def handle_location_message(event):
             findUser.longitude = event.message.longitude
             db.session.commit()
 
-            thumbnail_image = (
-                'https://location-linebot.herokuapp.com/static/img/location_thumbnail/restaurant.png',
-                'https://location-linebot.herokuapp.com/static/img/location_thumbnail/ticketbooth.png',
-                'https://location-linebot.herokuapp.com/static/img/location_thumbnail/mart.png',
-                'https://location-linebot.herokuapp.com/static/img/location_thumbnail/busstation.png',
-                'https://location-linebot.herokuapp.com/static/img/location_thumbnail/qm.png'
-            )
-
             image_option_template = ImageCarouselTemplate(columns=[
                 ImageCarouselColumn(image_url=thumbnail_image[0],
                                     action=MessageTemplateAction(
@@ -600,7 +621,7 @@ def handle_message(event):
                     PostbackTemplateAction(
                         label='Iya', text='Iya', data='search_location={search}'.format(search=data_search)),
                     PostbackTemplateAction(
-                        label='Tidak', text='Tidak', data='location_update=None')
+                        label='Tidak', text='Tidak', data='location_unregistered=None')
                     ])
 
                 line_bot_api.reply_message(
@@ -824,33 +845,25 @@ def handle_message(event):
                     else :
                         guide_string = "Pandu tidak mengenal kata-kata dalam percakapan, mungkin ada yang bisa Pandu bantu?"
 
-                    thumbnail_image = (
-                        'https://location-linebot.herokuapp.com/static/img/feature_thumbnail/location.png',
-                        'https://location-linebot.herokuapp.com/static/img/feature_thumbnail/weather.png',
-                        'https://location-linebot.herokuapp.com/static/img/feature_thumbnail/3R.png',
-                        'https://location-linebot.herokuapp.com/static/img/feature_thumbnail/coin.png',
-                        'https://location-linebot.herokuapp.com/static/img/feature_thumbnail/gogreen.png',
-                        'https://location-linebot.herokuapp.com/static/img/feature_thumbnail/www.png'
-                    )
                     image_option_template = ImageCarouselTemplate(columns=[
-                        ImageCarouselColumn(image_url=thumbnail_image[0],
+                        ImageCarouselColumn(image_url=feature_thumbnail[0],
                                             action=MessageTemplateAction(
                                                 label='Cari Lokasi', text='Pandu, tolong cariin {place} deket sini'.format(
                                                     place=random.choice(['restoran', 'atm', 'tempat poton rambut', 'salon', 'halte bus', 'warung', 'bioskop'])
                                                 ))),
-                        ImageCarouselColumn(image_url=thumbnail_image[1],
+                        ImageCarouselColumn(image_url=feature_thumbnail[1],
                                             action=MessageTemplateAction(
                                                 label='Cuaca Kini', text='Hari ini cuaca nya seperti apa Pan?')),
-                        ImageCarouselColumn(image_url=thumbnail_image[2],
+                        ImageCarouselColumn(image_url=feature_thumbnail[2],
                                             action=MessageTemplateAction(
                                                 label='Pasar Limbah', text='Pan, tolong buka Pasar Limbah')),
-                        ImageCarouselColumn(image_url=thumbnail_image[3],
+                        ImageCarouselColumn(image_url=feature_thumbnail[3],
                                             action=MessageTemplateAction(
                                                 label='Travel Point', text='Pandu, tolong cek deh travel point')),
-                        ImageCarouselColumn(image_url=thumbnail_image[4],
+                        ImageCarouselColumn(image_url=feature_thumbnail[4],
                                             action=MessageTemplateAction(
                                                 label='Go Green', text='Tips and tricks dong untuk jaga lingkungan kita!')),
-                        ImageCarouselColumn(image_url=thumbnail_image[5],
+                        ImageCarouselColumn(image_url=feature_thumbnail[5],
                                             action=MessageTemplateAction(
                                                 label='Buka Web', text='Pandu buka website Official dari Digibot Solution'))
                     ])
