@@ -286,7 +286,7 @@ def handle_postback(event):
                             search=data_search
                         )))
 
-            elif (command[2] == 'list'):
+            elif (command[1] == 'list'):
                 image_option_template = ImageCarouselTemplate(columns=[
                     ImageCarouselColumn(image_url=places_thumbnail['food'],
                                         action=MessageTemplateAction(
