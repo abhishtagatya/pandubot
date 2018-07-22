@@ -511,7 +511,9 @@ def handle_postback(event):
                 line_bot_api.reply_message(
                     event.reply_token,
                     TextSendMessage(
-                        text="Sementara, Pasar Limbah dengan kategori {category} belum diisi, silahkan menambahkan di halaman http://location-linebot.herokuapp.com/store/add"))
+                        text="Sementara, Pasar Limbah dengan kategori {category} belum diisi, silahkan menambahkan di halaman http://location-linebot.herokuapp.com/store/add".format(
+                            category=waste_category
+                        )))
 
         elif (command[0] == 'waste_market_info'):
             passed_market_id = command[1]
