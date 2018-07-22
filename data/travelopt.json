@@ -1,22 +1,22 @@
 [
   {
     "label": "Jalan Kaki",
-    "uri": "https://www.google.com/maps/dir/?api=1&parameters",
+    "uri": "https://www.google.com/maps/dir/?api=1&query={destination}&travelmode=walking",
     "thumbnail_image" : "https://location-linebot.herokuapp.com/static/img/travel_thumbnail/walk.png"
   },
   {
     "label": "Naik Sepeda",
-    "uri": "https://www.google.com/maps/dir/?api=1&parameters",
+    "uri": "https://www.google.com/maps/dir/?api=1&query={destination}&travelmode=bicycling",
     "thumbnail_image" : "https://location-linebot.herokuapp.com/static/img/travel_thumbnail/bike.png"
   },
   {
     "label": "Naik Bus",
-    "uri": "https://www.google.com/maps/dir/?api=1&parameters",
+    "uri": "https://www.google.com/maps/dir/?api=1&query={destination}&travelmode=driving",
     "thumbnail_image" : "https://location-linebot.herokuapp.com/static/img/travel_thumbnail/bus.png"
   },
   {
     "label": "Menyetir",
-    "uri": "https://www.google.com/maps/dir/?api=1&parameters",
+    "uri": "https://www.google.com/maps/dir/?api=1&query={destination}&travelmode=driving",
     "thumbnail_image" : "https://location-linebot.herokuapp.com/static/img/travel_thumbnail/car.png"
   }
 ]

@@ -123,7 +123,7 @@ def handle_postback(event):
                             TextSendMessage(
                                 text='Untuk mengetahui lingkungan Anda, dapatkah Anda membagikan lokasi Anda dengan mengirimkan Send Location?'),
                             TextSendMessage(
-                                text='Send Location dapat di temukan di bawah menu, silahkan klik tombol + dan klik Send Location atau bisa klik link ini line://nv/location'),
+                                text='Send Location dapat di temukan di bawah menu, silahkan klik tombol + dan klik Send Location atau bisa menggunakan Rich Menu dibawah'),
                             TemplateSendMessage(
                                 alt_text='Feature List', template=image_option_template
                             )
@@ -319,7 +319,7 @@ def handle_postback(event):
                 line_bot_api.reply_message(
                     event.reply_token,
                     TextSendMessage(
-                        text="Baiklah, silahkan perbarui lokasi Anda dengan mengirimkan lokasi line://nv/location"))
+                        text="Baiklah, silahkan perbarui lokasi Anda dengan mengirimkan lokasi dengan Rich Menu dibawah"))
 
         elif (command[0] == 'travel_option'):
             origin = command[1]
@@ -347,7 +347,9 @@ def handle_postback(event):
                     image_url=options['thumbnail_image'],
                     action=URITemplateAction(
                         label=options['label'],
-                        uri=options['uri']))
+                        uri=(options['uri']).format(
+                            destination=destination
+                        )))
 
                 if (distance['value'] >= 5000):
                     # Don't recommend walking more than 5km
