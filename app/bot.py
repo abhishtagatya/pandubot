@@ -749,8 +749,8 @@ def handle_message(event):
                         ))
                     ])
 
-        elif ('tukar' in msg or 'tuker' in msg):
-            thumbnail_image = feature_thumbnail['3']
+        elif ('tukar' in msg or 'tuker' in msg or 'penukaran' in msg):
+            thumbnail_image = feature_thumbnail[3]
             exchange_option_template = ImageCarouselTemplate(columns=[
                 ImageCarouselColumn(image_url=thumbnail_image,
                                     action=PostbackTemplateAction(
@@ -777,15 +777,23 @@ def handle_message(event):
                 ])
 
         elif ('cek' in msg):
+            point_template = ConfirmTemplate(
+                text='Ingin melihat pilihan penukaran Travel Point?',
+             actions=[
+                MessageTemplateAction(
+                    label='Iya', text='Iya, bukakan opsi penukaran Travel Point'),
+                MessageTemplateAction(
+                    label='Tidak', text='Tidak'),
+            ])
 
             line_bot_api.reply_message(
                 event.reply_token, [
                 TextSendMessage(
-                    text="Travel point Anda sekarang {point}".format(
+                    text="Travel Point Anda sekarang {point}".format(
                         point=findUser.travel_point
                     )),
-                TextSendMessage(
-                    text="Ingin menukar point Anda? Tinggal minta aja sama Pandu!"
+                TemplateSendMessage(
+                    alt_text='Konfirmasi Pilihan Penukaran Point', template=point_template
                 )
             ])
 
