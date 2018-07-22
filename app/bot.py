@@ -781,7 +781,7 @@ def handle_message(event):
                 text='Ingin melihat pilihan penukaran Travel Point?',
              actions=[
                 MessageTemplateAction(
-                    label='Iya', text='Iya, bukakan opsi penukaran Travel Point'),
+                    label='Iya', text='Iya, bukakan pilihan penukaran Travel Point'),
                 MessageTemplateAction(
                     label='Tidak', text='Tidak'),
             ])
