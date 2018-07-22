@@ -1,0 +1,36 @@
+{% extends "app.html" %}
+{% block content %}
+
+<div class="jumbotron jumbotron-image">
+  <h1 class="display-4">Tentang Kami</h1>
+  <p class="lead">Digibot Solution adalah tim pembangun solusi</p>
+  <hr class="my-4">
+  <p>Penasaran sama Pandu? Yuk kenalan sama Pandu lewat LINE</p>
+  <p class="lead">
+    <a class="btn btn-succes btn-lg text-light bg-success" href="https://line.me/R/ti/p/%40wxx2288i" role="button">Kenalan Yuk</a>
+  </p>
+</div>
+
+<div class="custom-divider container-fluid bg-success">
+  <h4 class="custom-divider-title">Tanggapan Kami</h4>
+</div>
+
+<div class="card-deck container-fluid" style="margin : 0">
+
+  <div class="card mb-3">
+  <div class="card-body custom-feature-list">
+    <h5 class="card-title">Siapa Kami?</h5>
+    <p class="card-text">Kami adalah Digibot Solution, disini kita hanyalah kumpulan lulusan SMA yang ingin berbuat lebih untuk sekitar dan masyarakat di Indonesia. Secara background, kita berbeda-beda tetapi kita bekerja sama senang dan semangat. Harapan kami, Pandu akan berguna untuk masyarakat Indonesia tidak hanya sebagai Chatbot, tetapi sebagai Solusi Smart City Indonesia.</p>
+    <h5 class="card-title">Executive Summary dan Mockup</h5>
+    <p class="card-text">Berikut adalah Executive Summary serta Mockup dari Aplikasi Chatbot kami</p>
+    <a class="btn btn-succes btn-lg text-light bg-success" href="{{ url_for('static', filename='pdf/ExecutiveSummary-DigibotSolution-Pandu.pdf') }}" role="button">Buka File</a>
+    <br><br>
+    <h5 class="card-title">Submisi Chatbot dan Tutorial</h5>
+    <p class="card-text">Berikut adalah Submisi Chatbot dan Tutorial Penggunaan kami</p>
+    <a class="btn btn-succes btn-lg text-light bg-success" href="{{ url_for('static', filename='pdf/Aplikasi-DigibotSolution-Pandu.pdf') }}" role="button">Buka File</a>
+    <br>
+  </div>
+</div>
+</div>
+
+{% endblock %}

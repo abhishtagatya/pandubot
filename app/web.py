@@ -87,3 +87,7 @@ def green_light():
         env_tips = json.load(envtips)
 
     return render_template('greenlight.html', tips=env_tips)
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
