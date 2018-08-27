@@ -1,31 +1,57 @@
-# PyLINE Bot
-LINE Bot Starter Kit using Python
+# Pandu Chatbot
 
-![bot-preview](https://cdn-images-1.medium.com/max/1400/1*LvHrVMkIFvWpqNv83St6Yg.png)
+> "An environmental lover chatbot, here to form the Smart Environment of today."
 
-## About the Documentations and LINE Messaging API 
+![Welcome Screen](docs/img/guide.png)
 
-See the official API documentation for more information.
+## About
 
-English: https://developers.line.me/en/docs/messaging-api/reference/
+Pandu is a Chatbot designed to help people acknowledge the environment around them better in hopes of increasing the care towards the environment.
 
-Japanese: https://developers.line.me/ja/docs/messaging-api/reference/
+It was created for a Competition from COMPFEST X Chatbot Invasion. Although it didn't won the competition, it still a really useful bot to play around.
 
-## Usage and Requirements
+A quick warning of detected spaghetti codes and bad practices, I try to improve it in the future but I also do accept pull requests from people around.
 
-PyLINE Bot requires [pip](https://pip.pypa.io/en/stable/installing/) to run.
+## Feature
 
-Clone the project and Install the Python requirements using pip.
+![Web and App](docs/img/web.png)
 
-```sh
-$ git clone https://github.com/abhishtagatya/pyline-bot
-$ cd pyline-bot
-$ pip install -r requirements.txt
-```
+#### Location Finder
 
-Once the requiremts are installed, you can start creating your bot. Here is a good documentation created by [LINE to create your chatbot. ](https://github.com/line/line-bot-sdk-python/blob/master/README.rst#synopsis)
+Pandu can search restaurants, cinemas, minimarkets and other places quickly and accurately. Pandu uses the Google Maps and Zomato APIs to process data.
 
-Need a tutorial to get started? Read my Medium Post on [Creating Your First LINE Bot](https://medium.com/@gatya/creating-your-first-line-bot-3d9d7e88047)
-## Messaging API
+#### Weather Man
 
-Head on over to [LINE Developers](https://developers.line.me/en/docs/messaging-api/overview/) to create your channel and how the Messaging API provided by LINE works.
+Pandu will remind you today's weather so you go safely and comfortably. Pandu uses the OpenWeatherMap API to process data.
+
+#### Waste Market
+
+Pandu creates an Online Market where users can buy and sell waste. Making a good business opportunity for its users also cleans around us.
+
+#### Travel Point and Tokens
+
+Pandu has a token system, to redeem a token you must first travel somewhere that supports the Pandu Chatbot. Once the token is redeemed, you can get points, these points can be exchange for a coupon or voucher of your choice.
+
+#### Environment Tips and Tricks
+
+Pandu occasionally send users Environment Tips and Tricks, you can even ask Pandu for it if you are curious.
+
+#### Website
+
+Pandu has a website. Check the official website is at [pandubot.com](http://location-linebot.herokuapp.com)
+
+## Tech Stack
+
+The Application is running on Python Flask and Deploying it on Heroku. The Database uses PostgreSQL. Install the requirements.txt beforehand.
+
+## Team
+
+- Abhishta Gatya - Fullstack Developer
+
+- Fadhi Rakhman - Marketing & Presentation Designer
+
+- Kevin Govinda - Business Development
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/abhishtagatya/pandubot/blob/master/LICENSE) for details
